@@ -46,6 +46,97 @@ async function getAdminDashboardData() {
      FROM classified`
   );
 
+  const stockAlertsRes = await pool.query(
+    `SELECT *
+     FROM (
+       SELECT
+         id,
+         name,
+         sku,
+         current_stock,
+         min_stock,
+         low_stock,
+         CASE
+           WHEN COALESCE(current_stock, 0) = 0 THEN 'Out of Stock'
+           WHEN COALESCE(current_stock, 0) <= COALESCE(min_stock, 0) THEN 'Severe'
+           WHEN COALESCE(current_stock, 0) <= COALESCE(low_stock, 0) THEN 'Low'
+           ELSE 'Normal'
+         END AS stock_status
+       FROM products
+     ) p
+     WHERE p.stock_status IN ('Out of Stock', 'Severe', 'Low')
+     ORDER BY
+       CASE p.stock_status
+         WHEN 'Out of Stock' THEN 1
+         WHEN 'Severe' THEN 2
+         WHEN 'Low' THEN 3
+         ELSE 4
+       END,
+       COALESCE(p.current_stock, 0) ASC,
+       p.id ASC`
+  );
+
+  const recentTransactionsRes = await pool.query(
+    `SELECT
+       t.id,
+       t.transaction_number,
+       t.type,
+       t.transaction_date,
+       t.status,
+       t.created_at,
+       u.name AS user_name
+     FROM transactions t
+     LEFT JOIN users u ON t.created_by = u.id
+     ORDER BY COALESCE(t.created_at, t.transaction_date::timestamptz) DESC, t.id DESC
+     LIMIT 5`
+  );
+
+  const recentActivitiesRes = await pool.query(
+    `SELECT *
+     FROM (
+       SELECT
+         CONCAT('trx-', t.id) AS id,
+         'transaction' AS kind,
+         t.type AS trx_type,
+         CONCAT(
+           COALESCE(u.name, 'Pengguna'),
+           ' mencatat ',
+           CASE
+             WHEN LOWER(TRIM(COALESCE(t.type, ''))) = 'outgoing' THEN 'Stock Out'
+             WHEN LOWER(TRIM(COALESCE(t.type, ''))) = 'incoming' THEN 'Stock In'
+             ELSE COALESCE(t.type, 'transaksi')
+           END
+         ) AS title,
+         CONCAT(
+           COALESCE(t.transaction_number, '-'),
+           ' • Status: ',
+           COALESCE(t.status, '-')
+         ) AS subtitle,
+         COALESCE(t.created_at, t.transaction_date::timestamptz) AS occurred_at
+       FROM transactions t
+       LEFT JOIN users u ON t.created_by = u.id
+
+       UNION ALL
+
+       SELECT
+         CONCAT('supplier-', u.id) AS id,
+         'supplier' AS kind,
+         NULL AS trx_type,
+         CONCAT('Pendaftaran supplier: ', COALESCE(u.name, '-')) AS title,
+         CONCAT(
+           COALESCE(u.company_name, u.email, '-'),
+           ' • Status: ',
+           COALESCE(u.status, '-')
+         ) AS subtitle,
+         u.created_at AS occurred_at
+       FROM users u
+       WHERE u.role = 'supplier'
+     ) act
+     WHERE act.occurred_at IS NOT NULL
+     ORDER BY act.occurred_at DESC
+     LIMIT 5`
+  );
+
   const stockRow = stockOverviewRes.rows[0] || {};
 
   return {
@@ -64,6 +155,9 @@ async function getAdminDashboardData() {
       severe: stockRow.severe_count ?? 0,
       outOfStock: stockRow.out_of_stock_count ?? 0,
     },
+    stockAlerts: stockAlertsRes.rows,
+    recentTransactions: recentTransactionsRes.rows,
+    recentActivities: recentActivitiesRes.rows,
   };
 }
 
@@ -86,6 +180,9 @@ export default async function AdminDashboardPage() {
       initialKpi={data.kpi}
       initialPendingSuppliers={data.pendingSuppliers}
       initialInventoryOverview={data.inventoryOverview}
+      initialStockAlerts={data.stockAlerts}
+      initialRecentTransactions={data.recentTransactions}
+      initialRecentActivities={data.recentActivities}
     />
   );
 }
