@@ -5,16 +5,23 @@ import AdminSidebar from "@/components/dashboard/admin/AdminSidebar";
 import AdminTopbar from "@/components/dashboard/admin/AdminTopbar";
 import AdminKpiCards from "@/components/dashboard/admin/AdminKpiCards";
 import AdminSupplierApproval from "@/components/dashboard/admin/AdminSupplierApproval";
+import AdminInventoryOverview from "@/components/dashboard/admin/AdminInventoryOverview";
 
 export default function AdminDashboardClient({
   adminName = "Admin Tataloka",
   initialKpi,
   initialPendingSuppliers = [],
+  initialInventoryOverview = {
+    totalProducts: 0,
+    normal: 0,
+    low: 0,
+    severe: 0,
+    outOfStock: 0,
+  },
 }) {
   const [pendingSuppliers, setPendingSuppliers] = useState(
     initialPendingSuppliers
   );
-
   const [pendingCount, setPendingCount] = useState(
     typeof initialKpi?.pendingSupplierApprovals === "number"
       ? initialKpi.pendingSupplierApprovals
@@ -56,9 +63,7 @@ export default function AdminDashboardClient({
               <div className="lg:col-span-8">
                 <AdminKpiCards
                   totalProducts={initialKpi?.totalProducts ?? 0}
-                  transactionsThisMonth={
-                    initialKpi?.transactionsThisMonth ?? 0
-                  }
+                  transactionsThisMonth={initialKpi?.transactionsThisMonth ?? 0}
                   inventoryValue={initialKpi?.inventoryValue ?? 0}
                   pendingSupplierApprovals={pendingCount}
                 />
@@ -72,8 +77,11 @@ export default function AdminDashboardClient({
                   onStatusUpdated={handleSupplierListUpdated}
                 />
               </div>
-
-              <div className="lg:col-span-5" />
+              <div className="lg:col-span-5">
+                <AdminInventoryOverview
+                  inventoryOverview={initialInventoryOverview}
+                />
+              </div>
             </div>
           </main>
         </div>
