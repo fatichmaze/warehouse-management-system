@@ -1,11 +1,15 @@
+import nextEnv from "@next/env";
 import { Pool } from "pg";
 import bcrypt from "bcryptjs";
 import { randomBytes } from "crypto";
 
+const { loadEnvConfig } = nextEnv;
+
+loadEnvConfig(process.cwd());
+
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
-
 const users = [
   {
     name: "Administrator",
