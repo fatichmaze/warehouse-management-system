@@ -34,9 +34,34 @@ async function getProductsPageData() {
      ORDER BY name ASC`
   );
 
+  const summaryRes = await pool.query(
+    `SELECT
+       COUNT(*) AS total_products,
+       COUNT(*) FILTER (WHERE current_stock > low_stock) AS normal_count,
+       COUNT(*) FILTER (
+         WHERE current_stock > min_stock AND current_stock <= low_stock
+       ) AS low_stock_count,
+       COUNT(*) FILTER (
+         WHERE current_stock > 0 AND current_stock <= min_stock
+       ) AS severe_count,
+       COUNT(*) FILTER (WHERE current_stock = 0) AS out_of_stock_count
+     FROM products`
+  );
+
+  const row = summaryRes.rows[0] || {};
+
+  const summary = {
+    totalProducts: Number(row.total_products ?? 0),
+    normal: Number(row.normal_count ?? 0),
+    lowStock: Number(row.low_stock_count ?? 0),
+    severe: Number(row.severe_count ?? 0),
+    outOfStock: Number(row.out_of_stock_count ?? 0),
+  };
+
   return {
     products: productsRes.rows,
     categories: categoriesRes.rows,
+    summary,
   };
 }
 
@@ -51,13 +76,14 @@ export default async function AdminProductsPage() {
     redirect("/dashboard");
   }
 
-  const { products, categories } = await getProductsPageData();
+  const { products, categories, summary } = await getProductsPageData();
 
   return (
     <AdminProductsClient
       userName={session.name || "Admin Tataloka"}
       initialProducts={products}
       initialCategories={categories}
+      initialSummary={summary}
     />
   );
 }

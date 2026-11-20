@@ -3,12 +3,22 @@
 import { Plus } from "lucide-react";
 import AdminSidebar from "@/components/dashboard/admin/AdminSidebar";
 import AdminTopbar from "@/components/dashboard/admin/AdminTopbar";
+import ProductSummaryCards from "@/components/dashboard/admin/products/ProductSummaryCards";
 
 export default function AdminProductsClient({
   userName = "Admin Tataloka",
   initialProducts = [],
   initialCategories = [],
+  initialSummary,
 }) {
+  const normalizedSummary = {
+    totalProducts: Number(initialSummary?.totalProducts ?? 0),
+    normal: Number(initialSummary?.normal ?? 0),
+    lowStock: Number(initialSummary?.lowStock ?? 0),
+    severe: Number(initialSummary?.severe ?? 0),
+    outOfStock: Number(initialSummary?.outOfStock ?? 0),
+  };
+
   return (
     <div
       className="min-h-screen bg-[#DCE6EF] text-[#30465B] p-3 sm:p-5"
@@ -42,6 +52,8 @@ export default function AdminProductsClient({
                 <span>Add Product</span>
               </button>
             </div>
+
+            <ProductSummaryCards summary={normalizedSummary} />
 
             <div className="text-[11px] text-[#8998A5]">
               {initialProducts.length} produk • {initialCategories.length} kategori
