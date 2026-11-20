@@ -96,7 +96,7 @@ export default function ProductTable({
   return (
     <div className="rounded-2xl bg-white border border-[#E8EEF4] shadow-[0_2px_10px_rgba(48,70,91,0.04)] overflow-hidden">
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[960px] border-collapse text-left">
+        <table className="w-full min-w-240 border-collapse text-left">
           <thead>
             <tr className="bg-[#F7F9FA] border-b border-[#E8EEF4] text-[10.5px] font-semibold uppercase tracking-wider text-[#8998A5]">
               <th className="py-3.5 pl-5 pr-3 whitespace-nowrap">SKU</th>
@@ -121,7 +121,7 @@ export default function ProductTable({
             {products.length === 0 ? (
               <tr>
                 <td colSpan={9} className="py-14 px-6 text-center">
-                  <div className="max-w-[360px] mx-auto flex flex-col items-center">
+                  <div className="max-w-90 mx-auto flex flex-col items-center">
                     <span className="w-10 h-10 rounded-2xl bg-[#F7F9FA] border border-[#E8EEF4] text-[#8998A5] flex items-center justify-center mb-3">
                       <PackageSearch className="w-5 h-5" strokeWidth={1.8} />
                     </span>
@@ -149,7 +149,7 @@ export default function ProductTable({
                       {product.sku}
                     </td>
 
-                    <td className="py-3.5 px-3 max-w-[240px]">
+                    <td className="py-3.5 px-3 max-w-60">
                       <div className="font-semibold text-[#30465B] truncate">
                         {product.name}
                       </div>

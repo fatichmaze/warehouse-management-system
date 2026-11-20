@@ -156,7 +156,7 @@ export default function AddProductModal({
       aria-labelledby="add-product-modal-title"
       style={{ fontFamily: "var(--font-inter), sans-serif" }}
     >
-      <div className="w-full max-w-2xl rounded-[24px] bg-white border border-[#E8EEF4] shadow-[0_20px_48px_rgba(48,70,91,0.18)] overflow-hidden my-auto">
+      <div className="w-full max-w-2xl rounded-3xl bg-white border border-[#E8EEF4] shadow-[0_20px_48px_rgba(48,70,91,0.18)] overflow-hidden my-auto">
         <div className="px-6 py-4.5 border-b border-[#E8EEF4] flex items-center justify-between gap-4 bg-[#FAFBFD]">
           <div>
             <h2

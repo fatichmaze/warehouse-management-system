@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Plus } from "lucide-react";
 import AdminSidebar from "@/components/dashboard/admin/AdminSidebar";
@@ -66,9 +66,25 @@ export default function AdminProductsClient({
     outOfStock: Number(initialSummary?.outOfStock ?? 0),
   };
 
-  useEffect(() => {
+  function handleSearchChange(value) {
+    setSearchQuery(value);
     setCurrentPage(1);
-  }, [searchQuery, selectedCategoryId, selectedStockStatus, sortBy]);
+  }
+
+  function handleCategoryChange(value) {
+    setSelectedCategoryId(value);
+    setCurrentPage(1);
+  }
+
+  function handleStockStatusChange(value) {
+    setSelectedStockStatus(value);
+    setCurrentPage(1);
+  }
+
+  function handleSortChange(value) {
+    setSortBy(value);
+    setCurrentPage(1);
+  }
 
   const filteredAndSortedProducts = useMemo(() => {
     const productsList = Array.isArray(initialProducts) ? initialProducts : [];
@@ -156,12 +172,6 @@ export default function AdminProductsClient({
 
   const totalFilteredCount = filteredAndSortedProducts.length;
   const totalPages = Math.max(1, Math.ceil(totalFilteredCount / PAGE_SIZE));
-
-  useEffect(() => {
-    if (currentPage > totalPages) {
-      setCurrentPage(1);
-    }
-  }, [currentPage, totalPages]);
 
   const safeCurrentPage =
     currentPage > totalPages ? 1 : Math.max(1, currentPage);
@@ -271,7 +281,7 @@ export default function AdminProductsClient({
       className="min-h-screen bg-[#DCE6EF] text-[#30465B] p-3 sm:p-5"
       style={{ fontFamily: "var(--font-inter), sans-serif" }}
     >
-      <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row items-start gap-4 min-h-[calc(100vh-2.5rem)]">
+      <div className="max-w-350 mx-auto flex flex-col md:flex-row items-start gap-4 min-h-[calc(100vh-2.5rem)]">
         <AdminSidebar pendingCount={0} />
 
         <div className="flex-1 min-w-0 rounded-[28px] bg-white/95 border border-white/90 shadow-[0_14px_36px_rgba(48,70,91,0.08)] flex flex-col">
@@ -305,14 +315,14 @@ export default function AdminProductsClient({
 
             <ProductFilterToolbar
               searchQuery={searchQuery}
-              onSearchChange={setSearchQuery}
+              onSearchChange={handleSearchChange}
               categories={initialCategories}
               selectedCategoryId={selectedCategoryId}
-              onCategoryChange={setSelectedCategoryId}
+              onCategoryChange={handleCategoryChange}
               selectedStockStatus={selectedStockStatus}
-              onStockStatusChange={setSelectedStockStatus}
+              onStockStatusChange={handleStockStatusChange}
               sortBy={sortBy}
-              onSortChange={setSortBy}
+              onSortChange={handleSortChange}
             />
 
             <ProductTable

@@ -25,14 +25,16 @@ export default function AdminDashboardClient({
   initialRecentTransactions = [],
   initialRecentActivities = [],
 }) {
-  const [pendingSuppliers, setPendingSuppliers] = useState(
-    initialPendingSuppliers
-  );
-  const [pendingCount, setPendingCount] = useState(
+  const safePendingSuppliers = Array.isArray(initialPendingSuppliers)
+    ? initialPendingSuppliers
+    : [];
+  const initialCount =
     typeof initialKpi?.pendingSupplierApprovals === "number"
       ? initialKpi.pendingSupplierApprovals
-      : initialPendingSuppliers.length
-  );
+      : safePendingSuppliers.length;
+
+  const [pendingSuppliers, setPendingSuppliers] = useState(safePendingSuppliers);
+  const [pendingCount, setPendingCount] = useState(initialCount);
 
   function handleSupplierListUpdated(updatedList) {
     setPendingSuppliers(updatedList);

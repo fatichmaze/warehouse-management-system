@@ -27,6 +27,9 @@ export default function AdminSidebar({ pendingCount = 0 }) {
   const pathname = usePathname();
   const router = useRouter();
   const [loggingOut, setLoggingOut] = useState(false);
+  const safePendingCount = Number.isFinite(Number(pendingCount))
+    ? Math.max(0, Number(pendingCount))
+    : 0;
 
   async function handleLogout() {
     if (loggingOut) return;
@@ -42,7 +45,7 @@ export default function AdminSidebar({ pendingCount = 0 }) {
   }
 
   return (
-    <aside className="w-[228px] shrink-0 bg-white rounded-[28px] border border-white/90 shadow-[0_14px_36px_rgba(48,70,91,0.08)] flex flex-col justify-between px-3.5 py-6 self-stretch">
+    <aside className="w-full md:w-[228px] shrink-0 bg-white rounded-[28px] border border-white/90 shadow-[0_14px_36px_rgba(48,70,91,0.08)] flex flex-col justify-between px-3.5 py-6 md:sticky md:top-5 md:h-[calc(100vh-2.5rem)]">
       <div>
         <div className="px-2 mb-7">
           <Link href="/admin/dashboard" className="inline-flex items-center">
@@ -80,9 +83,9 @@ export default function AdminSidebar({ pendingCount = 0 }) {
                   <span>{item.label}</span>
                 </span>
 
-                {item.showPendingBadge && pendingCount > 0 && (
+                {item.showPendingBadge && safePendingCount > 0 && (
                   <span className="min-w-5 h-5 px-1.5 rounded-full bg-[#E99A4A] text-white text-[11px] font-semibold flex items-center justify-center">
-                    {pendingCount}
+                    {safePendingCount}
                   </span>
                 )}
               </Link>
