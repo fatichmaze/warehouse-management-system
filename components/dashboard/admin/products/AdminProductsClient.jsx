@@ -9,6 +9,7 @@ import ProductSummaryCards from "@/components/dashboard/admin/products/ProductSu
 import ProductFilterToolbar from "@/components/dashboard/admin/products/ProductFilterToolbar";
 import ProductTable from "@/components/dashboard/admin/products/ProductTable";
 import AddProductModal from "@/components/dashboard/admin/products/AddProductModal";
+import EditProductModal from "@/components/dashboard/admin/products/EditProductModal";
 
 const PAGE_SIZE = 6;
 
@@ -52,6 +53,10 @@ export default function AdminProductsClient({
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
+
+  const [editingProduct, setEditingProduct] = useState(null);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [updateError, setUpdateError] = useState(null);
 
   const normalizedSummary = {
     totalProducts: Number(initialSummary?.totalProducts ?? 0),
@@ -211,6 +216,56 @@ export default function AdminProductsClient({
     }
   }
 
+  function handleOpenEditModal(product) {
+    if (isUpdating || !product) return;
+    setUpdateError(null);
+    setEditingProduct(product);
+  }
+
+  function handleCloseEditModal() {
+    if (isUpdating) return;
+    setUpdateError(null);
+    setEditingProduct(null);
+  }
+
+  async function handleUpdateProduct(payload) {
+    if (isUpdating || !editingProduct?.id) return;
+
+    setIsUpdating(true);
+    setUpdateError(null);
+
+    try {
+      const response = await fetch(
+        `/api/admin/products/${editingProduct.id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      const result = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        setUpdateError(
+          result?.error ||
+            "Gagal memperbarui produk. Silakan periksa kembali data."
+        );
+        return;
+      }
+
+      setUpdateError(null);
+      setEditingProduct(null);
+      router.refresh();
+    } catch {
+      setUpdateError("Terjadi gangguan jaringan saat menghubungi server.");
+    } finally {
+      setIsUpdating(false);
+    }
+  }
+
   return (
     <div
       className="min-h-screen bg-[#DCE6EF] text-[#30465B] p-3 sm:p-5"
@@ -266,6 +321,7 @@ export default function AdminProductsClient({
               currentPage={safeCurrentPage}
               pageSize={PAGE_SIZE}
               onPageChange={setCurrentPage}
+              onEditProduct={handleOpenEditModal}
             />
           </main>
         </div>
@@ -278,6 +334,17 @@ export default function AdminProductsClient({
           onSubmit={handleCreateProduct}
           isSubmitting={isSubmitting}
           error={submitError}
+        />
+      ) : null}
+
+      {editingProduct ? (
+        <EditProductModal
+          product={editingProduct}
+          categories={initialCategories}
+          onClose={handleCloseEditModal}
+          onSubmit={handleUpdateProduct}
+          isSubmitting={isUpdating}
+          error={updateError}
         />
       ) : null}
     </div>
