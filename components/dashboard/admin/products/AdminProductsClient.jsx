@@ -204,6 +204,13 @@ export default function AdminProductsClient({
     return filteredAndSortedProducts.slice(startIdx, startIdx + PAGE_SIZE);
   }, [filteredAndSortedProducts, safeCurrentPage]);
 
+  function handleViewProduct(product) {
+    if (isDeleting || isUpdating || isSubmitting) return;
+    const validId = getValidPositiveProductId(product);
+    if (!validId) return;
+    router.push(`/admin/products/${validId}`);
+  }
+
   function handleOpenAddModal() {
     setSubmitError(null);
     setIsAddModalOpen(true);
@@ -430,6 +437,7 @@ export default function AdminProductsClient({
               currentPage={safeCurrentPage}
               pageSize={PAGE_SIZE}
               onPageChange={setCurrentPage}
+              onViewProduct={handleViewProduct}
               onEditProduct={handleOpenEditModal}
               onDeleteProduct={handleOpenDeleteModal}
             />

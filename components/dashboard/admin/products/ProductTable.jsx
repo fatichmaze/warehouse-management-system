@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Eye,
   Pencil,
   Trash2,
   PackageSearch,
@@ -77,6 +78,7 @@ export default function ProductTable({
   currentPage = 1,
   pageSize = 6,
   onPageChange,
+  onViewProduct,
   onEditProduct,
   onDeleteProduct,
 }) {
@@ -193,7 +195,17 @@ export default function ProductTable({
                       <div className="inline-flex items-center justify-end gap-1.5">
                         <button
                           type="button"
+                          onClick={() => onViewProduct?.(product)}
+                          title={`View details ${product.name}`}
+                          aria-label={`View details ${product.name}`}
+                          className="w-7 h-7 rounded-lg bg-[#F7F9FA] hover:bg-[#EDF2F7] border border-[#E8EEF4] text-[#637587] hover:text-[#30465B] inline-flex items-center justify-center transition-colors cursor-pointer"
+                        >
+                          <Eye className="w-3.5 h-3.5" strokeWidth={1.8} />
+                        </button>
+                        <button
+                          type="button"
                           onClick={() => onEditProduct?.(product)}
+                          title={`Edit ${product.name}`}
                           aria-label={`Edit ${product.name}`}
                           className="w-7 h-7 rounded-lg bg-[#F7F9FA] hover:bg-[#EDF2F7] border border-[#E8EEF4] text-[#637587] hover:text-[#30465B] inline-flex items-center justify-center transition-colors cursor-pointer"
                         >
@@ -202,6 +214,7 @@ export default function ProductTable({
                         <button
                           type="button"
                           onClick={() => onDeleteProduct?.(product)}
+                          title={`Delete ${product.name}`}
                           aria-label={`Delete ${product.name}`}
                           className="w-7 h-7 rounded-lg bg-[#F7F9FA] hover:bg-[#FDECEC] border border-[#E8EEF4] hover:border-[#F5C2C2] text-[#637587] hover:text-[#C53030] inline-flex items-center justify-center transition-colors cursor-pointer"
                         >
