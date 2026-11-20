@@ -1,9 +1,34 @@
 "use client";
 
+import { useState, useMemo } from "react";
 import { Plus } from "lucide-react";
 import AdminSidebar from "@/components/dashboard/admin/AdminSidebar";
 import AdminTopbar from "@/components/dashboard/admin/AdminTopbar";
 import ProductSummaryCards from "@/components/dashboard/admin/products/ProductSummaryCards";
+import ProductFilterToolbar from "@/components/dashboard/admin/products/ProductFilterToolbar";
+
+export function getProductStockStatus(product) {
+  const currentStock = Number(product?.current_stock ?? 0);
+  const minStock = Number(product?.min_stock ?? 0);
+  const lowStock = Number(product?.low_stock ?? 0);
+
+  if (currentStock === 0) {
+    return "Out of Stock";
+  }
+  if (currentStock > 0 && currentStock <= minStock) {
+    return "Severe";
+  }
+  if (currentStock > minStock && currentStock <= lowStock) {
+    return "Low Stock";
+  }
+  return "Normal";
+}
+
+function getCreatedTimestamp(createdAt) {
+  if (!createdAt) return 0;
+  const time = new Date(createdAt).getTime();
+  return Number.isFinite(time) ? time : 0;
+}
 
 export default function AdminProductsClient({
   userName = "Admin Tataloka",
@@ -11,6 +36,11 @@ export default function AdminProductsClient({
   initialCategories = [],
   initialSummary,
 }) {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategoryId, setSelectedCategoryId] = useState("all");
+  const [selectedStockStatus, setSelectedStockStatus] = useState("all");
+  const [sortBy, setSortBy] = useState("created_desc");
+
   const normalizedSummary = {
     totalProducts: Number(initialSummary?.totalProducts ?? 0),
     normal: Number(initialSummary?.normal ?? 0),
@@ -18,6 +48,90 @@ export default function AdminProductsClient({
     severe: Number(initialSummary?.severe ?? 0),
     outOfStock: Number(initialSummary?.outOfStock ?? 0),
   };
+
+  const filteredAndSortedProducts = useMemo(() => {
+    const productsList = Array.isArray(initialProducts) ? initialProducts : [];
+    const normalizedQuery = searchQuery.trim().toLowerCase();
+
+    const filtered = productsList.filter((product) => {
+      if (normalizedQuery) {
+        const productName = String(product?.name ?? "").toLowerCase();
+        const productSku = String(product?.sku ?? "").toLowerCase();
+        const matchesSearch =
+          productName.includes(normalizedQuery) ||
+          productSku.includes(normalizedQuery);
+        if (!matchesSearch) return false;
+      }
+
+      if (selectedCategoryId !== "all") {
+        if (String(product?.category_id ?? "") !== String(selectedCategoryId)) {
+          return false;
+        }
+      }
+
+      if (selectedStockStatus !== "all") {
+        const status = getProductStockStatus(product);
+        if (status !== selectedStockStatus) {
+          return false;
+        }
+      }
+
+      return true;
+    });
+
+    const sorted = [...filtered].sort((a, b) => {
+      const idA = Number(a?.id ?? 0);
+      const idB = Number(b?.id ?? 0);
+
+      switch (sortBy) {
+        case "name_asc": {
+          const cmp = String(a?.name ?? "").localeCompare(
+            String(b?.name ?? ""),
+            "id",
+            { sensitivity: "base" }
+          );
+          return cmp !== 0 ? cmp : idA - idB;
+        }
+        case "name_desc": {
+          const cmp = String(b?.name ?? "").localeCompare(
+            String(a?.name ?? ""),
+            "id",
+            { sensitivity: "base" }
+          );
+          return cmp !== 0 ? cmp : idA - idB;
+        }
+        case "stock_asc": {
+          const stockA = Number(a?.current_stock ?? 0);
+          const stockB = Number(b?.current_stock ?? 0);
+          return stockA !== stockB ? stockA - stockB : idA - idB;
+        }
+        case "stock_desc": {
+          const stockA = Number(a?.current_stock ?? 0);
+          const stockB = Number(b?.current_stock ?? 0);
+          return stockB !== stockA ? stockB - stockA : idA - idB;
+        }
+        case "created_asc": {
+          const timeA = getCreatedTimestamp(a?.created_at);
+          const timeB = getCreatedTimestamp(b?.created_at);
+          return timeA !== timeB ? timeA - timeB : idA - idB;
+        }
+        case "created_desc":
+        default: {
+          const timeA = getCreatedTimestamp(a?.created_at);
+          const timeB = getCreatedTimestamp(b?.created_at);
+          return timeB !== timeA ? timeB - timeA : idB - idA;
+        }
+      }
+    });
+
+    return sorted;
+  }, [
+    initialProducts,
+    searchQuery,
+    selectedCategoryId,
+    selectedStockStatus,
+    sortBy,
+  ]);
 
   return (
     <div
@@ -55,8 +169,22 @@ export default function AdminProductsClient({
 
             <ProductSummaryCards summary={normalizedSummary} />
 
+            <ProductFilterToolbar
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+              categories={initialCategories}
+              selectedCategoryId={selectedCategoryId}
+              onCategoryChange={setSelectedCategoryId}
+              selectedStockStatus={selectedStockStatus}
+              onStockStatusChange={setSelectedStockStatus}
+              sortBy={sortBy}
+              onSortChange={setSortBy}
+            />
+
             <div className="text-[11px] text-[#8998A5]">
-              {initialProducts.length} produk • {initialCategories.length} kategori
+              Menampilkan {filteredAndSortedProducts.length} dari{" "}
+              {initialProducts.length} produk • {initialCategories.length}{" "}
+              kategori
             </div>
           </main>
         </div>
