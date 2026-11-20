@@ -10,6 +10,7 @@ import ProductFilterToolbar from "@/components/dashboard/admin/products/ProductF
 import ProductTable from "@/components/dashboard/admin/products/ProductTable";
 import AddProductModal from "@/components/dashboard/admin/products/AddProductModal";
 import EditProductModal from "@/components/dashboard/admin/products/EditProductModal";
+import DeleteProductModal from "@/components/dashboard/admin/products/DeleteProductModal";
 
 const PAGE_SIZE = 6;
 
@@ -36,6 +37,23 @@ function getCreatedTimestamp(createdAt) {
   return Number.isFinite(time) ? time : 0;
 }
 
+function getValidPositiveProductId(product) {
+  if (!product || typeof product !== "object" || Array.isArray(product)) {
+    return null;
+  }
+  const rawId = product.id;
+  if (typeof rawId === "number") {
+    return Number.isInteger(rawId) && rawId > 0 ? rawId : null;
+  }
+  if (typeof rawId === "string") {
+    const trimmed = rawId.trim();
+    if (!/^\d+$/.test(trimmed)) return null;
+    const parsed = Number.parseInt(trimmed, 10);
+    return Number.isSafeInteger(parsed) && parsed > 0 ? parsed : null;
+  }
+  return null;
+}
+
 export default function AdminProductsClient({
   userName = "Admin Tataloka",
   initialProducts = [],
@@ -57,6 +75,11 @@ export default function AdminProductsClient({
   const [editingProduct, setEditingProduct] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
   const [updateError, setUpdateError] = useState(null);
+
+  const [deletingProduct, setDeletingProduct] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState(null);
+  const [deleteSuccessMessage, setDeleteSuccessMessage] = useState(null);
 
   const normalizedSummary = {
     totalProducts: Number(initialSummary?.totalProducts ?? 0),
@@ -227,7 +250,7 @@ export default function AdminProductsClient({
   }
 
   function handleOpenEditModal(product) {
-    if (isUpdating || !product) return;
+    if (isUpdating || isDeleting || !product) return;
     setUpdateError(null);
     setEditingProduct(product);
   }
@@ -276,6 +299,66 @@ export default function AdminProductsClient({
     }
   }
 
+  function handleOpenDeleteModal(product) {
+    if (isDeleting || isUpdating || isSubmitting) return;
+    const validId = getValidPositiveProductId(product);
+    if (!validId) return;
+
+    setDeleteError(null);
+    setDeletingProduct(product);
+  }
+
+  function handleCloseDeleteModal() {
+    if (isDeleting) return;
+    setDeleteError(null);
+    setDeletingProduct(null);
+  }
+
+  async function handleConfirmDeleteProduct(targetProduct) {
+    if (isDeleting) return;
+
+    const candidate = targetProduct ?? deletingProduct;
+    const validId = getValidPositiveProductId(candidate);
+    if (!validId) {
+      setDeleteError("Data atau ID produk tidak valid untuk dihapus.");
+      return;
+    }
+
+    setIsDeleting(true);
+    setDeleteError(null);
+
+    try {
+      const response = await fetch(`/api/admin/products/${validId}`, {
+        method: "DELETE",
+      });
+
+      const result = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        setDeleteError(
+          result?.error || "Gagal menghapus produk. Silakan coba lagi."
+        );
+        return;
+      }
+
+      const deletedName =
+        result?.data?.name || candidate?.name || `ID #${validId}`;
+      const deletedSku = result?.data?.sku || candidate?.sku;
+      const label = deletedSku ? `${deletedName} (${deletedSku})` : deletedName;
+
+      setDeleteError(null);
+      setDeletingProduct(null);
+      setDeleteSuccessMessage(
+        result?.message || `Produk ${label} berhasil dihapus.`
+      );
+      router.refresh();
+    } catch {
+      setDeleteError("Terjadi gangguan jaringan saat menghubungi server.");
+    } finally {
+      setIsDeleting(false);
+    }
+  }
+
   return (
     <div
       className="min-h-screen bg-[#DCE6EF] text-[#30465B] p-3 sm:p-5"
@@ -311,6 +394,22 @@ export default function AdminProductsClient({
               </button>
             </div>
 
+            {deleteSuccessMessage ? (
+              <div
+                role="status"
+                className="rounded-xl bg-[#EAF6EE] border border-[#C6E6D0] px-4 py-2.5 text-[12px] font-medium text-[#2F855A] flex items-center justify-between gap-3"
+              >
+                <span>{deleteSuccessMessage}</span>
+                <button
+                  type="button"
+                  onClick={() => setDeleteSuccessMessage(null)}
+                  className="text-[11.5px] font-semibold underline underline-offset-2 hover:opacity-80 cursor-pointer shrink-0"
+                >
+                  Tutup
+                </button>
+              </div>
+            ) : null}
+
             <ProductSummaryCards summary={normalizedSummary} />
 
             <ProductFilterToolbar
@@ -332,6 +431,7 @@ export default function AdminProductsClient({
               pageSize={PAGE_SIZE}
               onPageChange={setCurrentPage}
               onEditProduct={handleOpenEditModal}
+              onDeleteProduct={handleOpenDeleteModal}
             />
           </main>
         </div>
@@ -349,6 +449,7 @@ export default function AdminProductsClient({
 
       {editingProduct ? (
         <EditProductModal
+          key={editingProduct.id}
           product={editingProduct}
           categories={initialCategories}
           onClose={handleCloseEditModal}
@@ -357,6 +458,15 @@ export default function AdminProductsClient({
           error={updateError}
         />
       ) : null}
+
+      <DeleteProductModal
+        isOpen={Boolean(deletingProduct)}
+        product={deletingProduct}
+        onClose={handleCloseDeleteModal}
+        onConfirm={handleConfirmDeleteProduct}
+        isDeleting={isDeleting}
+        error={deleteError}
+      />
     </div>
   );
 }

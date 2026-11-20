@@ -78,6 +78,7 @@ export default function ProductTable({
   pageSize = 6,
   onPageChange,
   onEditProduct,
+  onDeleteProduct,
 }) {
   const safeTotalFiltered = Math.max(0, Number(totalFilteredCount ?? 0));
   const safePageSize = Math.max(1, Number(pageSize ?? 6));
@@ -198,12 +199,14 @@ export default function ProductTable({
                         >
                           <Pencil className="w-3.5 h-3.5" strokeWidth={1.8} />
                         </button>
-                        <span
-                          className="w-7 h-7 rounded-lg bg-[#F7F9FA] border border-[#E8EEF4] text-[#8998A5] inline-flex items-center justify-center pointer-events-none select-none"
-                          aria-hidden="true"
+                        <button
+                          type="button"
+                          onClick={() => onDeleteProduct?.(product)}
+                          aria-label={`Delete ${product.name}`}
+                          className="w-7 h-7 rounded-lg bg-[#F7F9FA] hover:bg-[#FDECEC] border border-[#E8EEF4] hover:border-[#F5C2C2] text-[#637587] hover:text-[#C53030] inline-flex items-center justify-center transition-colors cursor-pointer"
                         >
                           <Trash2 className="w-3.5 h-3.5" strokeWidth={1.8} />
-                        </span>
+                        </button>
                       </div>
                     </td>
                   </tr>
