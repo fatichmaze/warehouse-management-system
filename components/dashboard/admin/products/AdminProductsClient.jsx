@@ -1,13 +1,18 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Plus } from "lucide-react";
 import AdminSidebar from "@/components/dashboard/admin/AdminSidebar";
 import AdminTopbar from "@/components/dashboard/admin/AdminTopbar";
 import ProductSummaryCards from "@/components/dashboard/admin/products/ProductSummaryCards";
 import ProductFilterToolbar from "@/components/dashboard/admin/products/ProductFilterToolbar";
+import ProductTable from "@/components/dashboard/admin/products/ProductTable";
+import AddProductModal from "@/components/dashboard/admin/products/AddProductModal";
 
-export function getProductStockStatus(product) {
+const PAGE_SIZE = 6;
+
+function getProductStockStatus(product) {
   const currentStock = Number(product?.current_stock ?? 0);
   const minStock = Number(product?.min_stock ?? 0);
   const lowStock = Number(product?.low_stock ?? 0);
@@ -36,10 +41,17 @@ export default function AdminProductsClient({
   initialCategories = [],
   initialSummary,
 }) {
+  const router = useRouter();
+
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategoryId, setSelectedCategoryId] = useState("all");
   const [selectedStockStatus, setSelectedStockStatus] = useState("all");
   const [sortBy, setSortBy] = useState("created_desc");
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
 
   const normalizedSummary = {
     totalProducts: Number(initialSummary?.totalProducts ?? 0),
@@ -48,6 +60,10 @@ export default function AdminProductsClient({
     severe: Number(initialSummary?.severe ?? 0),
     outOfStock: Number(initialSummary?.outOfStock ?? 0),
   };
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, selectedCategoryId, selectedStockStatus, sortBy]);
 
   const filteredAndSortedProducts = useMemo(() => {
     const productsList = Array.isArray(initialProducts) ? initialProducts : [];
@@ -133,6 +149,68 @@ export default function AdminProductsClient({
     sortBy,
   ]);
 
+  const totalFilteredCount = filteredAndSortedProducts.length;
+  const totalPages = Math.max(1, Math.ceil(totalFilteredCount / PAGE_SIZE));
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(1);
+    }
+  }, [currentPage, totalPages]);
+
+  const safeCurrentPage =
+    currentPage > totalPages ? 1 : Math.max(1, currentPage);
+
+  const paginatedProducts = useMemo(() => {
+    const startIdx = (safeCurrentPage - 1) * PAGE_SIZE;
+    return filteredAndSortedProducts.slice(startIdx, startIdx + PAGE_SIZE);
+  }, [filteredAndSortedProducts, safeCurrentPage]);
+
+  function handleOpenAddModal() {
+    setSubmitError(null);
+    setIsAddModalOpen(true);
+  }
+
+  function handleCloseAddModal() {
+    if (isSubmitting) return;
+    setSubmitError(null);
+    setIsAddModalOpen(false);
+  }
+
+  async function handleCreateProduct(payload) {
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      const response = await fetch("/api/admin/products", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        setSubmitError(
+          result?.error || "Gagal menambahkan produk. Silakan periksa kembali data."
+        );
+        return;
+      }
+
+      setSubmitError(null);
+      setIsAddModalOpen(false);
+      router.refresh();
+    } catch {
+      setSubmitError("Terjadi gangguan jaringan saat menghubungi server.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
   return (
     <div
       className="min-h-screen bg-[#DCE6EF] text-[#30465B] p-3 sm:p-5"
@@ -160,7 +238,8 @@ export default function AdminProductsClient({
 
               <button
                 type="button"
-                className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#2D4356] hover:bg-[#233544] text-white text-[12.5px] font-semibold shadow-[0_6px_16px_rgba(45,67,86,0.18)] transition-colors self-start sm:self-auto"
+                onClick={handleOpenAddModal}
+                className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#2D4356] hover:bg-[#233544] text-white text-[12.5px] font-semibold shadow-[0_6px_16px_rgba(45,67,86,0.18)] transition-colors self-start sm:self-auto cursor-pointer"
               >
                 <Plus className="w-4 h-4" strokeWidth={2} />
                 <span>Add Product</span>
@@ -181,14 +260,26 @@ export default function AdminProductsClient({
               onSortChange={setSortBy}
             />
 
-            <div className="text-[11px] text-[#8998A5]">
-              Menampilkan {filteredAndSortedProducts.length} dari{" "}
-              {initialProducts.length} produk • {initialCategories.length}{" "}
-              kategori
-            </div>
+            <ProductTable
+              products={paginatedProducts}
+              totalFilteredCount={totalFilteredCount}
+              currentPage={safeCurrentPage}
+              pageSize={PAGE_SIZE}
+              onPageChange={setCurrentPage}
+            />
           </main>
         </div>
       </div>
+
+      {isAddModalOpen ? (
+        <AddProductModal
+          categories={initialCategories}
+          onClose={handleCloseAddModal}
+          onSubmit={handleCreateProduct}
+          isSubmitting={isSubmitting}
+          error={submitError}
+        />
+      ) : null}
     </div>
   );
 }
