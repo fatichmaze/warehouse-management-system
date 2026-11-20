@@ -72,7 +72,8 @@ export default async function AdminProductsPage() {
     redirect("/login");
   }
 
-  if (!ALLOWED_ROLES.includes(session.role)) {
+  const role = String(session.role ?? "").toLowerCase();
+  if (!ALLOWED_ROLES.includes(role)) {
     redirect("/dashboard");
   }
 

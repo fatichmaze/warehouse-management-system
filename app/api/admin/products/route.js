@@ -4,6 +4,15 @@ import pool from "@/lib/db";
 
 const ALLOWED_ROLES = ["admin", "warehouse_manager"];
 
+function isValidHttpOrHttpsUrl(value) {
+  try {
+    const parsed = new URL(value);
+    return parsed.protocol === "http:" || parsed.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
 function parseFiniteNumber(value) {
   if (typeof value === "number") {
     return Number.isFinite(value) ? value : NaN;
@@ -39,7 +48,8 @@ export async function POST(request) {
       );
     }
 
-    if (!ALLOWED_ROLES.includes(session.role)) {
+    const role = String(session.role ?? "").toLowerCase();
+    if (!ALLOWED_ROLES.includes(role)) {
       return NextResponse.json(
         { error: "Akses ditolak. Hanya Admin dan Warehouse Manager yang diizinkan." },
         { status: 403 }
@@ -134,6 +144,16 @@ export async function POST(request) {
 
     const description = normalizeOptionalText(body?.description);
     const imageUrl = normalizeOptionalText(body?.image_url);
+
+    if (imageUrl !== null && !isValidHttpOrHttpsUrl(imageUrl)) {
+      return NextResponse.json(
+        {
+          error:
+            "image_url harus berupa URL valid yang diawali http:// atau https://.",
+        },
+        { status: 400 }
+      );
+    }
 
     const categoryCheck = await pool.query(
       "SELECT id FROM categories WHERE id = $1",

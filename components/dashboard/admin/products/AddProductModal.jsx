@@ -18,6 +18,15 @@ const INITIAL_FORM_STATE = {
   image_url: "",
 };
 
+function isValidHttpOrHttpsUrl(value) {
+  try {
+    const parsed = new URL(value);
+    return parsed.protocol === "http:" || parsed.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
 export default function AddProductModal({
   categories = [],
   onClose,
@@ -27,6 +36,8 @@ export default function AddProductModal({
 }) {
   const [formData, setFormData] = useState(INITIAL_FORM_STATE);
   const [validationError, setValidationError] = useState("");
+
+  const hasCategories = Array.isArray(categories) && categories.length > 0;
 
   function handleFieldChange(fieldName, value) {
     setFormData((prev) => ({
@@ -48,6 +59,13 @@ export default function AddProductModal({
     e.preventDefault();
     if (isSubmitting) return;
 
+    if (!hasCategories) {
+      setValidationError(
+        "Belum ada kategori yang tersedia. Tambahkan kategori terlebih dahulu sebelum menambahkan produk."
+      );
+      return;
+    }
+
     const skuTrimmed = formData.sku.trim().toUpperCase();
     const nameTrimmed = formData.name.trim();
     const unitTrimmed = formData.unit.trim();
@@ -61,6 +79,8 @@ export default function AddProductModal({
     const currentStockNum =
       formData.current_stock === "" ? 0 : Number(formData.current_stock);
 
+    const imageUrlTrimmed = formData.image_url.trim();
+
     if (!skuTrimmed || !nameTrimmed || !unitTrimmed || !rackTrimmed) {
       setValidationError(
         "SKU, Product Name, Unit, dan Rack Location wajib diisi."
@@ -70,6 +90,16 @@ export default function AddProductModal({
 
     if (!Number.isInteger(categoryIdNum) || categoryIdNum <= 0) {
       setValidationError("Silakan pilih kategori produk terlebih dahulu.");
+      return;
+    }
+
+    const isCategoryInList = categories.some(
+      (cat) => Number(cat?.id) === categoryIdNum
+    );
+    if (!isCategoryInList) {
+      setValidationError(
+        "Kategori yang dipilih tidak ditemukan dalam daftar kategori yang tersedia."
+      );
       return;
     }
 
@@ -126,6 +156,13 @@ export default function AddProductModal({
       return;
     }
 
+    if (imageUrlTrimmed !== "" && !isValidHttpOrHttpsUrl(imageUrlTrimmed)) {
+      setValidationError(
+        "Image URL harus berupa URL valid yang diawali http:// atau https://."
+      );
+      return;
+    }
+
     setValidationError("");
 
     const payload = {
@@ -140,7 +177,7 @@ export default function AddProductModal({
       current_stock: currentStockNum,
       unit: unitTrimmed,
       rack_location: rackTrimmed,
-      image_url: formData.image_url.trim() || null,
+      image_url: imageUrlTrimmed || null,
     };
 
     onSubmit?.(payload);
@@ -186,6 +223,15 @@ export default function AddProductModal({
 
         <form onSubmit={handleFormSubmit} noValidate>
           <div className="p-6 space-y-4 max-h-[72vh] overflow-y-auto">
+            {!hasCategories ? (
+              <div
+                role="status"
+                className="rounded-xl bg-[#FEF5E7] border border-[#F7D7A8] px-4 py-2.5 text-[12px] font-medium text-[#B76E1E]"
+              >
+                Belum ada kategori yang tersedia. Silakan tambahkan kategori terlebih dahulu sebelum menambahkan produk.
+              </div>
+            ) : null}
+
             {displayedError ? (
               <div
                 role="alert"
@@ -249,15 +295,17 @@ export default function AddProductModal({
                   id="product-category-id"
                   name="category_id"
                   required
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || !hasCategories}
                   value={formData.category_id}
                   onChange={(e) =>
                     handleFieldChange("category_id", e.target.value)
                   }
                   className="w-full h-10 px-3.5 rounded-xl bg-white border border-[#E2E8F0] text-[12.5px] font-medium text-[#30465B] focus:outline-none focus:border-[#527DA3] disabled:bg-[#F7F9FA] transition-colors"
                 >
-                  <option value="">Pilih kategori</option>
-                  {Array.isArray(categories)
+                  <option value="">
+                    {hasCategories ? "Pilih kategori" : "Tidak ada kategori"}
+                  </option>
+                  {hasCategories
                     ? categories.map((cat) => (
                         <option key={cat.id} value={String(cat.id)}>
                           {cat.name}
