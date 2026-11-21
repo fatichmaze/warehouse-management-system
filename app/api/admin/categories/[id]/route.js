@@ -1,5 +1,6 @@
+
 import { NextResponse } from "next/server";
-import { getSession } from "@/lib/auth";
+import { requireApiRole } from "@/lib/api-auth";
 import pool from "@/lib/db";
 
 const ALLOWED_ROLES = ["admin", "warehouse_manager"];
@@ -10,11 +11,13 @@ function parsePositiveIntId(rawId) {
   }
 
   const trimmed = String(rawId).trim();
+
   if (!/^\d+$/.test(trimmed)) {
     return null;
   }
 
   const parsed = Number.parseInt(trimmed, 10);
+
   if (!Number.isSafeInteger(parsed) || parsed <= 0) {
     return null;
   }
@@ -35,13 +38,16 @@ function parseOptionalTextField(value, fieldName) {
   if (value === undefined || value === null) {
     return { ok: true, value: null };
   }
+
   if (typeof value !== "string") {
     return {
       ok: false,
       error: `Field ${fieldName} harus berupa teks (string) atau null.`,
     };
   }
+
   const trimmed = value.trim();
+
   return {
     ok: true,
     value: trimmed === "" ? null : trimmed,
@@ -50,28 +56,20 @@ function parseOptionalTextField(value, fieldName) {
 
 export async function PATCH(request, context) {
   try {
-    const session = await getSession();
+    const auth = await requireApiRole(ALLOWED_ROLES, {
+      errorKey: "error",
+      messages: {
+        unauthenticated: "Sesi tidak ditemukan. Silakan login terlebih dahulu.",
+        forbidden:
+          "Akses ditolak. Hanya Admin dan Warehouse Manager yang diizinkan.",
+      },
+    });
 
-    if (!session) {
-      return NextResponse.json(
-        { error: "Sesi tidak ditemukan. Silakan login terlebih dahulu." },
-        { status: 401 }
-      );
-    }
-
-    const role = String(session.role ?? "").toLowerCase();
-    if (!ALLOWED_ROLES.includes(role)) {
-      return NextResponse.json(
-        {
-          error:
-            "Akses ditolak. Hanya Admin dan Warehouse Manager yang diizinkan.",
-        },
-        { status: 403 }
-      );
-    }
+    if (!auth.ok) return auth.response;
 
     const resolvedParams = await context.params;
     const categoryId = parsePositiveIntId(resolvedParams?.id);
+
     if (!categoryId) {
       return NextResponse.json(
         { error: "ID kategori tidak valid." },
@@ -80,6 +78,7 @@ export async function PATCH(request, context) {
     }
 
     let body;
+
     try {
       body = await request.json();
     } catch {
@@ -105,7 +104,11 @@ export async function PATCH(request, context) {
 
     const currentCategory = existingRes.rows[0];
 
-    const hasNameField = Object.prototype.hasOwnProperty.call(body ?? {}, "name");
+    const hasNameField = Object.prototype.hasOwnProperty.call(
+      body ?? {},
+      "name"
+    );
+
     const nextName = hasNameField
       ? typeof body?.name === "string"
         ? body.name.trim()
@@ -123,41 +126,64 @@ export async function PATCH(request, context) {
       body ?? {},
       "description"
     );
+
     let nextDescription = null;
+
     if (hasDescriptionField) {
       const descParsed = parseOptionalTextField(
         body?.description,
         "description"
       );
+
       if (!descParsed.ok) {
-        return NextResponse.json({ error: descParsed.error }, { status: 400 });
+        return NextResponse.json(
+          { error: descParsed.error },
+          { status: 400 }
+        );
       }
+
       nextDescription = descParsed.value;
     } else {
       const currentDescParsed = parseOptionalTextField(
         currentCategory.description,
         "description"
       );
-      nextDescription = currentDescParsed.ok ? currentDescParsed.value : null;
+
+      nextDescription = currentDescParsed.ok
+        ? currentDescParsed.value
+        : null;
     }
 
     const hasImageUrlField = Object.prototype.hasOwnProperty.call(
       body ?? {},
       "image_url"
     );
+
     let nextImageUrl = null;
+
     if (hasImageUrlField) {
-      const imgParsed = parseOptionalTextField(body?.image_url, "image_url");
+      const imgParsed = parseOptionalTextField(
+        body?.image_url,
+        "image_url"
+      );
+
       if (!imgParsed.ok) {
-        return NextResponse.json({ error: imgParsed.error }, { status: 400 });
+        return NextResponse.json(
+          { error: imgParsed.error },
+          { status: 400 }
+        );
       }
+
       nextImageUrl = imgParsed.value;
     } else {
       const currentImgParsed = parseOptionalTextField(
         currentCategory.image_url,
         "image_url"
       );
-      nextImageUrl = currentImgParsed.ok ? currentImgParsed.value : null;
+
+      nextImageUrl = currentImgParsed.ok
+        ? currentImgParsed.value
+        : null;
     }
 
     if (nextImageUrl !== null && !isValidHttpOrHttpsUrl(nextImageUrl)) {
@@ -232,6 +258,7 @@ export async function PATCH(request, context) {
     }
 
     console.error("PATCH /api/admin/categories/[id] error:", err);
+
     return NextResponse.json(
       { error: "Terjadi kesalahan pada server saat memperbarui kategori." },
       { status: 500 }
@@ -241,28 +268,20 @@ export async function PATCH(request, context) {
 
 export async function DELETE(_request, context) {
   try {
-    const session = await getSession();
+    const auth = await requireApiRole(ALLOWED_ROLES, {
+      errorKey: "error",
+      messages: {
+        unauthenticated: "Sesi tidak ditemukan. Silakan login terlebih dahulu.",
+        forbidden:
+          "Akses ditolak. Hanya Admin dan Warehouse Manager yang diizinkan.",
+      },
+    });
 
-    if (!session) {
-      return NextResponse.json(
-        { error: "Sesi tidak ditemukan. Silakan login terlebih dahulu." },
-        { status: 401 }
-      );
-    }
-
-    const role = String(session.role ?? "").toLowerCase();
-    if (!ALLOWED_ROLES.includes(role)) {
-      return NextResponse.json(
-        {
-          error:
-            "Akses ditolak. Hanya Admin dan Warehouse Manager yang diizinkan.",
-        },
-        { status: 403 }
-      );
-    }
+    if (!auth.ok) return auth.response;
 
     const resolvedParams = await context.params;
     const categoryId = parsePositiveIntId(resolvedParams?.id);
+
     if (!categoryId) {
       return NextResponse.json(
         { error: "ID kategori tidak valid." },
@@ -288,6 +307,7 @@ export async function DELETE(_request, context) {
       "SELECT COUNT(*)::int AS total FROM products WHERE category_id = $1",
       [categoryId]
     );
+
     const linkedProductsCount = linkedProductsRes.rows[0]?.total ?? 0;
 
     if (linkedProductsCount > 0) {
@@ -333,6 +353,7 @@ export async function DELETE(_request, context) {
     }
 
     console.error("DELETE /api/admin/categories/[id] error:", err);
+
     return NextResponse.json(
       { error: "Terjadi kesalahan pada server saat menghapus kategori." },
       { status: 500 }

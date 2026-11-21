@@ -1,5 +1,6 @@
+
 import { NextResponse } from "next/server";
-import { getSession } from "@/lib/auth";
+import { requireApiRole } from "@/lib/api-auth";
 import pool from "@/lib/db";
 
 const ALLOWED_ROLES = ["admin", "warehouse_manager"];
@@ -17,10 +18,12 @@ function parseFiniteNumber(value) {
   if (typeof value === "number") {
     return Number.isFinite(value) ? value : NaN;
   }
+
   if (typeof value === "string" && value.trim() !== "") {
     const parsed = Number(value.trim());
     return Number.isFinite(parsed) ? parsed : NaN;
   }
+
   return NaN;
 }
 
@@ -33,30 +36,26 @@ function normalizeOptionalText(value) {
   if (value === undefined || value === null) {
     return null;
   }
+
   const trimmed = String(value).trim();
   return trimmed === "" ? null : trimmed;
 }
 
 export async function POST(request) {
   try {
-    const session = await getSession();
+    const auth = await requireApiRole(ALLOWED_ROLES, {
+      errorKey: "error",
+      messages: {
+        unauthenticated: "Sesi tidak ditemukan. Silakan login terlebih dahulu.",
+        forbidden:
+          "Akses ditolak. Hanya Admin dan Warehouse Manager yang diizinkan.",
+      },
+    });
 
-    if (!session) {
-      return NextResponse.json(
-        { error: "Sesi tidak ditemukan. Silakan login terlebih dahulu." },
-        { status: 401 }
-      );
-    }
-
-    const role = String(session.role ?? "").toLowerCase();
-    if (!ALLOWED_ROLES.includes(role)) {
-      return NextResponse.json(
-        { error: "Akses ditolak. Hanya Admin dan Warehouse Manager yang diizinkan." },
-        { status: 403 }
-      );
-    }
+    if (!auth.ok) return auth.response;
 
     let body;
+
     try {
       body = await request.json();
     } catch {
@@ -66,22 +65,27 @@ export async function POST(request) {
       );
     }
 
-    const sku = typeof body?.sku === "string" ? body.sku.trim().toUpperCase() : "";
+    const sku =
+      typeof body?.sku === "string" ? body.sku.trim().toUpperCase() : "";
     const name = typeof body?.name === "string" ? body.name.trim() : "";
     const unit = typeof body?.unit === "string" ? body.unit.trim() : "";
     const rackLocation =
-      typeof body?.rack_location === "string" ? body.rack_location.trim() : "";
+      typeof body?.rack_location === "string"
+        ? body.rack_location.trim()
+        : "";
 
     if (!sku || !name || !unit || !rackLocation) {
       return NextResponse.json(
         {
-          error: "Field sku, name, unit, dan rack_location wajib diisi dan tidak boleh kosong.",
+          error:
+            "Field sku, name, unit, dan rack_location wajib diisi dan tidak boleh kosong.",
         },
         { status: 400 }
       );
     }
 
     const categoryId = parseInteger(body?.category_id);
+
     if (Number.isNaN(categoryId) || categoryId <= 0) {
       return NextResponse.json(
         { error: "category_id tidak valid." },
@@ -93,6 +97,7 @@ export async function POST(request) {
     const sellingPrice = parseFiniteNumber(body?.selling_price);
     const minStock = parseInteger(body?.min_stock);
     const lowStock = parseInteger(body?.low_stock);
+
     const currentStock =
       body?.current_stock === undefined ||
       body?.current_stock === null ||
@@ -281,6 +286,7 @@ export async function POST(request) {
     }
 
     console.error("POST /api/admin/products error:", err);
+
     return NextResponse.json(
       { error: "Terjadi kesalahan pada server saat menyimpan produk." },
       { status: 500 }

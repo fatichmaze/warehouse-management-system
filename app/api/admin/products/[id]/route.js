@@ -1,18 +1,23 @@
+
 import { NextResponse } from "next/server";
 import pool from "@/lib/db";
-import { getSession } from "@/lib/auth";
+import { requireApiRole } from "@/lib/api-auth";
 
-const ALLOWED_ROLES = new Set(["admin", "warehouse_manager"]);
+const ALLOWED_ROLES = ["admin", "warehouse_manager"];
 
 function parsePositiveIntId(rawId) {
   const str = String(rawId ?? "").trim();
+
   if (!/^\d+$/.test(str)) {
     return null;
   }
+
   const parsed = Number.parseInt(str, 10);
+
   if (!Number.isSafeInteger(parsed) || parsed <= 0) {
     return null;
   }
+
   return parsed;
 }
 
@@ -26,27 +31,20 @@ function isValidHttpOrHttpsUrl(value) {
 }
 
 export async function PATCH(request, context) {
-  const session = await getSession();
-  if (!session) {
-    return NextResponse.json(
-      { error: "Unauthorized. Silakan login terlebih dahulu." },
-      { status: 401 }
-    );
-  }
+  const auth = await requireApiRole(ALLOWED_ROLES, {
+    errorKey: "error",
+    messages: {
+      unauthenticated: "Unauthorized. Silakan login terlebih dahulu.",
+      forbidden:
+        "Forbidden. Hanya admin dan warehouse_manager yang dapat memperbarui produk.",
+    },
+  });
 
-  const role = String(session.role ?? "").toLowerCase();
-  if (!ALLOWED_ROLES.has(role)) {
-    return NextResponse.json(
-      {
-        error:
-          "Forbidden. Hanya admin dan warehouse_manager yang dapat memperbarui produk.",
-      },
-      { status: 403 }
-    );
-  }
+  if (!auth.ok) return auth.response;
 
   const resolvedParams = await context.params;
   const productId = parsePositiveIntId(resolvedParams?.id);
+
   if (!productId) {
     return NextResponse.json(
       { error: "ID produk tidak valid." },
@@ -55,6 +53,7 @@ export async function PATCH(request, context) {
   }
 
   let body;
+
   try {
     body = await request.json();
   } catch {
@@ -94,6 +93,7 @@ export async function PATCH(request, context) {
 
   const incomingKeys = Object.keys(body);
   const unknownKeys = incomingKeys.filter((key) => !allowedKeys.has(key));
+
   if (unknownKeys.length > 0) {
     return NextResponse.json(
       { error: `Field tidak dikenali: ${unknownKeys.join(", ")}.` },
@@ -155,14 +155,17 @@ export async function PATCH(request, context) {
     }
 
     let nextCategoryId;
+
     if (Object.prototype.hasOwnProperty.call(body, "category_id")) {
       const catNum = Number(body.category_id);
+
       if (!Number.isInteger(catNum) || catNum <= 0) {
         return NextResponse.json(
           { error: "Category tidak valid." },
           { status: 400 }
         );
       }
+
       nextCategoryId = catNum;
     } else {
       nextCategoryId = Number(current.category_id);
@@ -172,6 +175,7 @@ export async function PATCH(request, context) {
       "SELECT id FROM categories WHERE id = $1",
       [nextCategoryId]
     );
+
     if (categoryResult.rowCount === 0) {
       return NextResponse.json(
         { error: "Kategori yang dipilih tidak ditemukan." },
@@ -180,6 +184,7 @@ export async function PATCH(request, context) {
     }
 
     let nextDescription;
+
     if (Object.prototype.hasOwnProperty.call(body, "description")) {
       if (body.description === null) {
         nextDescription = null;
@@ -197,8 +202,10 @@ export async function PATCH(request, context) {
     }
 
     let nextPurchasePrice;
+
     if (Object.prototype.hasOwnProperty.call(body, "purchase_price")) {
       const val = Number(body.purchase_price);
+
       if (
         body.purchase_price === "" ||
         body.purchase_price === null ||
@@ -211,14 +218,17 @@ export async function PATCH(request, context) {
           { status: 400 }
         );
       }
+
       nextPurchasePrice = val;
     } else {
       nextPurchasePrice = Number(current.purchase_price);
     }
 
     let nextSellingPrice;
+
     if (Object.prototype.hasOwnProperty.call(body, "selling_price")) {
       const val = Number(body.selling_price);
+
       if (
         body.selling_price === "" ||
         body.selling_price === null ||
@@ -231,14 +241,17 @@ export async function PATCH(request, context) {
           { status: 400 }
         );
       }
+
       nextSellingPrice = val;
     } else {
       nextSellingPrice = Number(current.selling_price);
     }
 
     let nextMinStock;
+
     if (Object.prototype.hasOwnProperty.call(body, "min_stock")) {
       const val = Number(body.min_stock);
+
       if (
         body.min_stock === "" ||
         body.min_stock === null ||
@@ -251,14 +264,17 @@ export async function PATCH(request, context) {
           { status: 400 }
         );
       }
+
       nextMinStock = val;
     } else {
       nextMinStock = Number(current.min_stock);
     }
 
     let nextLowStock;
+
     if (Object.prototype.hasOwnProperty.call(body, "low_stock")) {
       const val = Number(body.low_stock);
+
       if (
         body.low_stock === "" ||
         body.low_stock === null ||
@@ -272,6 +288,7 @@ export async function PATCH(request, context) {
           { status: 400 }
         );
       }
+
       nextLowStock = val;
     } else {
       nextLowStock = Number(current.low_stock);
@@ -287,8 +304,10 @@ export async function PATCH(request, context) {
     }
 
     let nextCurrentStock;
+
     if (Object.prototype.hasOwnProperty.call(body, "current_stock")) {
       const val = Number(body.current_stock);
+
       if (
         body.current_stock === "" ||
         body.current_stock === null ||
@@ -301,6 +320,7 @@ export async function PATCH(request, context) {
           { status: 400 }
         );
       }
+
       nextCurrentStock = val;
     } else {
       nextCurrentStock = Number(current.current_stock);
@@ -336,11 +356,13 @@ export async function PATCH(request, context) {
     }
 
     let nextImageUrl;
+
     if (Object.prototype.hasOwnProperty.call(body, "image_url")) {
       if (body.image_url === null) {
         nextImageUrl = null;
       } else if (typeof body.image_url === "string") {
         const trimmed = body.image_url.trim();
+
         if (trimmed === "") {
           nextImageUrl = null;
         } else if (!isValidHttpOrHttpsUrl(trimmed)) {
@@ -435,6 +457,7 @@ export async function PATCH(request, context) {
     }
 
     console.error("PATCH /api/admin/products/[id] error:", err);
+
     return NextResponse.json(
       { error: "Terjadi kesalahan pada server saat memperbarui produk." },
       { status: 500 }
@@ -445,27 +468,20 @@ export async function PATCH(request, context) {
 }
 
 export async function DELETE(_request, context) {
-  const session = await getSession();
-  if (!session) {
-    return NextResponse.json(
-      { error: "Unauthorized. Silakan login terlebih dahulu." },
-      { status: 401 }
-    );
-  }
+  const auth = await requireApiRole(ALLOWED_ROLES, {
+    errorKey: "error",
+    messages: {
+      unauthenticated: "Unauthorized. Silakan login terlebih dahulu.",
+      forbidden:
+        "Forbidden. Hanya admin dan warehouse_manager yang dapat menghapus produk.",
+    },
+  });
 
-  const role = String(session.role ?? "").toLowerCase();
-  if (!ALLOWED_ROLES.has(role)) {
-    return NextResponse.json(
-      {
-        error:
-          "Forbidden. Hanya admin dan warehouse_manager yang dapat menghapus produk.",
-      },
-      { status: 403 }
-    );
-  }
+  if (!auth.ok) return auth.response;
 
   const resolvedParams = await context.params;
   const productId = parsePositiveIntId(resolvedParams?.id);
+
   if (!productId) {
     return NextResponse.json(
       { error: "ID produk tidak valid." },
@@ -488,6 +504,7 @@ export async function DELETE(_request, context) {
     if (existingResult.rowCount === 0) {
       await client.query("ROLLBACK");
       inTransaction = false;
+
       return NextResponse.json(
         { error: "Produk tidak ditemukan." },
         { status: 404 }
@@ -506,12 +523,14 @@ export async function DELETE(_request, context) {
     );
 
     const historyRow = historyCheckResult.rows[0] ?? {};
+
     if (
       Boolean(historyRow.has_transaction_history) ||
       Boolean(historyRow.has_restock_history)
     ) {
       await client.query("ROLLBACK");
       inTransaction = false;
+
       return NextResponse.json(
         {
           error:
@@ -529,6 +548,7 @@ export async function DELETE(_request, context) {
     if (deleteResult.rowCount === 0) {
       await client.query("ROLLBACK");
       inTransaction = false;
+
       return NextResponse.json(
         { error: "Produk tidak ditemukan." },
         { status: 404 }
@@ -550,7 +570,7 @@ export async function DELETE(_request, context) {
       try {
         await client.query("ROLLBACK");
       } catch {
-        // Abaikan error rollback lanjutan agar error asli tetap terkirim
+        // Abaikan error rollback lanjutan agar error asli tetap terkirim.
       }
     }
 
@@ -572,6 +592,7 @@ export async function DELETE(_request, context) {
     }
 
     console.error("DELETE /api/admin/products/[id] error:", err);
+
     return NextResponse.json(
       { error: "Terjadi kesalahan pada server saat menghapus produk." },
       { status: 500 }
