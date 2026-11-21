@@ -1,15 +1,15 @@
+
 "use client";
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutGrid,
   Package,
   Tags,
-  ArrowLeftRight,
-  ClipboardList,
-  Users,
+  UserCheck,
   ShieldCheck,
   LogOut,
 } from "lucide-react";
@@ -18,15 +18,19 @@ const NAV_ITEMS = [
   { label: "Dashboard", href: "/admin/dashboard", icon: LayoutGrid },
   { label: "Products", href: "/admin/products", icon: Package },
   { label: "Categories", href: "/admin/categories", icon: Tags },
-  { label: "Transactions", href: "/admin/transactions", icon: ArrowLeftRight },
-  { label: "Restock Orders", href: "/admin/restock-orders", icon: ClipboardList },
-  { label: "Users", href: "/admin/users", icon: Users, showPendingBadge: true },
+  {
+    label: "Supplier Verification",
+    href: "/admin/dashboard#supplier-approval",
+    icon: UserCheck,
+    showPendingBadge: true,
+  },
 ];
 
 export default function AdminSidebar({ pendingCount = 0 }) {
   const pathname = usePathname();
   const router = useRouter();
   const [loggingOut, setLoggingOut] = useState(false);
+
   const safePendingCount = Number.isFinite(Number(pendingCount))
     ? Math.max(0, Number(pendingCount))
     : 0;
@@ -45,14 +49,16 @@ export default function AdminSidebar({ pendingCount = 0 }) {
   }
 
   return (
-    <aside className="w-full md:w-[228px] shrink-0 bg-white rounded-[28px] border border-white/90 shadow-[0_14px_36px_rgba(48,70,91,0.08)] flex flex-col justify-between px-3.5 py-6 md:sticky md:top-5 md:h-[calc(100vh-2.5rem)]">
+    <aside className="w-full md:w-57 shrink-0 bg-white rounded-[28px] border border-white/90 shadow-[0_14px_36px_rgba(48,70,91,0.08)] flex flex-col justify-between px-3.5 py-6 md:sticky md:top-5 md:h-[calc(100vh-2.5rem)]">
       <div>
         <div className="px-2 mb-7">
           <Link href="/admin/dashboard" className="inline-flex items-center">
-            <img
+            <Image
               src="/logo.png"
+              width={188}
+              height={44}
               alt="TATALOKA - Kelola Gudang, Lebih Tertata."
-              className="h-11 w-auto max-w-[188px] object-contain"
+              className="h-11 w-auto max-w-47 object-contain"
             />
           </Link>
         </div>
@@ -61,7 +67,8 @@ export default function AdminSidebar({ pendingCount = 0 }) {
           {NAV_ITEMS.map((item) => {
             const Icon = item.icon;
             const isActive =
-              pathname === item.href || pathname?.startsWith(`${item.href}/`);
+              pathname === item.href ||
+              pathname?.startsWith(`${item.href}/`);
 
             return (
               <Link

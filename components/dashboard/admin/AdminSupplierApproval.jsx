@@ -1,6 +1,7 @@
+
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { Check, X } from "lucide-react";
 
@@ -26,10 +27,6 @@ export default function AdminSupplierApproval({
   const [processingId, setProcessingId] = useState(null);
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-
-  useEffect(() => {
-    setSuppliers(initialSuppliers);
-  }, [initialSuppliers]);
 
   async function handleDecision(supplierId, action) {
     if (processingId) return;
@@ -93,7 +90,7 @@ export default function AdminSupplierApproval({
         </div>
 
         <Link
-          href="/admin/users"
+          href="/admin/dashboard#supplier-approval"
           className="text-[11.5px] font-medium text-[#527DA3] hover:underline shrink-0"
         >
           Lihat semua
