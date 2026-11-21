@@ -56,7 +56,10 @@ export default function CategoryTable({
   currentPage = 1,
   pageSize = 6,
   onPageChange,
+  onEditCategory,
+  onDeleteCategory,
 }) {
+  const safeCategories = Array.isArray(categories) ? categories : [];
   const safeTotalFiltered = Math.max(0, Number(totalFilteredCount ?? 0));
   const safePageSize = Math.max(1, Number(pageSize ?? 6));
   const totalPages = Math.max(1, Math.ceil(safeTotalFiltered / safePageSize));
@@ -78,30 +81,34 @@ export default function CategoryTable({
 
   return (
     <div className="rounded-2xl bg-white border border-[#E8EEF4] shadow-[0_2px_10px_rgba(48,70,91,0.04)] overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-200 border-collapse text-left">
+      <div className="overflow-x-auto">195
+        <table className="w-full min-w-[780px] border-collapse text-left">
           <thead>
             <tr className="bg-[#F7F9FA] border-b border-[#E8EEF4] text-[10.5px] font-semibold uppercase tracking-wider text-[#8998A5]">
-              <th className="py-3.5 pl-5 pr-3 whitespace-nowrap">
-                Category Name
+              <th className="py-3.5 pl-5 pr-4 whitespace-nowrap w-[22%]">
+                CATEGORY NAME
               </th>
-              <th className="py-3.5 px-3 whitespace-nowrap">Description</th>
-              <th className="py-3.5 px-3 whitespace-nowrap text-right">
-                Total Products
+              <th className="py-3.5 px-4 whitespace-nowrap w-[36%]">
+                DESCRIPTION
               </th>
-              <th className="py-3.5 px-3 whitespace-nowrap">Created Date</th>
-              <th className="py-3.5 pl-3 pr-5 whitespace-nowrap text-right">
-                Actions
+              <th className="py-3.5 px-4 whitespace-nowrap text-center w-[15%]">
+                TOTAL PRODUCTS
+              </th>
+              <th className="py-3.5 px-4 whitespace-nowrap w-[15%]">
+                CREATED DATE
+              </th>
+              <th className="py-3.5 pl-4 pr-5 whitespace-nowrap text-right w-[12%]">
+                ACTIONS
               </th>
             </tr>
           </thead>
 
           <tbody className="divide-y divide-[#EEF2F6] text-[12.5px] text-[#30465B]">
-            {categories.length === 0 ? (
+            {safeCategories.length === 0 ? (
               <tr>
                 <td colSpan={5} className="py-14 px-6 text-center">
                   {!hasAnyCategories ? (
-                    <div className="max-w-90 mx-auto flex flex-col items-center">
+                    <div className="max-w-sm mx-auto flex flex-col items-center">
                       <span className="w-10 h-10 rounded-2xl bg-[#F7F9FA] border border-[#E8EEF4] text-[#8998A5] flex items-center justify-center mb-3">
                         <FolderOpen className="w-5 h-5" strokeWidth={1.8} />
                       </span>
@@ -113,7 +120,7 @@ export default function CategoryTable({
                       </p>
                     </div>
                   ) : (
-                    <div className="max-w-90 mx-auto flex flex-col items-center">
+                    <div className="max-w-sm mx-auto flex flex-col items-center">
                       <span className="w-10 h-10 rounded-2xl bg-[#F7F9FA] border border-[#E8EEF4] text-[#8998A5] flex items-center justify-center mb-3">
                         <FolderSearch className="w-5 h-5" strokeWidth={1.8} />
                       </span>
@@ -130,7 +137,7 @@ export default function CategoryTable({
                 </td>
               </tr>
             ) : (
-              categories.map((category, index) => {
+              safeCategories.map((category, index) => {
                 const productCount = Number(category?.product_count ?? 0);
                 const safeProductCount = Number.isFinite(productCount)
                   ? productCount
@@ -139,30 +146,34 @@ export default function CategoryTable({
                 return (
                   <tr
                     key={category?.id ?? `category-${index}`}
-                    className="hover:bg-[#FAFBFD] transition-colors"
+                    className="hover:bg-[#FAFBFD] transition-colors align-middle"
                   >
-                    <td className="py-3.5 pl-5 pr-3 font-semibold text-[#30465B] whitespace-nowrap">
+                    <td className="py-3.5 pl-5 pr-4 font-semibold text-[#30465B] whitespace-nowrap">
                       {category?.name || "-"}
                     </td>
 
-                    <td className="py-3.5 px-3 text-[#637587] max-w-80">
-                      <div className="truncate">
+                    <td className="py-3.5 px-4 text-[#637587] max-w-md">
+                      <div
+                        className="truncate"
+                        title={category?.description || undefined}
+                      >
                         {category?.description ? category.description : "-"}
                       </div>
                     </td>
 
-                    <td className="py-3.5 px-3 font-semibold text-[#30465B] text-right whitespace-nowrap tabular-nums">
+                    <td className="py-3.5 px-4 font-semibold text-[#30465B] text-center whitespace-nowrap tabular-nums">
                       {safeProductCount.toLocaleString("id-ID")} produk
                     </td>
 
-                    <td className="py-3.5 px-3 text-[#637587] whitespace-nowrap">
+                    <td className="py-3.5 px-4 text-[#637587] whitespace-nowrap">
                       {formatDateDisplay(category?.created_at)}
                     </td>
 
-                    <td className="py-3.5 pl-3 pr-5 whitespace-nowrap text-right">
+                    <td className="py-3.5 pl-4 pr-5 whitespace-nowrap text-right">
                       <div className="inline-flex items-center justify-end gap-1.5">
                         <button
                           type="button"
+                          onClick={() => onEditCategory?.(category)}
                           title={`Edit ${category?.name || "kategori"}`}
                           aria-label={`Edit ${category?.name || "kategori"}`}
                           className="w-7 h-7 rounded-lg bg-[#F7F9FA] hover:bg-[#EDF2F7] border border-[#E8EEF4] text-[#637587] hover:text-[#30465B] inline-flex items-center justify-center transition-colors cursor-pointer"
@@ -171,6 +182,7 @@ export default function CategoryTable({
                         </button>
                         <button
                           type="button"
+                          onClick={() => onDeleteCategory?.(category)}
                           title={`Delete ${category?.name || "kategori"}`}
                           aria-label={`Delete ${category?.name || "kategori"}`}
                           className="w-7 h-7 rounded-lg bg-[#F7F9FA] hover:bg-[#FDECEC] border border-[#E8EEF4] hover:border-[#F5C2C2] text-[#637587] hover:text-[#C53030] inline-flex items-center justify-center transition-colors cursor-pointer"
