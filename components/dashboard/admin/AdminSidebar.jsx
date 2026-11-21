@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -10,25 +9,29 @@ import {
   Package,
   Tags,
   UserCheck,
+  ArrowLeftRight,
   ShieldCheck,
   LogOut,
 } from "lucide-react";
+import { getRoleConfig } from "@/lib/roles";
 
-const NAV_ITEMS = [
-  { label: "Dashboard", href: "/admin/dashboard", icon: LayoutGrid },
-  { label: "Products", href: "/admin/products", icon: Package },
-  { label: "Categories", href: "/admin/categories", icon: Tags },
-  {
-    label: "Supplier Verification",
-    href: "/admin/dashboard#supplier-approval",
-    icon: UserCheck,
-    showPendingBadge: true,
-  },
-];
+// Menyambungkan kunci ikon di lib/roles.js dengan ikon lucide-react.
+const NAV_ICONS = {
+  dashboard: LayoutGrid,
+  products: Package,
+  categories: Tags,
+  suppliers: UserCheck,
+  transactions: ArrowLeftRight,
+};
 
-export default function AdminSidebar({ pendingCount = 0 }) {
+// `role` boleh tidak diisi: tanpa role, sidebar tampil sebagai Admin
+// (sama seperti sebelumnya).
+export default function AdminSidebar({ pendingCount = 0, role }) {
   const pathname = usePathname();
   const router = useRouter();
+  const roleConfig = getRoleConfig(role);
+  const navItems = roleConfig.navItems;
+
   const [loggingOut, setLoggingOut] = useState(false);
 
   const safePendingCount = Number.isFinite(Number(pendingCount))
@@ -37,9 +40,18 @@ export default function AdminSidebar({ pendingCount = 0 }) {
 
   async function handleLogout() {
     if (loggingOut) return;
+
     setLoggingOut(true);
+
     try {
-      await fetch("/api/auth/logout", { method: "POST" });
+      const res = await fetch("/api/auth/logout", {
+        method: "POST",
+      });
+
+      if (!res.ok) {
+        throw new Error("Gagal logout.");
+      }
+
       router.push("/login");
       router.refresh();
     } catch (error) {
@@ -52,7 +64,10 @@ export default function AdminSidebar({ pendingCount = 0 }) {
     <aside className="w-full md:w-57 shrink-0 bg-white rounded-[28px] border border-white/90 shadow-[0_14px_36px_rgba(48,70,91,0.08)] flex flex-col justify-between px-3.5 py-6 md:sticky md:top-5 md:h-[calc(100vh-2.5rem)]">
       <div>
         <div className="px-2 mb-7">
-          <Link href="/admin/dashboard" className="inline-flex items-center">
+          <Link
+            href={roleConfig.dashboardHref}
+            className="inline-flex items-center"
+          >
             <Image
               src="/logo.png"
               width={188}
@@ -63,9 +78,9 @@ export default function AdminSidebar({ pendingCount = 0 }) {
           </Link>
         </div>
 
-        <nav aria-label="Navigasi Admin" className="space-y-1.5">
-          {NAV_ITEMS.map((item) => {
-            const Icon = item.icon;
+        <nav aria-label={roleConfig.navLabel} className="space-y-1.5">
+          {navItems.map((item) => {
+            const Icon = NAV_ICONS[item.icon] ?? LayoutGrid;
             const isActive =
               pathname === item.href ||
               pathname?.startsWith(`${item.href}/`);
@@ -106,12 +121,15 @@ export default function AdminSidebar({ pendingCount = 0 }) {
           <div className="w-9 h-9 rounded-full bg-white/15 text-white flex items-center justify-center mx-auto mb-2.5">
             <ShieldCheck className="w-4 h-4" strokeWidth={1.9} />
           </div>
+
           <p className="text-[12px] font-bold text-white text-center">
-            Sesi Admin Aktif
+            {roleConfig.sessionTitle}
           </p>
+
           <p className="text-[11px] text-[#CBD7E2] text-center mt-1 leading-snug">
-            Anda masuk sebagai administrator sistem.
+            {roleConfig.sessionText}
           </p>
+
           <button
             type="button"
             onClick={handleLogout}
@@ -119,7 +137,10 @@ export default function AdminSidebar({ pendingCount = 0 }) {
             className="mt-3.5 w-full py-2 px-3 rounded-xl bg-white hover:bg-[#F7F9FA] disabled:opacity-60 text-[#30465B] text-[12px] font-semibold flex items-center justify-center gap-2 transition-colors cursor-pointer"
           >
             <span>{loggingOut ? "Keluar..." : "Logout"}</span>
-            <LogOut className="w-3.5 h-3.5 text-[#30465B]" strokeWidth={1.8} />
+            <LogOut
+              className="w-3.5 h-3.5 text-[#30465B]"
+              strokeWidth={1.8}
+            />
           </button>
         </div>
       </div>
