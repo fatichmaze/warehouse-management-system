@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -22,6 +21,7 @@ function formatRegisteredDate(dateValue) {
 export default function AdminSupplierApproval({
   initialSuppliers = [],
   onStatusUpdated,
+  showViewAllLink = true,
 }) {
   const [suppliers, setSuppliers] = useState(initialSuppliers);
   const [processingId, setProcessingId] = useState(null);
@@ -89,12 +89,14 @@ export default function AdminSupplierApproval({
           </span>
         </div>
 
-        <Link
-          href="/admin/dashboard#supplier-approval"
-          className="text-[11.5px] font-medium text-[#527DA3] hover:underline shrink-0"
-        >
-          Lihat semua
-        </Link>
+        {showViewAllLink && (
+          <Link
+            href="/admin/dashboard#supplier-approval"
+            className="text-[11.5px] font-medium text-[#527DA3] hover:underline shrink-0"
+          >
+            Lihat semua
+          </Link>
+        )}
       </div>
 
       {feedbackMessage && (

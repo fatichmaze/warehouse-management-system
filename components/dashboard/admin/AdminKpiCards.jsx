@@ -27,7 +27,7 @@ export default function AdminKpiCards({
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3.5">
       {/* KPI 1: Total Products */}
-      <div className="rounded-[20px] bg-white border border-[#E8EEF4] p-4 shadow-[0_6px_18px_rgba(48,70,91,0.04)] flex flex-col justify-between min-h-[126px]">
+      <div className="rounded-[20px] bg-white border border-[#E8EEF4] p-4 shadow-[0_6px_18px_rgba(48,70,91,0.04)] flex flex-col justify-between min-h-31.5">
         <div className="flex items-center justify-between gap-2">
           <div className="w-8 h-8 rounded-xl bg-[#DCEAF3]/75 text-[#527DA3] flex items-center justify-center shrink-0">
             <Package className="w-4 h-4" strokeWidth={1.8} />
@@ -48,7 +48,7 @@ export default function AdminKpiCards({
       </div>
 
       {/* KPI 2: Transactions This Month */}
-      <div className="rounded-[20px] bg-white border border-[#E8EEF4] p-4 shadow-[0_6px_18px_rgba(48,70,91,0.04)] flex flex-col justify-between min-h-[126px]">
+      <div className="rounded-[20px] bg-white border border-[#E8EEF4] p-4 shadow-[0_6px_18px_rgba(48,70,91,0.04)] flex flex-col justify-between min-h-31.5">
         <div className="flex items-center justify-between gap-2">
           <div className="w-8 h-8 rounded-xl bg-[#DCEAF3]/75 text-[#527DA3] flex items-center justify-center shrink-0">
             <ArrowLeftRight className="w-4 h-4" strokeWidth={1.8} />
@@ -69,7 +69,7 @@ export default function AdminKpiCards({
       </div>
 
       {/* KPI 3: Inventory Value */}
-      <div className="rounded-[20px] bg-[#F7F0E4] border border-[#E8DCC8] p-4 shadow-[0_6px_18px_rgba(48,70,91,0.04)] flex flex-col justify-between min-h-[126px]">
+      <div className="rounded-[20px] bg-[#F7F0E4] border border-[#E8DCC8] p-4 shadow-[0_6px_18px_rgba(48,70,91,0.04)] flex flex-col justify-between min-h-31.5">
         <div className="flex items-center justify-between gap-2">
           <div className="w-8 h-8 rounded-xl bg-[#E8DCC8] text-[#30465B] flex items-center justify-center shrink-0">
             <Wallet className="w-4 h-4" strokeWidth={1.8} />
@@ -92,8 +92,8 @@ export default function AdminKpiCards({
 
       {/* KPI 4: Pending Supplier Approvals */}
       <Link
-        href="#supplier-approval"
-        className="rounded-[20px] bg-[#2D4356] border border-[#2D4356] p-4 shadow-[0_8px_20px_rgba(45,67,86,0.16)] flex flex-col justify-between min-h-[126px] transition-opacity hover:opacity-95"
+        href="/admin/suppliers"
+        className="rounded-[20px] bg-[#2D4356] border border-[#2D4356] p-4 shadow-[0_8px_20px_rgba(45,67,86,0.16)] flex flex-col justify-between min-h-31.5 transition-opacity hover:opacity-95"
       >
         <div className="flex items-center justify-between gap-2">
           <div className="w-8 h-8 rounded-xl bg-[#E8DCC8] text-[#30465B] flex items-center justify-center shrink-0">
