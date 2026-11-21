@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import { Plus, Search, FolderOpen, Layers, FolderX } from "lucide-react";
 import AdminSidebar from "@/components/dashboard/admin/AdminSidebar";
 import AdminTopbar from "@/components/dashboard/admin/AdminTopbar";
+import CategoryTable from "@/components/dashboard/admin/categories/CategoryTable";
 
 const PAGE_SIZE = 6;
 
@@ -65,13 +66,6 @@ export default function AdminCategoriesClient({
     const startIdx = (safeCurrentPage - 1) * PAGE_SIZE;
     return filteredCategories.slice(startIdx, startIdx + PAGE_SIZE);
   }, [filteredCategories, safeCurrentPage]);
-
-  const startIndex =
-    totalFilteredCount === 0 ? 0 : (safeCurrentPage - 1) * PAGE_SIZE + 1;
-  const endIndex =
-    totalFilteredCount === 0
-      ? 0
-      : Math.min(safeCurrentPage * PAGE_SIZE, totalFilteredCount);
 
   const normalizedRole = String(userRole ?? "").toLowerCase();
 
@@ -199,41 +193,18 @@ export default function AdminCategoriesClient({
               </div>
             </div>
 
-            <div className="rounded-2xl bg-white border border-[#E8EEF4] shadow-[0_2px_10px_rgba(48,70,91,0.04)] p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-              <p className="text-[12px] text-[#8998A5]">
-                {totalFilteredCount === 0
-                  ? "Menampilkan 0 dari 0 kategori"
-                  : `Menampilkan ${startIndex}–${endIndex} dari ${totalFilteredCount} kategori (halaman ${safeCurrentPage} dari ${totalPages}, ${paginatedCategories.length} item pada halaman ini)`}
-              </p>
-
-              <div className="inline-flex items-center gap-1.5 self-start sm:self-auto">
-                <button
-                  type="button"
-                  disabled={safeCurrentPage <= 1 || totalFilteredCount === 0}
-                  onClick={() =>
-                    setCurrentPage((prev) => Math.max(1, prev - 1))
-                  }
-                  className="px-3 h-8 rounded-lg border border-[#E2E8F0] bg-white text-[12px] font-semibold text-[#30465B] hover:bg-[#F7F9FA] disabled:opacity-40 disabled:pointer-events-none transition-colors cursor-pointer"
-                >
-                  Prev
-                </button>
-                <span className="px-2.5 h-8 rounded-lg bg-[#2D4356] text-white text-[12px] font-semibold inline-flex items-center justify-center">
-                  {safeCurrentPage}
-                </span>
-                <button
-                  type="button"
-                  disabled={
-                    safeCurrentPage >= totalPages || totalFilteredCount === 0
-                  }
-                  onClick={() =>
-                    setCurrentPage((prev) => Math.min(totalPages, prev + 1))
-                  }
-                  className="px-3 h-8 rounded-lg border border-[#E2E8F0] bg-white text-[12px] font-semibold text-[#30465B] hover:bg-[#F7F9FA] disabled:opacity-40 disabled:pointer-events-none transition-colors cursor-pointer"
-                >
-                  Next
-                </button>
-              </div>
-            </div>
+            <CategoryTable
+              categories={paginatedCategories}
+              hasAnyCategories={
+                Array.isArray(initialCategories) && initialCategories.length > 0
+              }
+              searchQuery={searchQuery}
+              filterMode={filterMode}
+              totalFilteredCount={totalFilteredCount}
+              currentPage={safeCurrentPage}
+              pageSize={PAGE_SIZE}
+              onPageChange={setCurrentPage}
+            />
           </main>
         </div>
       </div>
