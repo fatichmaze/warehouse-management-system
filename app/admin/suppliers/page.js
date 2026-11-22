@@ -30,6 +30,7 @@ export default async function AdminSuppliersPage() {
   return (
     <AdminSuppliersClient
       adminName={session.name || "Admin Tataloka"}
+      userRole={session.role}
       initialPendingSuppliers={initialPendingSuppliers}
     />
   );

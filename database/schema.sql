@@ -58,6 +58,10 @@ CREATE TABLE IF NOT EXISTS restock_orders (
         CHECK (status IN ('Pending', 'Confirmed', 'Rejected', 'In Transit', 'Received')),
     status_notes TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    confirmed_at TIMESTAMP,
+    rejected_at TIMESTAMP,
+    in_transit_at TIMESTAMP,
+    received_at TIMESTAMP,
 
     CONSTRAINT restock_orders_check
         CHECK (
@@ -150,3 +154,19 @@ CREATE TABLE IF NOT EXISTS transaction_items (
     FOREIGN KEY (product_id)
         REFERENCES products(id) ON DELETE RESTRICT
 );
+
+-- Index (sinkron dengan database/migrations/001_restock_order_lifecycle.sql)
+
+-- Satu PO maksimal satu Incoming Transaction yang statusnya bukan 'Rejected'.
+-- (Tanpa kondisi type: transactions_restock_check sudah menjamin hanya
+-- transaksi incoming yang boleh punya restock_order_id.)
+CREATE UNIQUE INDEX IF NOT EXISTS ux_transactions_one_active_incoming_per_po
+    ON transactions (restock_order_id)
+    WHERE restock_order_id IS NOT NULL
+      AND status <> 'Rejected';
+
+CREATE INDEX IF NOT EXISTS idx_restock_orders_supplier_status
+    ON restock_orders (supplier_id, status);
+
+CREATE INDEX IF NOT EXISTS idx_restock_orders_status
+    ON restock_orders (status);

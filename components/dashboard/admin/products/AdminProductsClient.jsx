@@ -56,6 +56,7 @@ function getValidPositiveProductId(product) {
 
 export default function AdminProductsClient({
   userName = "Admin Tataloka",
+  userRole = "",
   initialProducts = [],
   initialCategories = [],
   initialSummary,
@@ -372,10 +373,14 @@ export default function AdminProductsClient({
       style={{ fontFamily: "var(--font-inter), sans-serif" }}
     >
       <div className="max-w-350 mx-auto flex flex-col md:flex-row items-start gap-4 min-h-[calc(100vh-2.5rem)]">
-        <AdminSidebar pendingCount={0} />
+        <AdminSidebar pendingCount={0} role={userRole} />
 
         <div className="flex-1 min-w-0 rounded-[28px] bg-white/95 border border-white/90 shadow-[0_14px_36px_rgba(48,70,91,0.08)] flex flex-col">
-          <AdminTopbar adminName={userName} currentSection="Products" />
+          <AdminTopbar
+            adminName={userName}
+            role={userRole}
+            currentSection="Products"
+          />
 
           <main className="flex-1 px-7 pt-3 pb-7 space-y-5">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">

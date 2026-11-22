@@ -10,6 +10,7 @@ import {
   Tags,
   UserCheck,
   ArrowLeftRight,
+  ClipboardList,
   ShieldCheck,
   LogOut,
 } from "lucide-react";
@@ -22,6 +23,7 @@ const NAV_ICONS = {
   categories: Tags,
   suppliers: UserCheck,
   transactions: ArrowLeftRight,
+  restock: ClipboardList,
 };
 
 // `role` boleh tidak diisi: tanpa role, sidebar tampil sebagai Admin

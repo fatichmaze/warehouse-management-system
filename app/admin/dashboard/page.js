@@ -177,6 +177,7 @@ export default async function AdminDashboardPage() {
   return (
     <AdminDashboardClient
       adminName={session.name || "Admin Tataloka"}
+      userRole={session.role}
       initialKpi={data.kpi}
       initialPendingSuppliers={data.pendingSuppliers}
       initialInventoryOverview={data.inventoryOverview}

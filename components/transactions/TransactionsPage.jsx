@@ -2,7 +2,10 @@ import pool from "@/lib/db";
 import { requirePageRole } from "@/lib/page-auth";
 import TransactionsClient from "./TransactionsClient";
 
-export default async function TransactionsPage({ role }) {
+export default async function TransactionsPage({
+  role,
+  initialTab = "incoming",
+}) {
   const user = await requirePageRole([role]);
 
   const productsRes = await pool.query(
@@ -50,14 +53,16 @@ export default async function TransactionsPage({ role }) {
     receivedOrders = poRes.rows;
   }
 
-  return (
+    return (
     <TransactionsClient
-      role={user.role}
-      userId={user.id}
-      userName={user.name}
-      products={productsRes.rows}
-      suppliers={suppliers}
-      receivedOrders={receivedOrders}
+        key={initialTab}
+        role={user.role}
+        userId={user.id}
+        userName={user.name}
+        products={productsRes.rows}
+        suppliers={suppliers}
+        receivedOrders={receivedOrders}
+        initialTab={initialTab}
     />
-  );
+    );
 }

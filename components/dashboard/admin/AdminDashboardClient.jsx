@@ -12,6 +12,7 @@ import AdminRecentActivities from "@/components/dashboard/admin/AdminRecentActiv
 
 export default function AdminDashboardClient({
   adminName = "Admin Tataloka",
+  userRole = "",
   initialKpi,
   initialPendingSuppliers = [],
   initialInventoryOverview = {
@@ -41,10 +42,10 @@ export default function AdminDashboardClient({
       style={{ fontFamily: "var(--font-inter), sans-serif" }}
     >
       <div className="max-w-350 mx-auto flex flex-col md:flex-row items-start gap-4 min-h-[calc(100vh-2.5rem)]">
-        <AdminSidebar pendingCount={pendingCount} />
+        <AdminSidebar pendingCount={pendingCount} role={userRole} />
 
         <div className="flex-1 min-w-0 rounded-[28px] bg-white/95 border border-white/90 shadow-[0_14px_36px_rgba(48,70,91,0.08)] flex flex-col">
-          <AdminTopbar adminName={adminName} />
+          <AdminTopbar adminName={adminName} role={userRole} />
 
           <main className="flex-1 px-7 pt-3 pb-7 space-y-5">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">

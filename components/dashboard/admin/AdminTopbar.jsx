@@ -1,9 +1,10 @@
 "use client";
 
 import { Calendar, ChevronDown, ChevronRight, Home } from "lucide-react";
+import { getRoleConfig } from "@/lib/roles";
 
-function getInitials(name) {
-  if (!name || typeof name !== "string") return "AD";
+function getInitials(name, fallback = "AD") {
+  if (!name || typeof name !== "string") return fallback;
   const parts = name.trim().split(/\s+/);
   if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
   return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
@@ -20,19 +21,25 @@ function formatIndonesianDate(dateInput) {
   }).format(targetDate);
 }
 
+// `role` boleh tidak diisi: tanpa role, topbar tampil sebagai Admin
+// (sama seperti sebelumnya). Nama prop `adminName` dipertahankan agar
+// semua pemanggil lama tetap berfungsi.
 export default function AdminTopbar({
-  adminName = "Admin Tataloka",
+  adminName,
   currentSection = "Dashboard",
   dateValue,
+  role,
 }) {
+  const roleConfig = getRoleConfig(role);
+  const displayName = adminName || roleConfig.defaultName;
   const formattedDate = formatIndonesianDate(dateValue);
-  const initials = getInitials(adminName);
+  const initials = getInitials(displayName, roleConfig.fallbackInitials);
 
   return (
     <header className="w-full pt-5 pb-2 px-7 bg-transparent flex items-center justify-between gap-4">
       <div className="flex items-center gap-1.5 text-[12px] text-[#8998A5]">
         <Home className="w-3.5 h-3.5 text-[#8998A5]" strokeWidth={1.8} />
-        <span>Admin</span>
+        <span>{roleConfig.label}</span>
         <ChevronRight className="w-3.5 h-3.5 text-[#8998A5]" strokeWidth={1.8} />
         <span className="font-semibold text-[#30465B]">{currentSection}</span>
       </div>
@@ -51,10 +58,10 @@ export default function AdminTopbar({
           </div>
           <div className="leading-tight text-left">
             <div className="flex items-center gap-1">
-              <p className="text-[12px] font-bold text-[#30465B]">{adminName}</p>
+              <p className="text-[12px] font-bold text-[#30465B]">{displayName}</p>
               <ChevronDown className="w-3 h-3 text-[#8998A5]" strokeWidth={1.8} />
             </div>
-            <p className="text-[11px] text-[#8998A5]">Administrator</p>
+            <p className="text-[11px] text-[#8998A5]">{roleConfig.title}</p>
           </div>
         </div>
       </div>

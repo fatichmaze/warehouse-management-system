@@ -82,6 +82,7 @@ export default async function AdminProductsPage() {
   return (
     <AdminProductsClient
       userName={session.name || "Admin Tataloka"}
+      userRole={role}
       initialProducts={products}
       initialCategories={categories}
       initialSummary={summary}

@@ -14,23 +14,17 @@ function getProductStockStatus(product) {
   const minStock = Number(product?.min_stock ?? 0);
   const lowStock = Number(product?.low_stock ?? 0);
 
-  if (currentStock === 0) {
-    return "Out of Stock";
-  }
-  if (currentStock > 0 && currentStock <= minStock) {
-    return "Severe";
-  }
-  if (currentStock > minStock && currentStock <= lowStock) {
-    return "Low Stock";
-  }
+  if (currentStock === 0) return "Out of Stock";
+  if (currentStock <= minStock) return "Severe";
+  if (currentStock <= lowStock) return "Low Stock";
   return "Normal";
 }
 
 function formatRupiah(value) {
   const numericValue = Number(value ?? 0);
   const safeValue = Number.isFinite(numericValue) ? numericValue : 0;
-  const formatted = Math.round(safeValue).toLocaleString("id-ID");
-  return `Rp ${formatted}`;
+
+  return `Rp ${Math.round(safeValue).toLocaleString("id-ID")}`;
 }
 
 function getStockBadgeStyle(status) {
@@ -41,7 +35,6 @@ function getStockBadgeStyle(status) {
       return "bg-[#FDECEC] text-[#C53030]";
     case "Low Stock":
       return "bg-[#FEF5E7] text-[#D9822B]";
-    case "Normal":
     default:
       return "bg-[#EAF6EE] text-[#2F855A]";
   }
@@ -56,17 +49,13 @@ function buildPaginationItems(currentPage, totalPages) {
   const start = Math.max(2, currentPage - 1);
   const end = Math.min(totalPages - 1, currentPage + 1);
 
-  if (start > 2) {
-    pages.push("ellipsis-left");
-  }
+  if (start > 2) pages.push("ellipsis-left");
 
   for (let page = start; page <= end; page += 1) {
     pages.push(page);
   }
 
-  if (end < totalPages - 1) {
-    pages.push("ellipsis-right");
-  }
+  if (end < totalPages - 1) pages.push("ellipsis-right");
 
   pages.push(totalPages);
   return pages;
@@ -81,20 +70,34 @@ export default function ProductTable({
   onViewProduct,
   onEditProduct,
   onDeleteProduct,
+  readOnly = false,
 }) {
   const safeTotalFiltered = Math.max(0, Number(totalFilteredCount ?? 0));
   const safePageSize = Math.max(1, Number(pageSize ?? 6));
-  const totalPages = Math.max(1, Math.ceil(safeTotalFiltered / safePageSize));
-  const safeCurrentPage = Math.min(Math.max(1, Number(currentPage ?? 1)), totalPages);
+  const totalPages = Math.max(
+    1,
+    Math.ceil(safeTotalFiltered / safePageSize)
+  );
+
+  const safeCurrentPage = Math.min(
+    Math.max(1, Number(currentPage ?? 1)),
+    totalPages
+  );
 
   const startIndex =
-    safeTotalFiltered === 0 ? 0 : (safeCurrentPage - 1) * safePageSize + 1;
+    safeTotalFiltered === 0
+      ? 0
+      : (safeCurrentPage - 1) * safePageSize + 1;
+
   const endIndex =
     safeTotalFiltered === 0
       ? 0
       : Math.min(safeCurrentPage * safePageSize, safeTotalFiltered);
 
-  const paginationItems = buildPaginationItems(safeCurrentPage, totalPages);
+  const paginationItems = buildPaginationItems(
+    safeCurrentPage,
+    totalPages
+  );
 
   return (
     <div className="rounded-2xl bg-white border border-[#E8EEF4] shadow-[0_2px_10px_rgba(48,70,91,0.04)] overflow-hidden">
@@ -114,25 +117,34 @@ export default function ProductTable({
               </th>
               <th className="py-3.5 px-3 whitespace-nowrap">Rack Location</th>
               <th className="py-3.5 px-3 whitespace-nowrap">Stock Status</th>
-              <th className="py-3.5 pl-3 pr-5 whitespace-nowrap text-right">
-                Actions
-              </th>
+
+              {!readOnly && (
+                <th className="py-3.5 pl-3 pr-5 whitespace-nowrap text-right">
+                  Actions
+                </th>
+              )}
             </tr>
           </thead>
 
           <tbody className="divide-y divide-[#EEF2F6] text-[12.5px] text-[#30465B]">
             {products.length === 0 ? (
               <tr>
-                <td colSpan={9} className="py-14 px-6 text-center">
+                <td
+                  colSpan={readOnly ? 8 : 9}
+                  className="py-14 px-6 text-center"
+                >
                   <div className="max-w-90 mx-auto flex flex-col items-center">
                     <span className="w-10 h-10 rounded-2xl bg-[#F7F9FA] border border-[#E8EEF4] text-[#8998A5] flex items-center justify-center mb-3">
                       <PackageSearch className="w-5 h-5" strokeWidth={1.8} />
                     </span>
+
                     <p className="text-[13px] font-semibold text-[#30465B]">
                       Tidak ada produk yang ditemukan
                     </p>
+
                     <p className="mt-1 text-[12px] text-[#8998A5] leading-relaxed">
-                      Coba ubah kata kunci pencarian atau sesuaikan filter kategori dan status stok.
+                      Coba ubah kata kunci pencarian atau sesuaikan filter
+                      kategori dan status stok.
                     </p>
                   </div>
                 </td>
@@ -156,6 +168,7 @@ export default function ProductTable({
                       <div className="font-semibold text-[#30465B] truncate">
                         {product.name}
                       </div>
+
                       {product.description ? (
                         <div className="text-[11px] text-[#8998A5] truncate mt-0.5">
                           {product.description}
@@ -191,37 +204,41 @@ export default function ProductTable({
                       </span>
                     </td>
 
-                    <td className="py-3.5 pl-3 pr-5 whitespace-nowrap text-right">
-                      <div className="inline-flex items-center justify-end gap-1.5">
-                        <button
-                          type="button"
-                          onClick={() => onViewProduct?.(product)}
-                          title={`View details ${product.name}`}
-                          aria-label={`View details ${product.name}`}
-                          className="w-7 h-7 rounded-lg bg-[#F7F9FA] hover:bg-[#EDF2F7] border border-[#E8EEF4] text-[#637587] hover:text-[#30465B] inline-flex items-center justify-center transition-colors cursor-pointer"
-                        >
-                          <Eye className="w-3.5 h-3.5" strokeWidth={1.8} />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => onEditProduct?.(product)}
-                          title={`Edit ${product.name}`}
-                          aria-label={`Edit ${product.name}`}
-                          className="w-7 h-7 rounded-lg bg-[#F7F9FA] hover:bg-[#EDF2F7] border border-[#E8EEF4] text-[#637587] hover:text-[#30465B] inline-flex items-center justify-center transition-colors cursor-pointer"
-                        >
-                          <Pencil className="w-3.5 h-3.5" strokeWidth={1.8} />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => onDeleteProduct?.(product)}
-                          title={`Delete ${product.name}`}
-                          aria-label={`Delete ${product.name}`}
-                          className="w-7 h-7 rounded-lg bg-[#F7F9FA] hover:bg-[#FDECEC] border border-[#E8EEF4] hover:border-[#F5C2C2] text-[#637587] hover:text-[#C53030] inline-flex items-center justify-center transition-colors cursor-pointer"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" strokeWidth={1.8} />
-                        </button>
-                      </div>
-                    </td>
+                    {!readOnly && (
+                      <td className="py-3.5 pl-3 pr-5 whitespace-nowrap text-right">
+                        <div className="inline-flex items-center justify-end gap-1.5">
+                          <button
+                            type="button"
+                            onClick={() => onViewProduct?.(product)}
+                            title={`View details ${product.name}`}
+                            aria-label={`View details ${product.name}`}
+                            className="w-7 h-7 rounded-lg bg-[#F7F9FA] hover:bg-[#EDF2F7] border border-[#E8EEF4] text-[#637587] inline-flex items-center justify-center cursor-pointer"
+                          >
+                            <Eye className="w-3.5 h-3.5" />
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => onEditProduct?.(product)}
+                            title={`Edit ${product.name}`}
+                            aria-label={`Edit ${product.name}`}
+                            className="w-7 h-7 rounded-lg bg-[#F7F9FA] hover:bg-[#EDF2F7] border border-[#E8EEF4] text-[#637587] inline-flex items-center justify-center cursor-pointer"
+                          >
+                            <Pencil className="w-3.5 h-3.5" />
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => onDeleteProduct?.(product)}
+                            title={`Delete ${product.name}`}
+                            aria-label={`Delete ${product.name}`}
+                            className="w-7 h-7 rounded-lg bg-[#F7F9FA] hover:bg-[#FDECEC] border border-[#E8EEF4] text-[#637587] inline-flex items-center justify-center cursor-pointer"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </td>
+                    )}
                   </tr>
                 );
               })
@@ -244,11 +261,13 @@ export default function ProductTable({
           <button
             type="button"
             disabled={safeCurrentPage <= 1 || safeTotalFiltered === 0}
-            onClick={() => onPageChange?.(Math.max(1, safeCurrentPage - 1))}
+            onClick={() =>
+              onPageChange?.(Math.max(1, safeCurrentPage - 1))
+            }
             aria-label="Halaman sebelumnya"
-            className="w-8 h-8 rounded-lg border border-[#E2E8F0] bg-white text-[#30465B] hover:bg-[#F7F9FA] disabled:opacity-40 disabled:pointer-events-none inline-flex items-center justify-center transition-colors cursor-pointer"
+            className="w-8 h-8 rounded-lg border border-[#E2E8F0] bg-white text-[#30465B] hover:bg-[#F7F9FA] disabled:opacity-40 disabled:pointer-events-none inline-flex items-center justify-center cursor-pointer"
           >
-            <ChevronLeft className="w-4 h-4" strokeWidth={1.9} />
+            <ChevronLeft className="w-4 h-4" />
           </button>
 
           {paginationItems.map((item, idx) => {
@@ -256,7 +275,7 @@ export default function ProductTable({
               return (
                 <span
                   key={`${item}-${idx}`}
-                  className="px-1.5 text-[12px] text-[#8998A5] select-none"
+                  className="px-1.5 text-[12px] text-[#8998A5]"
                 >
                   ...
                 </span>
@@ -272,9 +291,9 @@ export default function ProductTable({
                 disabled={safeTotalFiltered === 0}
                 onClick={() => onPageChange?.(item)}
                 aria-current={isActivePage ? "page" : undefined}
-                className={`min-w-8 h-8 px-2 rounded-lg text-[12px] font-semibold transition-colors cursor-pointer disabled:opacity-40 disabled:pointer-events-none ${
+                className={`min-w-8 h-8 px-2 rounded-lg text-[12px] font-semibold cursor-pointer ${
                   isActivePage
-                    ? "bg-[#2D4356] text-white shadow-[0_4px_10px_rgba(45,67,86,0.18)]"
+                    ? "bg-[#2D4356] text-white"
                     : "bg-white border border-[#E2E8F0] text-[#30465B] hover:bg-[#F7F9FA]"
                 }`}
               >
@@ -285,14 +304,16 @@ export default function ProductTable({
 
           <button
             type="button"
-            disabled={safeCurrentPage >= totalPages || safeTotalFiltered === 0}
+            disabled={
+              safeCurrentPage >= totalPages || safeTotalFiltered === 0
+            }
             onClick={() =>
               onPageChange?.(Math.min(totalPages, safeCurrentPage + 1))
             }
             aria-label="Halaman berikutnya"
-            className="w-8 h-8 rounded-lg border border-[#E2E8F0] bg-white text-[#30465B] hover:bg-[#F7F9FA] disabled:opacity-40 disabled:pointer-events-none inline-flex items-center justify-center transition-colors cursor-pointer"
+            className="w-8 h-8 rounded-lg border border-[#E2E8F0] bg-white text-[#30465B] hover:bg-[#F7F9FA] disabled:opacity-40 disabled:pointer-events-none inline-flex items-center justify-center cursor-pointer"
           >
-            <ChevronRight className="w-4 h-4" strokeWidth={1.9} />
+            <ChevronRight className="w-4 h-4" />
           </button>
         </nav>
       </div>

@@ -1,0 +1,94 @@
+import { redirect } from "next/navigation";
+import { getSession } from "@/lib/auth";
+import pool from "@/lib/db";
+import StaffProductsClient from "@/components/dashboard/staff/StaffProductsClient";
+
+async function getProductsPageData() {
+  const productsRes = await pool.query(
+    `SELECT
+       p.id,
+       p.sku,
+       p.name,
+       p.category_id,
+       c.name AS category_name,
+       p.description,
+       p.purchase_price,
+       p.selling_price,
+       p.min_stock,
+       p.low_stock,
+       p.current_stock,
+       p.unit,
+       p.rack_location,
+       p.image_url,
+       p.created_at
+     FROM products p
+     INNER JOIN categories c ON p.category_id = c.id
+     ORDER BY p.created_at DESC, p.id DESC`
+  );
+
+  const categoriesRes = await pool.query(
+    `SELECT id, name
+     FROM categories
+     ORDER BY name ASC`
+  );
+
+  const summaryRes = await pool.query(
+    `SELECT
+       COUNT(*) AS total_products,
+       COUNT(*) FILTER (
+         WHERE current_stock > low_stock
+       ) AS normal_count,
+       COUNT(*) FILTER (
+         WHERE current_stock > min_stock
+           AND current_stock <= low_stock
+       ) AS low_stock_count,
+       COUNT(*) FILTER (
+         WHERE current_stock > 0
+           AND current_stock <= min_stock
+       ) AS severe_count,
+       COUNT(*) FILTER (
+         WHERE current_stock = 0
+       ) AS out_of_stock_count
+     FROM products`
+  );
+
+  const row = summaryRes.rows[0] || {};
+
+  return {
+    products: productsRes.rows,
+    categories: categoriesRes.rows,
+    summary: {
+      totalProducts: Number(row.total_products ?? 0),
+      normal: Number(row.normal_count ?? 0),
+      lowStock: Number(row.low_stock_count ?? 0),
+      severe: Number(row.severe_count ?? 0),
+      outOfStock: Number(row.out_of_stock_count ?? 0),
+    },
+  };
+}
+
+export default async function StaffProductsPage() {
+  const session = await getSession();
+
+  if (!session) {
+    redirect("/login");
+  }
+
+  const role = String(session.role ?? "").trim().toLowerCase();
+
+  if (role !== "staff") {
+    redirect("/dashboard");
+  }
+
+  const { products, categories, summary } =
+    await getProductsPageData();
+
+  return (
+    <StaffProductsClient
+      userName={session.name || "Staff Tataloka"}
+      initialProducts={products}
+      initialCategories={categories}
+      initialSummary={summary}
+    />
+  );
+}

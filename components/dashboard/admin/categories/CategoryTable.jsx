@@ -81,8 +81,8 @@ export default function CategoryTable({
 
   return (
     <div className="rounded-2xl bg-white border border-[#E8EEF4] shadow-[0_2px_10px_rgba(48,70,91,0.04)] overflow-hidden">
-      <div className="overflow-x-auto">195
-        <table className="w-full min-w-[780px] border-collapse text-left">
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-195 border-collapse text-left">
           <thead>
             <tr className="bg-[#F7F9FA] border-b border-[#E8EEF4] text-[10.5px] font-semibold uppercase tracking-wider text-[#8998A5]">
               <th className="py-3.5 pl-5 pr-4 whitespace-nowrap w-[22%]">

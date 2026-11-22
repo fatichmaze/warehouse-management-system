@@ -39,13 +39,16 @@ export default function TransactionsClient({
   products,
   suppliers,
   receivedOrders,
+  initialTab = "incoming",
 }) {
   const router = useRouter();
   const isManager = role === "warehouse_manager";
   const isStaff = role === "staff";
   const columnCount = isManager ? 7 : 6;
 
-  const [tab, setTab] = useState("incoming");
+  const [tab, setTab] = useState(
+    initialTab === "outgoing" ? "outgoing" : "incoming"
+  );
   const [status, setStatus] = useState("");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
@@ -66,10 +69,12 @@ export default function TransactionsClient({
       page: String(page),
       page_size: String(PAGE_SIZE),
     });
+
     if (status) p.set("status", status);
     if (dateFrom) p.set("date_from", dateFrom);
     if (dateTo) p.set("date_to", dateTo);
     if (party) p.set("party", party);
+
     return p.toString();
   }, [tab, sort, page, status, dateFrom, dateTo, party]);
 
@@ -80,6 +85,7 @@ export default function TransactionsClient({
     pagination: null,
     error: "",
   });
+
   const loading = result.key !== requestKey;
 
   useEffect(() => {
@@ -129,7 +135,7 @@ export default function TransactionsClient({
     setFormState(null);
     setFlash(message);
     setRefreshToken((t) => t + 1);
-    router.refresh(); // segarkan stok produk pada props server
+    router.refresh();
   }
 
   function resetFilters() {
@@ -154,7 +160,11 @@ export default function TransactionsClient({
         <AdminSidebar role={role} />
 
         <div className="flex-1 min-w-0 rounded-[28px] bg-white/95 border border-white/90 shadow-[0_14px_36px_rgba(48,70,91,0.08)] flex flex-col">
-          <AdminTopbar adminName={userName} role={role} currentSection="Transaksi" />
+          <AdminTopbar
+            adminName={userName}
+            role={role}
+            currentSection="Transaksi"
+          />
 
           <main className="flex-1 px-7 pt-3 pb-7 space-y-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
@@ -175,7 +185,9 @@ export default function TransactionsClient({
               {isStaff && (
                 <button
                   type="button"
-                  onClick={() => setFormState({ mode: "create", type: tab })}
+                  onClick={() =>
+                    setFormState({ mode: "create", type: tab })
+                  }
                   className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#2D4356] text-white text-[12px] font-semibold cursor-pointer"
                 >
                   <Plus className="w-4 h-4" strokeWidth={2} />
@@ -234,7 +246,11 @@ export default function TransactionsClient({
                   type="search"
                   value={partyInput}
                   onChange={(e) => handlePartyInputChange(e.target.value)}
-                  placeholder={isIncoming ? "Cari supplier..." : "Cari customer atau tujuan..."}
+                  placeholder={
+                    isIncoming
+                      ? "Cari supplier..."
+                      : "Cari customer atau tujuan..."
+                  }
                   aria-label="Cari supplier atau customer"
                   className={`${fieldCls} w-full pl-9`}
                 />
@@ -325,6 +341,7 @@ export default function TransactionsClient({
                     <th className="px-4 py-3 font-semibold text-right">Aksi</th>
                   </tr>
                 </thead>
+
                 <tbody>
                   {loading && (
                     <tr>
@@ -410,6 +427,7 @@ export default function TransactionsClient({
                   Halaman {pagination.page} dari {pagination.totalPages} •{" "}
                   {pagination.total} transaksi
                 </span>
+
                 <div className="flex gap-2">
                   <button
                     type="button"
@@ -420,6 +438,7 @@ export default function TransactionsClient({
                   >
                     <ChevronLeft className="w-4 h-4" strokeWidth={1.8} />
                   </button>
+
                   <button
                     type="button"
                     disabled={pagination.page >= pagination.totalPages}

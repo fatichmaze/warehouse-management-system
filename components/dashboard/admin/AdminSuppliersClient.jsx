@@ -7,6 +7,7 @@ import AdminSupplierApproval from "@/components/dashboard/admin/AdminSupplierApp
 
 export default function AdminSuppliersClient({
   adminName = "Admin Tataloka",
+  userRole = "",
   initialPendingSuppliers = [],
 }) {
   const safeInitialSuppliers = Array.isArray(initialPendingSuppliers)
@@ -31,11 +32,12 @@ export default function AdminSuppliersClient({
       style={{ fontFamily: "var(--font-inter), sans-serif" }}
     >
       <div className="max-w-350 mx-auto flex flex-col md:flex-row items-start gap-4 min-h-[calc(100vh-2.5rem)]">
-        <AdminSidebar pendingCount={pendingCount} />
+        <AdminSidebar pendingCount={pendingCount} role={userRole} />
 
         <div className="flex-1 min-w-0 rounded-[28px] bg-white/95 border border-white/90 shadow-[0_14px_36px_rgba(48,70,91,0.08)] flex flex-col">
           <AdminTopbar
             adminName={adminName}
+            role={userRole}
             currentSection="Supplier Verification"
           />
 
