@@ -2,7 +2,10 @@ import { requirePageRole } from "@/lib/page-auth";
 import pool from "@/lib/db";
 import RestockOrdersClient from "./RestockOrdersClient";
 
-export default async function RestockOrdersPage({ role }) {
+export default async function RestockOrdersPage({
+  role,
+  initialProductId = "",
+}) {
   const user = await requirePageRole([role]);
 
   let suppliers = [];
@@ -31,10 +34,10 @@ export default async function RestockOrdersPage({ role }) {
   return (
     <RestockOrdersClient
       role={user.role}
-      userId={user.id}
       userName={user.name}
       suppliers={suppliers}
       products={products}
+      initialProductId={initialProductId}
     />
   );
 }
