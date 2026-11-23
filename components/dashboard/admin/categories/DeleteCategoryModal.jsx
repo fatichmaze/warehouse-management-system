@@ -55,10 +55,10 @@ export default function DeleteCategoryModal({
       }}
     >
       <div
-        className="w-full max-w-md rounded-3xl bg-white border border-[#E8EEF4] shadow-[0_24px_60px_rgba(30,46,61,0.22)] overflow-hidden"
+        className="w-full max-w-md max-h-[calc(100dvh-2rem)] flex flex-col rounded-3xl bg-white border border-[#E8EEF4] shadow-[0_24px_60px_rgba(30,46,61,0.22)] overflow-hidden"
         style={{ fontFamily: "var(--font-inter), sans-serif" }}
       >
-        <div className="px-6 py-4.5 border-b border-[#EEF2F6] flex items-center justify-between gap-3">
+        <div className="shrink-0 px-6 py-4.5 border-b border-[#EEF2F6] flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
             <span className="w-9 h-9 rounded-xl bg-[#FDECEC] border border-[#F5C2C2] text-[#C53030] inline-flex items-center justify-center">
               <Trash2 className="w-4 h-4" strokeWidth={2} />
@@ -88,7 +88,7 @@ export default function DeleteCategoryModal({
           </button>
         </div>
 
-        <div className="p-6 space-y-4">
+        <div className="flex-1 min-h-0 overflow-y-auto p-6 space-y-4">
           {errorMessage ? (
             <div
               role="alert"
@@ -114,25 +114,25 @@ export default function DeleteCategoryModal({
               . Kategori hanya dapat dihapus jika tidak memiliki produk.
             </p>
           </div>
+        </div>
 
-          <div className="pt-1 flex items-center justify-end gap-2.5">
-            <button
-              type="button"
-              onClick={handleRequestClose}
-              disabled={isDeleting}
-              className="px-4 h-10 rounded-xl border border-[#E2E8F0] bg-white hover:bg-[#F7F9FA] text-[12.5px] font-semibold text-[#637587] hover:text-[#30465B] transition-colors disabled:opacity-40 disabled:pointer-events-none cursor-pointer"
-            >
-              Batal
-            </button>
-            <button
-              type="button"
-              onClick={handleConfirmClick}
-              disabled={isDeleting}
-              className="px-4 h-10 rounded-xl bg-[#C53030] hover:bg-[#A62626] text-white text-[12.5px] font-semibold shadow-[0_6px_16px_rgba(197,48,48,0.22)] transition-colors disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
-            >
-              {isDeleting ? "Menghapus..." : "Hapus Kategori"}
-            </button>
-          </div>
+        <div className="shrink-0 px-6 py-4 border-t border-[#EEF2F6] flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-2.5">
+          <button
+            type="button"
+            onClick={handleRequestClose}
+            disabled={isDeleting}
+            className="w-full sm:w-auto px-4 h-10 rounded-xl border border-[#E2E8F0] bg-white hover:bg-[#F7F9FA] text-[12.5px] font-semibold text-[#637587] hover:text-[#30465B] transition-colors disabled:opacity-40 disabled:pointer-events-none cursor-pointer"
+          >
+            Batal
+          </button>
+          <button
+            type="button"
+            onClick={handleConfirmClick}
+            disabled={isDeleting}
+            className="w-full sm:w-auto px-4 h-10 rounded-xl bg-[#C53030] hover:bg-[#A62626] text-white text-[12.5px] font-semibold shadow-[0_6px_16px_rgba(197,48,48,0.22)] transition-colors disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
+          >
+            {isDeleting ? "Menghapus..." : "Hapus Kategori"}
+          </button>
         </div>
       </div>
     </div>

@@ -168,10 +168,10 @@ export default function EditCategoryModal({
       }}
     >
       <div
-        className="w-full max-w-lg rounded-3xl bg-white border border-[#E8EEF4] shadow-[0_24px_60px_rgba(30,46,61,0.22)] overflow-hidden"
+        className="w-full max-w-lg max-h-[calc(100dvh-2rem)] flex flex-col rounded-3xl bg-white border border-[#E8EEF4] shadow-[0_24px_60px_rgba(30,46,61,0.22)] overflow-hidden"
         style={{ fontFamily: "var(--font-inter), sans-serif" }}
       >
-        <div className="px-6 py-4.5 border-b border-[#EEF2F6] flex items-center justify-between gap-3">
+        <div className="shrink-0 px-6 py-4.5 border-b border-[#EEF2F6] flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
             <span className="w-9 h-9 rounded-xl bg-[#F7F9FA] border border-[#E8EEF4] text-[#2D4356] inline-flex items-center justify-center">
               <Pencil className="w-4 h-4" strokeWidth={2} />
@@ -201,93 +201,101 @@ export default function EditCategoryModal({
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} noValidate className="p-6 space-y-4">
-          {errorMessage ? (
-            <div
-              role="alert"
-              className="rounded-xl bg-[#FDECEC] border border-[#F5C2C2] px-4 py-2.5 text-[12px] font-medium text-[#C53030]"
-            >
-              {errorMessage}
+        <div className="flex-1 min-h-0 overflow-y-auto p-6">
+          <form
+            id="edit-category-form"
+            onSubmit={handleSubmit}
+            noValidate
+            className="space-y-4"
+          >
+            {errorMessage ? (
+              <div
+                role="alert"
+                className="rounded-xl bg-[#FDECEC] border border-[#F5C2C2] px-4 py-2.5 text-[12px] font-medium text-[#C53030]"
+              >
+                {errorMessage}
+              </div>
+            ) : null}
+
+            <div>
+              <label
+                htmlFor="edit-category-name-input"
+                className="block text-[11.5px] font-semibold text-[#30465B] mb-1.5"
+              >
+                Nama Kategori <span className="text-[#C53030]">*</span>
+              </label>
+              <input
+                id="edit-category-name-input"
+                name="name"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                disabled={isSubmitting}
+                placeholder="Contoh: Elektronik"
+                className="w-full h-10 px-3.5 rounded-xl bg-[#F7F9FA] border border-[#E2E8F0] text-[12.5px] text-[#30465B] placeholder:text-[#8998A5] focus:outline-none focus:bg-white focus:border-[#527DA3] disabled:opacity-60 transition-colors"
+              />
             </div>
-          ) : null}
 
-          <div>
-            <label
-              htmlFor="edit-category-name-input"
-              className="block text-[11.5px] font-semibold text-[#30465B] mb-1.5"
-            >
-              Nama Kategori <span className="text-[#C53030]">*</span>
-            </label>
-            <input
-              id="edit-category-name-input"
-              name="name"
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              disabled={isSubmitting}
-              placeholder="Contoh: Elektronik"
-              className="w-full h-10 px-3.5 rounded-xl bg-[#F7F9FA] border border-[#E2E8F0] text-[12.5px] text-[#30465B] placeholder:text-[#8998A5] focus:outline-none focus:bg-white focus:border-[#527DA3] disabled:opacity-60 transition-colors"
-            />
-          </div>
+            <div>
+              <label
+                htmlFor="edit-category-description-input"
+                className="block text-[11.5px] font-semibold text-[#30465B] mb-1.5"
+              >
+                Deskripsi{" "}
+                <span className="text-[#8998A5] font-normal">(Opsional)</span>
+              </label>
+              <textarea
+                id="edit-category-description-input"
+                name="description"
+                rows={3}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                disabled={isSubmitting}
+                placeholder="Tuliskan deskripsi singkat kategori..."
+                className="w-full px-3.5 py-2.5 rounded-xl bg-[#F7F9FA] border border-[#E2E8F0] text-[12.5px] text-[#30465B] placeholder:text-[#8998A5] focus:outline-none focus:bg-white focus:border-[#527DA3] disabled:opacity-60 transition-colors resize-none"
+              />
+            </div>
 
-          <div>
-            <label
-              htmlFor="edit-category-description-input"
-              className="block text-[11.5px] font-semibold text-[#30465B] mb-1.5"
-            >
-              Deskripsi{" "}
-              <span className="text-[#8998A5] font-normal">(Opsional)</span>
-            </label>
-            <textarea
-              id="edit-category-description-input"
-              name="description"
-              rows={3}
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              disabled={isSubmitting}
-              placeholder="Tuliskan deskripsi singkat kategori..."
-              className="w-full px-3.5 py-2.5 rounded-xl bg-[#F7F9FA] border border-[#E2E8F0] text-[12.5px] text-[#30465B] placeholder:text-[#8998A5] focus:outline-none focus:bg-white focus:border-[#527DA3] disabled:opacity-60 transition-colors resize-none"
-            />
-          </div>
+            <div>
+              <label
+                htmlFor="edit-category-image-url-input"
+                className="block text-[11.5px] font-semibold text-[#30465B] mb-1.5"
+              >
+                URL Gambar Kategori{" "}
+                <span className="text-[#8998A5] font-normal">(Opsional)</span>
+              </label>
+              <input
+                id="edit-category-image-url-input"
+                name="image_url"
+                type="url"
+                value={imageUrl}
+                onChange={(e) => setImageUrl(e.target.value)}
+                disabled={isSubmitting}
+                placeholder="https://example.com/kategori.png"
+                className="w-full h-10 px-3.5 rounded-xl bg-[#F7F9FA] border border-[#E2E8F0] text-[12.5px] text-[#30465B] placeholder:text-[#8998A5] focus:outline-none focus:bg-white focus:border-[#527DA3] disabled:opacity-60 transition-colors"
+              />
+            </div>
+          </form>
+        </div>
 
-          <div>
-            <label
-              htmlFor="edit-category-image-url-input"
-              className="block text-[11.5px] font-semibold text-[#30465B] mb-1.5"
-            >
-              URL Gambar Kategori{" "}
-              <span className="text-[#8998A5] font-normal">(Opsional)</span>
-            </label>
-            <input
-              id="edit-category-image-url-input"
-              name="image_url"
-              type="url"
-              value={imageUrl}
-              onChange={(e) => setImageUrl(e.target.value)}
-              disabled={isSubmitting}
-              placeholder="https://example.com/kategori.png"
-              className="w-full h-10 px-3.5 rounded-xl bg-[#F7F9FA] border border-[#E2E8F0] text-[12.5px] text-[#30465B] placeholder:text-[#8998A5] focus:outline-none focus:bg-white focus:border-[#527DA3] disabled:opacity-60 transition-colors"
-            />
-          </div>
-
-          <div className="pt-2 flex items-center justify-end gap-2.5">
-            <button
-              type="button"
-              onClick={handleRequestClose}
-              disabled={isSubmitting}
-              className="px-4 h-10 rounded-xl border border-[#E2E8F0] bg-white hover:bg-[#F7F9FA] text-[12.5px] font-semibold text-[#637587] hover:text-[#30465B] transition-colors disabled:opacity-40 disabled:pointer-events-none cursor-pointer"
-            >
-              Batal
-            </button>
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="px-4 h-10 rounded-xl bg-[#2D4356] hover:bg-[#233544] text-white text-[12.5px] font-semibold shadow-[0_6px_16px_rgba(45,67,86,0.18)] transition-colors disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
-            >
-              {isSubmitting ? "Menyimpan..." : "Simpan Perubahan"}
-            </button>
-          </div>
-        </form>
+        <div className="shrink-0 px-6 py-4 border-t border-[#EEF2F6] flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-2.5">
+          <button
+            type="button"
+            onClick={handleRequestClose}
+            disabled={isSubmitting}
+            className="w-full sm:w-auto px-4 h-10 rounded-xl border border-[#E2E8F0] bg-white hover:bg-[#F7F9FA] text-[12.5px] font-semibold text-[#637587] hover:text-[#30465B] transition-colors disabled:opacity-40 disabled:pointer-events-none cursor-pointer"
+          >
+            Batal
+          </button>
+          <button
+            type="submit"
+            form="edit-category-form"
+            disabled={isSubmitting}
+            className="w-full sm:w-auto px-4 h-10 rounded-xl bg-[#2D4356] hover:bg-[#233544] text-white text-[12.5px] font-semibold shadow-[0_6px_16px_rgba(45,67,86,0.18)] transition-colors disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
+          >
+            {isSubmitting ? "Menyimpan..." : "Simpan Perubahan"}
+          </button>
+        </div>
       </div>
     </div>
   );

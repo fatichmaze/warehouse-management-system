@@ -40,10 +40,10 @@ function SummaryCard({ title, value, description, icon: Icon, href }) {
   return (
     <Link
       href={href}
-      className="rounded-[20px] border border-[#E8EEF4] bg-white p-5 shadow-[0_4px_14px_rgba(48,70,91,0.04)] transition-shadow hover:shadow-md"
+      className="min-w-0 rounded-[20px] border border-[#E8EEF4] bg-white p-5 shadow-[0_4px_14px_rgba(48,70,91,0.04)] transition-shadow hover:shadow-md"
     >
       <div className="flex items-start justify-between gap-3">
-        <div>
+        <div className="min-w-0">
           <p className="text-[12px] font-medium text-[#8998A5]">{title}</p>
           <p className="mt-2 text-[28px] font-bold tracking-tight text-[#30465B]">
             {formatNumber(value)}
@@ -146,14 +146,14 @@ export default function ManagerDashboardClient({
       <div className="mx-auto flex min-h-[calc(100vh-2.5rem)] max-w-350 flex-col items-start gap-4 md:flex-row">
         <AdminSidebar role={userRole} />
 
-        <div className="flex min-w-0 flex-1 flex-col rounded-[28px] border border-white/90 bg-white/95 shadow-[0_14px_36px_rgba(48,70,91,0.08)]">
+        <div className="flex min-w-0 w-full max-w-full flex-1 flex-col rounded-[28px] border border-white/90 bg-white/95 shadow-[0_14px_36px_rgba(48,70,91,0.08)]">
           <AdminTopbar
             adminName={managerName}
             role={userRole}
             currentSection="Dashboard"
           />
 
-          <main className="flex-1 space-y-6 px-5 pb-7 pt-3 sm:px-7">
+          <main className="min-w-0 flex-1 space-y-6 px-5 pb-7 pt-3 sm:px-7">
             {/* Heading */}
             <section>
               <h1
@@ -364,7 +364,7 @@ export default function ManagerDashboardClient({
             </section>
 
             {/* Ongoing Restock Orders */}
-            <section className="overflow-hidden rounded-[20px] border border-[#E8EEF4] bg-white">
+            <section className="min-w-0 overflow-hidden rounded-[20px] border border-[#E8EEF4] bg-white">
               <div className="flex items-center justify-between gap-3 border-b border-[#EDF1F5] px-5 py-4">
                 <div>
                   <h2 className="text-[14px] font-bold text-[#30465B]">
@@ -428,7 +428,7 @@ export default function ManagerDashboardClient({
             </section>
 
             {/* Recent Transactions */}
-            <section className="overflow-hidden rounded-[20px] border border-[#E8EEF4] bg-white">
+            <section className="min-w-0 overflow-hidden rounded-[20px] border border-[#E8EEF4] bg-white">
               <div className="flex items-center justify-between gap-3 border-b border-[#EDF1F5] px-5 py-4">
                 <div>
                   <h2 className="text-[14px] font-bold text-[#30465B]">

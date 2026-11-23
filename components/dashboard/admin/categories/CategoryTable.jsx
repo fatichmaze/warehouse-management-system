@@ -152,9 +152,9 @@ export default function CategoryTable({
                       {category?.name || "-"}
                     </td>
 
-                    <td className="py-3.5 px-4 text-[#637587] max-w-md">
+                    <td className="py-3.5 px-4 text-[#637587]">
                       <div
-                        className="truncate"
+                        className="max-w-[180px] sm:max-w-[260px] lg:max-w-none truncate"
                         title={category?.description || undefined}
                       >
                         {category?.description ? category.description : "-"}
@@ -176,7 +176,7 @@ export default function CategoryTable({
                           onClick={() => onEditCategory?.(category)}
                           title={`Edit ${category?.name || "kategori"}`}
                           aria-label={`Edit ${category?.name || "kategori"}`}
-                          className="w-7 h-7 rounded-lg bg-[#F7F9FA] hover:bg-[#EDF2F7] border border-[#E8EEF4] text-[#637587] hover:text-[#30465B] inline-flex items-center justify-center transition-colors cursor-pointer"
+                          className="w-8 h-8 sm:w-7 sm:h-7 rounded-lg bg-[#F7F9FA] hover:bg-[#EDF2F7] border border-[#E8EEF4] text-[#637587] hover:text-[#30465B] inline-flex items-center justify-center transition-colors cursor-pointer"
                         >
                           <Pencil className="w-3.5 h-3.5" strokeWidth={1.8} />
                         </button>
@@ -185,7 +185,7 @@ export default function CategoryTable({
                           onClick={() => onDeleteCategory?.(category)}
                           title={`Delete ${category?.name || "kategori"}`}
                           aria-label={`Delete ${category?.name || "kategori"}`}
-                          className="w-7 h-7 rounded-lg bg-[#F7F9FA] hover:bg-[#FDECEC] border border-[#E8EEF4] hover:border-[#F5C2C2] text-[#637587] hover:text-[#C53030] inline-flex items-center justify-center transition-colors cursor-pointer"
+                          className="w-8 h-8 sm:w-7 sm:h-7 rounded-lg bg-[#F7F9FA] hover:bg-[#FDECEC] border border-[#E8EEF4] hover:border-[#F5C2C2] text-[#637587] hover:text-[#C53030] inline-flex items-center justify-center transition-colors cursor-pointer"
                         >
                           <Trash2 className="w-3.5 h-3.5" strokeWidth={1.8} />
                         </button>
@@ -209,7 +209,7 @@ export default function CategoryTable({
         {totalPages > 1 ? (
           <nav
             aria-label="Pagination kategori"
-            className="inline-flex items-center gap-1 self-start sm:self-auto"
+            className="inline-flex flex-wrap items-center gap-1 self-start sm:self-auto"
           >
             <button
               type="button"

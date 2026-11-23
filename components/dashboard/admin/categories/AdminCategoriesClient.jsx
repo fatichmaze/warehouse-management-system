@@ -222,18 +222,18 @@ export default function AdminCategoriesClient({
       <div className="max-w-350 mx-auto flex flex-col md:flex-row items-start gap-4 min-h-[calc(100vh-2.5rem)]">
         <AdminSidebar pendingCount={0} role={userRole} />
 
-        <div className="flex-1 min-w-0 rounded-[28px] bg-white/95 border border-white/90 shadow-[0_14px_36px_rgba(48,70,91,0.08)] flex flex-col">
+        <div className="flex-1 min-w-0 w-full max-w-full rounded-[28px] bg-white/95 border border-white/90 shadow-[0_14px_36px_rgba(48,70,91,0.08)] flex flex-col">
           <AdminTopbar
             adminName={userName}
             role={userRole}
             currentSection="Categories"
           />
 
-          <main className="flex-1 px-7 pt-3 pb-7 space-y-5">
+          <main className="flex-1 min-w-0 px-4 sm:px-7 pt-2.5 sm:pt-3 pb-6 sm:pb-7 space-y-4 sm:space-y-5">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
                 <h1
-                  className="text-[34px] leading-[1.12] font-bold tracking-tight text-[#30465B]"
+                  className="text-[26px] sm:text-[34px] leading-[1.12] font-bold tracking-tight text-[#30465B]"
                   style={{ fontFamily: "var(--font-bricolage), sans-serif" }}
                 >
                   Category Management
@@ -275,8 +275,8 @@ export default function AdminCategoriesClient({
               </div>
             ) : null}
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="rounded-2xl bg-white border border-[#E8EEF4] shadow-[0_2px_10px_rgba(48,70,91,0.04)] px-5 py-4 flex items-center gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
+              <div className="rounded-2xl bg-white border border-[#E8EEF4] shadow-[0_2px_10px_rgba(48,70,91,0.04)] px-4 py-3 sm:px-5 sm:py-4 flex items-center gap-3 sm:gap-4">
                 <span className="w-10 h-10 rounded-xl bg-[#F7F9FA] border border-[#E8EEF4] text-[#527DA3] inline-flex items-center justify-center shrink-0">
                   <FolderOpen className="w-5 h-5" strokeWidth={1.8} />
                 </span>
@@ -285,7 +285,7 @@ export default function AdminCategoriesClient({
                     Total Categories
                   </p>
                   <p
-                    className="text-[26px] leading-tight font-bold text-[#30465B] tabular-nums"
+                    className="text-[22px] sm:text-[26px] leading-tight font-bold text-[#30465B] tabular-nums"
                     style={{ fontFamily: "var(--font-bricolage), sans-serif" }}
                   >
                     {normalizedSummary.totalCategories.toLocaleString("id-ID")}
@@ -293,7 +293,7 @@ export default function AdminCategoriesClient({
                 </div>
               </div>
 
-              <div className="rounded-2xl bg-white border border-[#E8EEF4] shadow-[0_2px_10px_rgba(48,70,91,0.04)] px-5 py-4 flex items-center gap-4">
+              <div className="rounded-2xl bg-white border border-[#E8EEF4] shadow-[0_2px_10px_rgba(48,70,91,0.04)] px-4 py-3 sm:px-5 sm:py-4 flex items-center gap-3 sm:gap-4">
                 <span className="w-10 h-10 rounded-xl bg-[#F7F9FA] border border-[#E8EEF4] text-[#2F855A] inline-flex items-center justify-center shrink-0">
                   <Layers className="w-5 h-5" strokeWidth={1.8} />
                 </span>
@@ -302,7 +302,7 @@ export default function AdminCategoriesClient({
                     Categories with Products
                   </p>
                   <p
-                    className="text-[26px] leading-tight font-bold text-[#30465B] tabular-nums"
+                    className="text-[22px] sm:text-[26px] leading-tight font-bold text-[#30465B] tabular-nums"
                     style={{ fontFamily: "var(--font-bricolage), sans-serif" }}
                   >
                     {normalizedSummary.categoriesWithProducts.toLocaleString(
@@ -312,7 +312,7 @@ export default function AdminCategoriesClient({
                 </div>
               </div>
 
-              <div className="rounded-2xl bg-[#2D4356] border border-[#2D4356] shadow-[0_6px_16px_rgba(45,67,86,0.16)] px-5 py-4 flex items-center gap-4 text-white">
+              <div className="rounded-2xl bg-[#2D4356] border border-[#2D4356] shadow-[0_6px_16px_rgba(45,67,86,0.16)] px-4 py-3 sm:px-5 sm:py-4 flex items-center gap-3 sm:gap-4 text-white">
                 <span className="w-10 h-10 rounded-xl bg-white/10 text-white inline-flex items-center justify-center shrink-0">
                   <FolderX className="w-5 h-5" strokeWidth={1.8} />
                 </span>
@@ -321,7 +321,7 @@ export default function AdminCategoriesClient({
                     Empty Categories
                   </p>
                   <p
-                    className="text-[26px] leading-tight font-bold text-white tabular-nums"
+                    className="text-[22px] sm:text-[26px] leading-tight font-bold text-white tabular-nums"
                     style={{ fontFamily: "var(--font-bricolage), sans-serif" }}
                   >
                     {normalizedSummary.emptyCategories.toLocaleString("id-ID")}
@@ -346,7 +346,7 @@ export default function AdminCategoriesClient({
                 />
               </div>
 
-              <div className="flex items-center gap-2 self-start sm:self-auto">
+              <div className="flex items-center gap-2 w-full sm:w-auto self-start sm:self-auto">
                 <label htmlFor="category-filter-select" className="sr-only">
                   Filter kategori
                 </label>
@@ -354,7 +354,7 @@ export default function AdminCategoriesClient({
                   id="category-filter-select"
                   value={filterMode}
                   onChange={(e) => handleFilterChange(e.target.value)}
-                  className="h-10 px-3.5 rounded-xl bg-[#F7F9FA] border border-[#E2E8F0] text-[12.5px] font-medium text-[#30465B] focus:outline-none focus:bg-white focus:border-[#527DA3] transition-colors cursor-pointer"
+                  className="w-full sm:w-auto h-10 px-3.5 rounded-xl bg-[#F7F9FA] border border-[#E2E8F0] text-[12.5px] font-medium text-[#30465B] focus:outline-none focus:bg-white focus:border-[#527DA3] transition-colors cursor-pointer"
                 >
                   <option value="all">All Categories</option>
                   <option value="with_products">With Products</option>

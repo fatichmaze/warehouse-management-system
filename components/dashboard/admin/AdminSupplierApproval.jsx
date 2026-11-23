@@ -73,7 +73,7 @@ export default function AdminSupplierApproval({
   return (
     <section
       id="supplier-approval"
-      className="rounded-[22px] bg-white border border-[#E8EEF4] p-5 shadow-[0_6px_18px_rgba(48,70,91,0.04)]"
+      className="min-w-0 rounded-[22px] bg-white border border-[#E8EEF4] p-4 sm:p-5 shadow-[0_6px_18px_rgba(48,70,91,0.04)]"
     >
       <div className="flex items-center justify-between gap-3 mb-4">
         <div className="flex items-center gap-2.5 flex-wrap">
@@ -119,7 +119,7 @@ export default function AdminSupplierApproval({
         </div>
       ) : (
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+          <table className="w-full min-w-160 text-left border-collapse">
             <thead>
               <tr className="bg-[#F7F9FA] text-[#8998A5] text-[10.5px] font-semibold uppercase tracking-wider">
                 <th className="py-2.5 px-3 rounded-l-lg">SUPPLIER</th>
@@ -170,7 +170,7 @@ export default function AdminSupplierApproval({
                           onClick={() =>
                             handleDecision(supplier.id, "approve")
                           }
-                          className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#2D4356] hover:bg-[#527DA3] disabled:opacity-50 text-white text-[11px] font-semibold transition-colors cursor-pointer"
+                          className="inline-flex items-center gap-1 px-3 py-1.5 sm:py-1 rounded-full bg-[#2D4356] hover:bg-[#527DA3] disabled:opacity-50 text-white text-[11.5px] sm:text-[11px] font-semibold transition-colors cursor-pointer"
                         >
                           <Check className="w-3 h-3" strokeWidth={2.2} />
                           <span>{isBusy ? "..." : "Approve"}</span>
@@ -182,7 +182,7 @@ export default function AdminSupplierApproval({
                           onClick={() =>
                             handleDecision(supplier.id, "reject")
                           }
-                          className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white hover:bg-[#FDECEC] disabled:opacity-50 text-[#B43232] border border-[#F3C8C8] text-[11px] font-semibold transition-colors cursor-pointer"
+                          className="inline-flex items-center gap-1 px-3 py-1.5 sm:py-1 rounded-full bg-white hover:bg-[#FDECEC] disabled:opacity-50 text-[#B43232] border border-[#F3C8C8] text-[11.5px] sm:text-[11px] font-semibold transition-colors cursor-pointer"
                         >
                           <X className="w-3 h-3" strokeWidth={2.2} />
                           <span>Reject</span>

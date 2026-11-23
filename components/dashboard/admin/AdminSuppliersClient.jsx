@@ -34,17 +34,17 @@ export default function AdminSuppliersClient({
       <div className="max-w-350 mx-auto flex flex-col md:flex-row items-start gap-4 min-h-[calc(100vh-2.5rem)]">
         <AdminSidebar pendingCount={pendingCount} role={userRole} />
 
-        <div className="flex-1 min-w-0 rounded-[28px] bg-white/95 border border-white/90 shadow-[0_14px_36px_rgba(48,70,91,0.08)] flex flex-col">
+        <div className="flex-1 min-w-0 w-full max-w-full rounded-[28px] bg-white/95 border border-white/90 shadow-[0_14px_36px_rgba(48,70,91,0.08)] flex flex-col">
           <AdminTopbar
             adminName={adminName}
             role={userRole}
             currentSection="Supplier Verification"
           />
 
-          <main className="flex-1 px-7 pt-3 pb-7 space-y-5">
+          <main className="flex-1 min-w-0 px-4 sm:px-7 pt-2.5 sm:pt-3 pb-6 sm:pb-7 space-y-4 sm:space-y-5">
             <div className="pt-1">
               <h1
-                className="text-[34px] leading-[1.08] font-bold tracking-tight"
+                className="text-[26px] sm:text-[34px] leading-[1.12] sm:leading-[1.08] font-bold tracking-tight"
                 style={{ fontFamily: "var(--font-bricolage), sans-serif" }}
               >
                 <span className="text-[#30465B] block">Supplier</span>

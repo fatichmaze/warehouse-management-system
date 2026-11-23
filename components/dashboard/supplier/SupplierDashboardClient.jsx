@@ -59,14 +59,14 @@ function StatusBadge({ status }) {
 
 function SummaryCard({ title, value, description, icon: Icon }) {
   return (
-    <div className="rounded-2xl border border-[#E8EEF4] bg-white p-5 shadow-sm">
+    <div className="rounded-2xl border border-[#E8EEF4] bg-white p-4 sm:p-5 shadow-sm">
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="text-[12px] font-medium text-[#8998A5]">
             {title}
           </p>
 
-          <p className="mt-2 text-[28px] font-bold text-[#30465B]">
+          <p className="mt-2 text-[24px] sm:text-[28px] leading-tight font-bold text-[#30465B]">
             {formatNumber(value)}
           </p>
 
@@ -75,7 +75,7 @@ function SummaryCard({ title, value, description, icon: Icon }) {
           </p>
         </div>
 
-        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#DCEAF3] text-[#527DA3]">
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#DCEAF3] text-[#527DA3]">
           <Icon size={20} />
         </div>
       </div>
@@ -116,19 +116,19 @@ export default function SupplierDashboardClient({
       <div className="mx-auto flex min-h-[calc(100vh-2.5rem)] max-w-350 flex-col items-start gap-4 md:flex-row">
         <AdminSidebar role="supplier" />
 
-        <div className="flex min-w-0 flex-1 flex-col rounded-[28px] border border-white/90 bg-white/95 shadow-[0_14px_36px_rgba(48,70,91,0.08)]">
+        <div className="flex min-w-0 w-full max-w-full flex-1 flex-col rounded-[28px] border border-white/90 bg-white/95 shadow-[0_14px_36px_rgba(48,70,91,0.08)]">
           <AdminTopbar
             adminName={supplierName}
             role="supplier"
             currentSection="Dashboard"
           />
 
-          <main className="flex-1 space-y-6 px-5 pb-7 pt-4 sm:px-7">
+          <main className="min-w-0 flex-1 space-y-4 sm:space-y-5 px-4 pb-6 sm:pb-7 pt-2.5 sm:pt-3 sm:px-7">
             {/* Header */}
             <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
               <div>
                 <h1
-                  className="text-[30px] font-bold tracking-tight text-[#30465B] sm:text-[34px]"
+                  className="text-[26px] sm:text-[34px] leading-[1.12] sm:leading-[1.08] font-bold tracking-tight text-[#30465B]"
                   style={{
                     fontFamily: "var(--font-bricolage), sans-serif",
                   }}
@@ -143,7 +143,7 @@ export default function SupplierDashboardClient({
 
               <Link
                 href="/supplier/restock-orders"
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#527DA3] px-4 py-2.5 text-[12px] font-semibold text-white transition hover:bg-[#426B90]"
+                className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-[#527DA3] px-4 py-2.5 text-[12px] font-semibold text-white transition hover:bg-[#426B90]"
               >
                 <ClipboardList size={15} />
                 Restock Orders
@@ -182,7 +182,7 @@ export default function SupplierDashboardClient({
             </section>
 
             {/* Pending Orders */}
-            <section className="rounded-2xl border border-[#E8EEF4] bg-white p-5">
+            <section className="rounded-2xl border border-[#E8EEF4] bg-white p-4 sm:p-5">
               <div className="mb-4 flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
                 <div>
                   <h2 className="text-[16px] font-bold text-[#30465B]">
@@ -209,7 +209,7 @@ export default function SupplierDashboardClient({
                   {pendingOrders.map((order) => (
                     <div
                       key={order.id}
-                      className="flex flex-col justify-between gap-3 rounded-xl border border-[#E8EEF4] bg-[#F8FAFC] p-4 sm:flex-row sm:items-center"
+                      className="flex flex-col justify-between gap-3 rounded-xl border border-[#E8EEF4] bg-[#F8FAFC] p-3.5 sm:p-4 sm:flex-row sm:items-center"
                     >
                       <div>
                         <p className="text-[13px] font-bold text-[#30465B]">
@@ -246,7 +246,7 @@ export default function SupplierDashboardClient({
             </section>
 
             {/* Shipment History */}
-            <section className="rounded-2xl border border-[#E8EEF4] bg-white p-5">
+            <section className="rounded-2xl border border-[#E8EEF4] bg-white p-4 sm:p-5">
               <div className="mb-4 flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
                 <div>
                   <h2 className="text-[16px] font-bold text-[#30465B]">
@@ -297,19 +297,19 @@ export default function SupplierDashboardClient({
                           key={order.id}
                           className="border-b border-[#F1F5F9] last:border-0"
                         >
-                          <td className="px-3 py-3 font-semibold text-[#30465B]">
+                          <td className="whitespace-nowrap px-3 py-3 font-semibold text-[#30465B]">
                             {order.po_number}
                           </td>
 
-                          <td className="px-3 py-3 text-[#637587]">
+                          <td className="whitespace-nowrap px-3 py-3 text-[#637587]">
                             {formatDate(order.order_date)}
                           </td>
 
-                          <td className="px-3 py-3 text-[#637587]">
+                          <td className="whitespace-nowrap px-3 py-3 text-[#637587]">
                             {formatDate(order.expected_delivery_date)}
                           </td>
 
-                          <td className="px-3 py-3">
+                          <td className="whitespace-nowrap px-3 py-3">
                             <StatusBadge status={order.status} />
                           </td>
                         </tr>
