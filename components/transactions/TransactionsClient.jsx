@@ -42,9 +42,8 @@ export default function TransactionsClient({
   initialTab = "incoming",
 }) {
   const router = useRouter();
-  const isManager = role === "warehouse_manager";
   const isStaff = role === "staff";
-  const columnCount = isManager ? 7 : 6;
+  const columnCount = 7;
 
   const [tab, setTab] = useState(
     initialTab === "outgoing" ? "outgoing" : "incoming"
@@ -176,9 +175,7 @@ export default function TransactionsClient({
                   Transaksi
                 </h1>
                 <p className="mt-1.5 text-[12px] leading-relaxed text-[#8998A5]">
-                  {isStaff
-                    ? "Transaksi barang masuk dan keluar yang Anda buat."
-                    : "Seluruh transaksi barang masuk dan keluar gudang."}
+                  Seluruh transaksi barang masuk dan keluar gudang.
                 </p>
               </div>
 
@@ -334,9 +331,7 @@ export default function TransactionsClient({
                       {isIncoming ? "Supplier" : "Customer/Tujuan"}
                     </th>
                     <th className="px-4 py-3 font-semibold">Produk</th>
-                    {isManager && (
-                      <th className="px-4 py-3 font-semibold">Dibuat oleh</th>
-                    )}
+                    <th className="px-4 py-3 font-semibold">Dibuat oleh</th>
                     <th className="px-4 py-3 font-semibold">Status</th>
                     <th className="px-4 py-3 font-semibold text-right">Aksi</th>
                   </tr>
@@ -398,11 +393,9 @@ export default function TransactionsClient({
                         <td className="px-4 py-3 text-[#637587]">
                           {row.item_count} produk • {row.total_quantity} unit
                         </td>
-                        {isManager && (
-                          <td className="px-4 py-3 text-[#637587]">
-                            {row.created_by_name || "-"}
-                          </td>
-                        )}
+                        <td className="px-4 py-3 text-[#637587]">
+                          {row.created_by_name || "-"}
+                        </td>
                         <td className="px-4 py-3">
                           <TransactionStatusBadge status={row.status} />
                         </td>

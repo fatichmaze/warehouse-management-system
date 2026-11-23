@@ -77,10 +77,12 @@ export default function TransactionDetailModal({
   }
 
   function handleApprove() {
-    return run(
-      () => postStatus({ action: "approve" }),
-      "Transaksi disetujui. Stok diperbarui."
-    );
+    const msg =
+      trx?.type === "incoming"
+        ? "Transaksi masuk disetujui. Stok diperbarui."
+        : "Transaksi keluar disetujui. Siap dikemas oleh Staff.";
+
+    return run(() => postStatus({ action: "approve" }), msg);
   }
 
   function handleReject() {
@@ -97,7 +99,7 @@ export default function TransactionDetailModal({
   function handleShip() {
     return run(
       () => postStatus({ action: "ship" }),
-      "Transaksi ditandai Shipped."
+      "Transaksi selesai dan ditandai Shipped. Stok telah dikurangi."
     );
   }
 

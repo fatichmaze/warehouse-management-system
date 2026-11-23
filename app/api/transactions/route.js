@@ -30,11 +30,6 @@ export async function GET(request) {
       return `$${params.length}`;
     };
 
-    // Staff hanya dapat melihat transaksi miliknya.
-    if (auth.user.role === "staff") {
-      conditions.push(`t.created_by = ${add(auth.user.id)}`);
-    }
-
     const type = sp.get("type");
 
     if (type === "incoming" || type === "outgoing") {

@@ -55,12 +55,8 @@ export async function GET(_request, context) {
        LEFT JOIN users cu ON cu.id = t.created_by
        LEFT JOIN users au ON au.id = t.approved_by
        LEFT JOIN restock_orders po ON po.id = t.restock_order_id
-       WHERE t.id = $1
-         AND (
-           $2 = 'warehouse_manager'
-           OR t.created_by = $3
-         )`,
-      [id, auth.user.role, auth.user.id]
+       WHERE t.id = $1`,
+      [id]
     );
 
     if (trx.rowCount === 0) {

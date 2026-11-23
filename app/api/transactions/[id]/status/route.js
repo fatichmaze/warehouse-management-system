@@ -48,10 +48,13 @@ export async function POST(request, context) {
           );
         }
 
-        await approveTransaction(auth.user, id);
+        const approved = await approveTransaction(auth.user, id);
 
         return NextResponse.json({
-          message: "Transaksi disetujui. Stok diperbarui.",
+          message:
+            approved.type === "incoming"
+              ? "Transaksi masuk disetujui. Stok bertambah."
+              : "Transaksi keluar disetujui. Siap dikemas dan dikirim.",
         });
       }
 
@@ -81,7 +84,7 @@ export async function POST(request, context) {
         await markTransactionShipped(auth.user, id);
 
         return NextResponse.json({
-          message: "Transaksi ditandai Shipped.",
+          message: "Transaksi ditandai Shipped. Stok berkurang.",
         });
       }
 
