@@ -1,51 +1,11 @@
 "use client";
+import {
+  buildInitialFormState,
+  isValidHttpOrHttpsUrl,
+} from "@/lib/product-form-helpers";
 
 import { useState, useEffect } from "react";
 import { X, Loader2, Lock } from "lucide-react";
-
-function buildInitialFormState(product) {
-  return {
-    sku: product?.sku ? String(product.sku) : "",
-    name: product?.name ? String(product.name) : "",
-    category_id:
-      product?.category_id !== undefined && product?.category_id !== null
-        ? String(product.category_id)
-        : "",
-    description: product?.description ? String(product.description) : "",
-    purchase_price:
-      product?.purchase_price !== undefined && product?.purchase_price !== null
-        ? String(product.purchase_price)
-        : "",
-    selling_price:
-      product?.selling_price !== undefined && product?.selling_price !== null
-        ? String(product.selling_price)
-        : "",
-    min_stock:
-      product?.min_stock !== undefined && product?.min_stock !== null
-        ? String(product.min_stock)
-        : "",
-    low_stock:
-      product?.low_stock !== undefined && product?.low_stock !== null
-        ? String(product.low_stock)
-        : "",
-    current_stock:
-      product?.current_stock !== undefined && product?.current_stock !== null
-        ? String(product.current_stock)
-        : "",
-    unit: product?.unit ? String(product.unit) : "",
-    rack_location: product?.rack_location ? String(product.rack_location) : "",
-    image_url: product?.image_url ? String(product.image_url) : "",
-  };
-}
-
-function isValidHttpOrHttpsUrl(value) {
-  try {
-    const parsed = new URL(value);
-    return parsed.protocol === "http:" || parsed.protocol === "https:";
-  } catch {
-    return false;
-  }
-}
 
 export default function EditProductModal({
   product = null,
@@ -219,11 +179,21 @@ export default function EditProductModal({
       selling_price: sellingPriceNum,
       min_stock: minStockNum,
       low_stock: lowStockNum,
-      current_stock: currentStockNum,
       unit: unitTrimmed,
       rack_location: rackTrimmed,
       image_url: imageUrlTrimmed || null,
     };
+
+    // Stok hanya dikirim bila pengguna benar-benar mengubahnya. Jika tidak,
+    // stok di database (yang bisa berubah karena transaksi yang di-approve)
+    // tidak disentuh. expected_current_stock = stok saat form dibuka; server
+    // menolak (409) bila stok di database sudah berbeda.
+    const originalStock = Number(product.current_stock);
+
+    if (currentStockNum !== originalStock) {
+      payload.current_stock = currentStockNum;
+      payload.expected_current_stock = originalStock;
+    }
 
     onSubmit?.(payload);
   }
