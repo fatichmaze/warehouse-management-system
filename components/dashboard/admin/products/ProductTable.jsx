@@ -16,7 +16,7 @@ function getProductStockStatus(product) {
 
   if (currentStock === 0) return "Out of Stock";
   if (currentStock <= minStock) return "Severe";
-  if (currentStock <= lowStock) return "Low Stock";
+  if (currentStock <= lowStock) return "Low";
   return "Normal";
 }
 
@@ -30,11 +30,11 @@ function formatRupiah(value) {
 function getStockBadgeStyle(status) {
   switch (status) {
     case "Out of Stock":
-      return "bg-[#2D4356] text-white";
+      return "bg-[#EEF1F4] text-[#4A5568]";
     case "Severe":
       return "bg-[#FDECEC] text-[#C53030]";
-    case "Low Stock":
-      return "bg-[#FEF5E7] text-[#D9822B]";
+    case "Low":
+      return "bg-[#FEF9E7] text-[#B7791F]";
     default:
       return "bg-[#EAF6EE] text-[#2F855A]";
   }

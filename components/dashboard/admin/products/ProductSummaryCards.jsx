@@ -38,7 +38,7 @@ export default function ProductSummaryCards({ summary }) {
     },
     {
       key: "low",
-      label: "Low Stock",
+      label: "Low",
       value: lowStock,
       badge: "Pantau",
       icon: AlertTriangle,

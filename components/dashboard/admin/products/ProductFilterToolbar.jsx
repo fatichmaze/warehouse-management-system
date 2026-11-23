@@ -14,7 +14,7 @@ export const SORT_OPTIONS = [
 export const STOCK_STATUS_OPTIONS = [
   { value: "all", label: "Semua Status Stok" },
   { value: "Normal", label: "Normal" },
-  { value: "Low Stock", label: "Low Stock" },
+  { value: "Low", label: "Low" },
   { value: "Severe", label: "Severe" },
   { value: "Out of Stock", label: "Out of Stock" },
 ];
