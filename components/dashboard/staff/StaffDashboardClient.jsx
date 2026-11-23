@@ -222,7 +222,7 @@ export default function StaffDashboardClient({
                 </div>
               ) : (
                 <div className="overflow-x-auto">
-                  <table className="w-full min-w-[720px] text-left text-[13px]">
+                  <table className="w-full min-w-180 text-left text-[13px]">
                     <thead>
                       <tr className="bg-[#F7F9FA] text-[10.5px] uppercase tracking-wider text-[#8998A5]">
                         <th className="px-5 py-3 font-semibold">Nomor Transaksi</th>

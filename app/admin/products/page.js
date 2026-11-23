@@ -1,9 +1,6 @@
-import { redirect } from "next/navigation";
-import { getSession } from "@/lib/auth";
+import { requirePageRole } from "@/lib/page-auth";
 import pool from "@/lib/db";
 import AdminProductsClient from "@/components/dashboard/admin/products/AdminProductsClient";
-
-const ALLOWED_ROLES = ["admin", "warehouse_manager"];
 
 async function getProductsPageData() {
   const productsRes = await pool.query(
@@ -66,23 +63,14 @@ async function getProductsPageData() {
 }
 
 export default async function AdminProductsPage() {
-  const session = await getSession();
-
-  if (!session) {
-    redirect("/login");
-  }
-
-  const role = String(session.role ?? "").toLowerCase();
-  if (!ALLOWED_ROLES.includes(role)) {
-    redirect("/dashboard");
-  }
+  const user = await requirePageRole(["admin", "warehouse_manager"]);
 
   const { products, categories, summary } = await getProductsPageData();
 
   return (
     <AdminProductsClient
-      userName={session.name || "Admin Tataloka"}
-      userRole={role}
+      userName={user.name || "Admin Tataloka"}
+      userRole={user.role}
       initialProducts={products}
       initialCategories={categories}
       initialSummary={summary}

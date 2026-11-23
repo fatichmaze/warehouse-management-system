@@ -1,5 +1,4 @@
-import { redirect } from "next/navigation";
-import { getSession } from "@/lib/auth";
+import { requirePageRole } from "@/lib/page-auth";
 import pool from "@/lib/db";
 import AdminDashboardClient from "@/components/dashboard/admin/AdminDashboardClient";
 
@@ -162,22 +161,14 @@ async function getAdminDashboardData() {
 }
 
 export default async function AdminDashboardPage() {
-  const session = await getSession();
-
-  if (!session) {
-    redirect("/login");
-  }
-
-  if (session.role !== "admin") {
-    redirect("/dashboard");
-  }
+  const user = await requirePageRole(["admin"]);
 
   const data = await getAdminDashboardData();
 
   return (
     <AdminDashboardClient
-      adminName={session.name || "Admin Tataloka"}
-      userRole={session.role}
+      adminName={user.name || "Admin Tataloka"}
+      userRole={user.role}
       initialKpi={data.kpi}
       initialPendingSuppliers={data.pendingSuppliers}
       initialInventoryOverview={data.inventoryOverview}

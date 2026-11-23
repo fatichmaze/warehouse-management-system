@@ -1,5 +1,4 @@
-import { redirect } from "next/navigation";
-import { getSession } from "@/lib/auth";
+import { requirePageRole } from "@/lib/page-auth";
 import pool from "@/lib/db";
 import AdminSuppliersClient from "@/components/dashboard/admin/AdminSuppliersClient";
 
@@ -15,22 +14,14 @@ async function getPendingSuppliers() {
 }
 
 export default async function AdminSuppliersPage() {
-  const session = await getSession();
-
-  if (!session) {
-    redirect("/login");
-  }
-
-  if (session.role !== "admin") {
-    redirect("/dashboard");
-  }
+  const user = await requirePageRole(["admin"]);
 
   const initialPendingSuppliers = await getPendingSuppliers();
 
   return (
     <AdminSuppliersClient
-      adminName={session.name || "Admin Tataloka"}
-      userRole={session.role}
+      adminName={user.name || "Admin Tataloka"}
+      userRole={user.role}
       initialPendingSuppliers={initialPendingSuppliers}
     />
   );

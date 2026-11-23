@@ -79,8 +79,8 @@ export default function ProductSummaryCards({ summary }) {
             key={card.key}
             className={
               isDark
-                ? "rounded-2xl bg-[#2D4356] text-white p-4 border border-[#2D4356] shadow-[0_8px_20px_rgba(45,67,86,0.16)] flex flex-col justify-between min-h-[118px]"
-                : "rounded-2xl bg-white text-[#30465B] p-4 border border-[#E8EEF4] shadow-[0_2px_10px_rgba(48,70,91,0.04)] flex flex-col justify-between min-h-[118px]"
+                ? "rounded-2xl bg-[#2D4356] text-white p-4 border border-[#2D4356] shadow-[0_8px_20px_rgba(45,67,86,0.16)] flex flex-col justify-between min-h-29.5"
+                : "rounded-2xl bg-white text-[#30465B] p-4 border border-[#E8EEF4] shadow-[0_2px_10px_rgba(48,70,91,0.04)] flex flex-col justify-between min-h-29.5"
             }
           >
             <div className="flex items-center justify-between gap-2">

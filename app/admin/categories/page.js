@@ -1,9 +1,6 @@
-import { redirect } from "next/navigation";
-import { getSession } from "@/lib/auth";
+import { requirePageRole } from "@/lib/page-auth";
 import pool from "@/lib/db";
 import AdminCategoriesClient from "@/components/dashboard/admin/categories/AdminCategoriesClient";
-
-const ALLOWED_ROLES = ["admin", "warehouse_manager"];
 
 async function getCategoriesPageData() {
   const categoriesRes = await pool.query(
@@ -51,23 +48,14 @@ async function getCategoriesPageData() {
 }
 
 export default async function AdminCategoriesPage() {
-  const session = await getSession();
-
-  if (!session) {
-    redirect("/login");
-  }
-
-  const role = String(session.role ?? "").toLowerCase();
-  if (!ALLOWED_ROLES.includes(role)) {
-    redirect("/dashboard");
-  }
+  const user = await requirePageRole(["admin", "warehouse_manager"]);
 
   const { categories, summary } = await getCategoriesPageData();
 
   return (
     <AdminCategoriesClient
-      userName={session.name || "Admin Tataloka"}
-      userRole={role}
+      userName={user.name || "Admin Tataloka"}
+      userRole={user.role}
       initialCategories={categories}
       initialSummary={summary}
     />

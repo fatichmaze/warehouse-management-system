@@ -143,7 +143,7 @@ export default function ManagerDashboardClient({
       className="min-h-screen bg-[#DCE6EF] p-3 text-[#30465B] sm:p-5"
       style={{ fontFamily: "var(--font-inter), sans-serif" }}
     >
-      <div className="mx-auto flex min-h-[calc(100vh-2.5rem)] max-w-[1400px] flex-col items-start gap-4 md:flex-row">
+      <div className="mx-auto flex min-h-[calc(100vh-2.5rem)] max-w-350 flex-col items-start gap-4 md:flex-row">
         <AdminSidebar role={userRole} />
 
         <div className="flex min-w-0 flex-1 flex-col rounded-[28px] border border-white/90 bg-white/95 shadow-[0_14px_36px_rgba(48,70,91,0.08)]">

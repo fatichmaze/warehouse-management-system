@@ -1,5 +1,4 @@
-import { redirect } from "next/navigation";
-import { getSession } from "@/lib/auth";
+import { requirePageRole } from "@/lib/page-auth";
 import pool from "@/lib/db";
 import StaffProductsClient from "@/components/dashboard/staff/StaffProductsClient";
 
@@ -68,24 +67,14 @@ async function getProductsPageData() {
 }
 
 export default async function StaffProductsPage() {
-  const session = await getSession();
-
-  if (!session) {
-    redirect("/login");
-  }
-
-  const role = String(session.role ?? "").trim().toLowerCase();
-
-  if (role !== "staff") {
-    redirect("/dashboard");
-  }
+  const user = await requirePageRole(["staff"]);
 
   const { products, categories, summary } =
     await getProductsPageData();
 
   return (
     <StaffProductsClient
-      userName={session.name || "Staff Tataloka"}
+      userName={user.name || "Staff Tataloka"}
       initialProducts={products}
       initialCategories={categories}
       initialSummary={summary}
