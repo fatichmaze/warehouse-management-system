@@ -71,7 +71,7 @@ export default function ProductDetailsClient({
 
                 <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                   <h1
-                    className="break-words text-[24px] font-bold leading-[1.15] tracking-tight text-[#30465B] sm:text-[32px]"
+                    className="wrap-break-word text-[24px] font-bold leading-[1.15] tracking-tight text-[#30465B] sm:text-[32px]"
                     style={{
                       fontFamily: "var(--font-bricolage), sans-serif",
                     }}

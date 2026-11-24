@@ -318,7 +318,7 @@ export default function AdminSupplierApproval({
                 <div className="rounded-xl bg-[#F7F9FA] border border-[#E8EEF4] p-3.5 space-y-1.5 text-[12px]">
                   <div className="flex items-baseline justify-between gap-3">
                     <span className="text-[#8998A5] shrink-0">Nama Supplier</span>
-                    <span className="font-semibold text-[#30465B] text-right break-words">
+                    <span className="font-semibold text-[#30465B] text-right wrap-break-word">
                       {rejectingSupplier.name || "-"}
                     </span>
                   </div>
