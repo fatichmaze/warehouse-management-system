@@ -14,3 +14,4 @@ CHECK (
     OR rejection_reason IS NOT NULL
     OR created_at < CURRENT_TIMESTAMP
 );
+COMMIT;
