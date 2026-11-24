@@ -1,28 +1,17 @@
 import { NextResponse } from "next/server";
 import pool from "@/lib/db";
-import { getSession } from "@/lib/auth";
+import { requireApiRole } from "@/lib/api-auth";
 
 export async function GET() {
   try {
-    // 1. Periksa sesi login
-    const session = await getSession();
+    // 1. Periksa sesi, role, dan status akun terbaru dari database
+    const auth = await requireApiRole(["admin"]);
 
-    if (!session) {
-      return NextResponse.json(
-        { message: "Silakan login terlebih dahulu." },
-        { status: 401 }
-      );
+    if (!auth.ok) {
+      return auth.response;
     }
 
-    // 2. Pastikan hanya Admin yang bisa mengakses
-    if (session.role !== "admin") {
-      return NextResponse.json(
-        { message: "Anda tidak memiliki akses." },
-        { status: 403 }
-      );
-    }
-
-    // 3. Ambil data dashboard dari database
+    // 2. Ambil data dashboard dari database
     const [
       productStats,
       transactionStats,
@@ -143,7 +132,7 @@ export async function GET() {
       `),
     ]);
 
-    // 4. Kirim data dashboard dalam format JSON
+    // 3. Kirim data dashboard dalam format JSON
     return NextResponse.json({
       stats: {
         totalProducts: productStats.rows[0].total_products,
