@@ -57,20 +57,20 @@ export default function StaffDashboardClient({
       <div className="max-w-350 mx-auto flex flex-col md:flex-row items-start gap-4 min-h-[calc(100vh-2.5rem)]">
         <AdminSidebar role="staff" />
 
-        <div className="flex-1 min-w-0 rounded-[28px] bg-white/95 border border-white/90 shadow-[0_14px_36px_rgba(48,70,91,0.08)] flex flex-col">
+        <div className="flex-1 min-w-0 w-full max-w-full rounded-[28px] bg-white/95 border border-white/90 shadow-[0_14px_36px_rgba(48,70,91,0.08)] flex flex-col">
           <AdminTopbar
             role="staff"
             adminName={userName}
             currentSection="Dashboard"
           />
 
-          <main className="flex-1 px-7 pt-3 pb-7 space-y-5">
+          <main className="flex-1 min-w-0 px-4 sm:px-7 pt-2.5 sm:pt-3 pb-6 sm:pb-7 space-y-4 sm:space-y-5">
             <section>
               <p className="text-[12px] font-medium text-[#8998A5]">
                 Staff Gudang
               </p>
               <h1
-                className="mt-1 text-[34px] leading-[1.08] font-bold tracking-tight text-[#30465B]"
+                className="mt-1 text-[26px] sm:text-[34px] leading-[1.12] sm:leading-[1.08] font-bold tracking-tight text-[#30465B]"
                 style={{ fontFamily: "var(--font-bricolage), sans-serif" }}
               >
                 Dashboard
@@ -81,7 +81,7 @@ export default function StaffDashboardClient({
             </section>
 
             <section className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-              <div className="rounded-2xl border border-[#E8EEF4] bg-white p-5">
+              <div className="rounded-2xl border border-[#E8EEF4] bg-white p-4 sm:p-5">
                 <div className="flex items-center justify-between">
                   <p className="text-[12px] font-medium text-[#8998A5]">
                     Transaksi Hari Ini
@@ -90,12 +90,12 @@ export default function StaffDashboardClient({
                     <ClipboardList size={18} strokeWidth={1.9} />
                   </div>
                 </div>
-                <p className="mt-3 text-3xl font-bold text-[#30465B]">
+                <p className="mt-2 sm:mt-3 text-[24px] sm:text-3xl leading-tight font-bold text-[#30465B]">
                   {summary?.total ?? 0}
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-[#E8EEF4] bg-white p-5">
+              <div className="rounded-2xl border border-[#E8EEF4] bg-white p-4 sm:p-5">
                 <div className="flex items-center justify-between">
                   <p className="text-[12px] font-medium text-[#8998A5]">
                     Barang Masuk
@@ -104,12 +104,12 @@ export default function StaffDashboardClient({
                     <ArrowDownToLine size={18} strokeWidth={1.9} />
                   </div>
                 </div>
-                <p className="mt-3 text-3xl font-bold text-[#30465B]">
+                <p className="mt-2 sm:mt-3 text-[24px] sm:text-3xl leading-tight font-bold text-[#30465B]">
                   {summary?.incoming ?? 0}
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-[#E8EEF4] bg-white p-5">
+              <div className="rounded-2xl border border-[#E8EEF4] bg-white p-4 sm:p-5">
                 <div className="flex items-center justify-between">
                   <p className="text-[12px] font-medium text-[#8998A5]">
                     Barang Keluar
@@ -118,13 +118,13 @@ export default function StaffDashboardClient({
                     <ArrowUpFromLine size={18} strokeWidth={1.9} />
                   </div>
                 </div>
-                <p className="mt-3 text-3xl font-bold text-[#30465B]">
+                <p className="mt-2 sm:mt-3 text-[24px] sm:text-3xl leading-tight font-bold text-[#30465B]">
                   {summary?.outgoing ?? 0}
                 </p>
               </div>
             </section>
 
-            <section className="rounded-2xl border border-[#E8EEF4] bg-white p-5 sm:p-6">
+            <section className="rounded-2xl border border-[#E8EEF4] bg-white p-4 sm:p-6">
               <div className="mb-4">
                 <h2
                   className="text-[18px] font-bold text-[#30465B]"
@@ -140,7 +140,7 @@ export default function StaffDashboardClient({
               <div className="grid gap-4 sm:grid-cols-2">
                 <Link
                   href="/staff/transactions?type=incoming"
-                  className="group flex items-center justify-between rounded-2xl border border-[#DCE6EF] bg-[#F8FAFC] p-4 transition hover:border-[#527DA3] hover:bg-[#DCEAF3]/45"
+                  className="group flex items-center justify-between rounded-2xl border border-[#DCE6EF] bg-[#F8FAFC] p-3.5 sm:p-4 transition hover:border-[#527DA3] hover:bg-[#DCEAF3]/45"
                 >
                   <div className="flex items-center gap-3.5">
                     <div className="rounded-xl bg-[#EAF6EE] p-3 text-[#2F855A]">
@@ -163,7 +163,7 @@ export default function StaffDashboardClient({
 
                 <Link
                   href="/staff/transactions?type=outgoing"
-                  className="group flex items-center justify-between rounded-2xl border border-[#DCE6EF] bg-[#F8FAFC] p-4 transition hover:border-[#527DA3] hover:bg-[#F7EFE3]/65"
+                  className="group flex items-center justify-between rounded-2xl border border-[#DCE6EF] bg-[#F8FAFC] p-3.5 sm:p-4 transition hover:border-[#527DA3] hover:bg-[#F7EFE3]/65"
                 >
                   <div className="flex items-center gap-3.5">
                     <div className="rounded-xl bg-[#F7EFE3] p-3 text-[#8C5A1E]">
@@ -254,9 +254,18 @@ export default function StaffDashboardClient({
                             )}
                           </td>
                           <td className="px-5 py-3 text-[#637587]">
-                            {transaction.supplier_name ||
-                              transaction.customer_destination ||
-                              "-"}
+                            <div
+                              className="max-w-[200px] sm:max-w-[240px] lg:max-w-none truncate"
+                              title={
+                                transaction.supplier_name ||
+                                transaction.customer_destination ||
+                                undefined
+                              }
+                            >
+                              {transaction.supplier_name ||
+                                transaction.customer_destination ||
+                                "-"}
+                            </div>
                           </td>
                           <td className="whitespace-nowrap px-5 py-3 text-[#637587]">
                             {transaction.item_count} item

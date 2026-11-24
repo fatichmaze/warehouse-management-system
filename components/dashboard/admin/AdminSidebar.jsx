@@ -255,7 +255,7 @@ export default function AdminSidebar({ pendingCount = 0, role }) {
           mobileOpen
             ? "translate-x-0"
             : "-translate-x-[calc(100%+1.5rem)] pointer-events-none md:pointer-events-auto"
-        } ${isCollapsed ? "md:w-[76px] px-2.5" : "md:w-[228px] px-3.5"}`}
+        } ${isCollapsed ? "md:w-19 px-2.5" : "md:w-57 px-3.5"}`}
       >
         <div>
           <div

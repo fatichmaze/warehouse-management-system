@@ -39,7 +39,7 @@ export default function LoginPage() {
         return;
       }
 
-      window.location.href = "/dashboard";
+      router.push("/dashboard");
     } catch (error) {
       setErrorMessage("Tidak dapat terhubung ke server.");
     } finally {
@@ -49,7 +49,7 @@ export default function LoginPage() {
 
   return (
     <main className="min-h-screen w-full flex flex-col lg:flex-row bg-white">
-      <section className="relative w-full lg:w-1/2 min-h-[260px] lg:min-h-screen bg-gradient-to-b from-[#F8FAFC] via-[#EFF4F9] to-[#E1ECF6] lg:border-r border-[#E2EAF2] flex flex-col justify-between overflow-hidden">
+      <section className="relative w-full lg:w-1/2 min-h-65 lg:min-h-screen bg-linear-to-b from-[#F8FAFC] via-[#EFF4F9] to-[#E1ECF6] lg:border-r border-[#E2EAF2] flex flex-col justify-between overflow-hidden">
         <div
           aria-hidden="true"
           className="pointer-events-none select-none absolute inset-0"
@@ -96,7 +96,7 @@ export default function LoginPage() {
       <section className="w-full lg:w-1/2 flex items-center justify-center bg-white px-6 py-12 sm:px-12 lg:px-16">
         <div className="w-full max-w-[440px]">
           <div className="mb-8">
-            <h1 className="font-[family-name:var(--font-bricolage)] text-[32px] sm:text-[38px] font-bold tracking-tight leading-tight text-[#193B59]">
+            <h1 className="font-(family-name:--font-bricolage) text-[32px] sm:text-[38px] font-bold tracking-tight leading-tight text-[#193B59]">
               Welcome <span className="text-[#356F9F]">Back!</span>
             </h1>
 
