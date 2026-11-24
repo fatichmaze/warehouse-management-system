@@ -69,19 +69,23 @@ export default function ProductSummaryCards({ summary }) {
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
-      {cards.map((card) => {
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5 sm:gap-3.5">
+      {cards.map((card, index) => {
         const Icon = card.icon;
         const isDark = card.variant === "dark";
+        const isLastOnTwoCol = index === cards.length - 1;
+        const layoutClasses = isLastOnTwoCol
+          ? "sm:col-span-2 lg:col-span-1 min-h-23 sm:min-h-27 p-3.5 sm:p-4"
+          : "min-h-23 sm:min-h-27 p-3.5 sm:p-4";
 
         return (
           <div
             key={card.key}
-            className={
+            className={`${layoutClasses} ${
               isDark
-                ? "rounded-2xl bg-[#2D4356] text-white p-4 border border-[#2D4356] shadow-[0_8px_20px_rgba(45,67,86,0.16)] flex flex-col justify-between min-h-29.5"
-                : "rounded-2xl bg-white text-[#30465B] p-4 border border-[#E8EEF4] shadow-[0_2px_10px_rgba(48,70,91,0.04)] flex flex-col justify-between min-h-29.5"
-            }
+                ? "rounded-2xl bg-[#2D4356] text-white border border-[#2D4356] shadow-[0_8px_20px_rgba(45,67,86,0.16)] flex flex-col justify-between"
+                : "rounded-2xl bg-white text-[#30465B] border border-[#E8EEF4] shadow-[0_2px_10px_rgba(48,70,91,0.04)] flex flex-col justify-between"
+            }`}
           >
             <div className="flex items-center justify-between gap-2">
               <span
@@ -97,9 +101,9 @@ export default function ProductSummaryCards({ summary }) {
               </span>
             </div>
 
-            <div className="mt-3">
+            <div className="mt-2.5 sm:mt-3 flex items-baseline justify-between gap-2 sm:block">
               <div
-                className={`text-[28px] leading-[1.1] font-bold tracking-tight ${
+                className={`text-[24px] sm:text-[28px] leading-[1.1] font-bold tracking-tight tabular-nums ${
                   isDark ? "text-white" : "text-[#30465B]"
                 }`}
                 style={{ fontFamily: "var(--font-bricolage), sans-serif" }}
@@ -107,7 +111,7 @@ export default function ProductSummaryCards({ summary }) {
                 {card.value.toLocaleString("id-ID")}
               </div>
               <p
-                className={`mt-1 text-[12px] font-medium leading-snug ${
+                className={`sm:mt-1 text-[11.5px] sm:text-[12px] font-medium leading-snug ${
                   isDark ? "text-[#CBD7E2]" : "text-[#8998A5]"
                 }`}
               >

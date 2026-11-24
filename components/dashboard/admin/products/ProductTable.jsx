@@ -256,7 +256,7 @@ export default function ProductTable({
 
         <nav
           aria-label="Pagination produk"
-          className="inline-flex items-center gap-1 self-start sm:self-auto"
+          className="flex flex-wrap items-center gap-1 self-start sm:self-auto max-w-full"
         >
           <button
             type="button"

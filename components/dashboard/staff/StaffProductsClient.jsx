@@ -172,35 +172,35 @@ export default function StaffProductsClient({
 
   return (
     <div
-      className="min-h-screen bg-[#DCE6EF] text-[#30465B] p-3 sm:p-5"
+      className="min-h-screen bg-[#DCE6EF] text-[#30465B] p-2.5 sm:p-5"
       style={{ fontFamily: "var(--font-inter), sans-serif" }}
     >
-      <div className="max-w-350 mx-auto flex flex-col md:flex-row items-start gap-4 min-h-[calc(100vh-2.5rem)]">
+      <div className="max-w-350 w-full mx-auto flex flex-col md:flex-row items-start gap-3 sm:gap-4 min-h-[calc(100vh-2.5rem)]">
         <AdminSidebar role="staff" />
 
-        <div className="flex-1 min-w-0 rounded-[28px] bg-white/95 border border-white/90 shadow-[0_14px_36px_rgba(48,70,91,0.08)] flex flex-col">
+        <div className="flex-1 w-full min-w-0 rounded-[24px] sm:rounded-[28px] bg-white/95 border border-white/90 shadow-[0_14px_36px_rgba(48,70,91,0.08)] flex flex-col">
           <AdminTopbar
             adminName={userName}
             role="staff"
             currentSection="Products"
           />
 
-          <main className="flex-1 px-5 sm:px-7 pt-3 pb-7 space-y-5">
-            <div>
+          <main className="flex-1 min-w-0 px-4 sm:px-7 pt-3 pb-5 sm:pb-7 space-y-4 sm:space-y-5">
+            <div className="flex flex-col gap-2.5">
               <h1
-                className="text-[30px] sm:text-[34px] leading-tight font-bold tracking-tight text-[#30465B]"
+                className="text-[26px] sm:text-[32px] lg:text-[34px] leading-[1.1] font-bold tracking-tight text-[#30465B]"
                 style={{ fontFamily: "var(--font-bricolage), sans-serif" }}
               >
                 Product List
               </h1>
 
-              <p className="mt-1 text-[12px] leading-relaxed text-[#8998A5]">
+              <p className="text-[12px] leading-relaxed text-[#8998A5] max-w-2xl">
                 Lihat informasi produk, ketersediaan stok, dan lokasi
                 penyimpanan barang di gudang.
               </p>
 
-              <div className="mt-3 inline-flex items-center gap-2 rounded-lg bg-[#EFF6FA] border border-[#DCE8F0] px-3 py-2 text-[11px] font-medium text-[#527DA3]">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#527DA3]" />
+              <div className="self-start inline-flex items-center gap-2 rounded-xl bg-[#EFF6FA] border border-[#DCE8F0] px-3 py-1.5 text-[11px] font-medium text-[#527DA3]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#527DA3] shrink-0" />
                 Mode lihat saja — Staff tidak dapat mengubah data produk.
               </div>
             </div>

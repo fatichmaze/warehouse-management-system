@@ -163,24 +163,24 @@ export default function RestockOrdersClient({
 
   return (
     <div
-      className="min-h-screen bg-[#DCE6EF] text-[#30465B] p-3 sm:p-5"
+      className="min-h-screen bg-[#DCE6EF] text-[#30465B] p-2.5 sm:p-5"
       style={{ fontFamily: "var(--font-inter), sans-serif" }}
     >
-      <div className="max-w-350 mx-auto flex flex-col md:flex-row items-start gap-4 min-h-[calc(100vh-2.5rem)]">
+      <div className="max-w-350 mx-auto flex flex-col md:flex-row items-start gap-3 sm:gap-4 min-h-[calc(100vh-2.5rem)]">
         <AdminSidebar role={role} />
 
-        <div className="flex-1 min-w-0 rounded-[28px] bg-white/95 border border-white/90 shadow-[0_14px_36px_rgba(48,70,91,0.08)] flex flex-col">
+        <div className="flex-1 w-full min-w-0 rounded-[24px] sm:rounded-[28px] bg-white/95 border border-white/90 shadow-[0_14px_36px_rgba(48,70,91,0.08)] flex flex-col">
           <AdminTopbar
             adminName={userName}
             role={role}
             currentSection="Restock Orders"
           />
 
-          <main className="flex-1 px-7 pt-3 pb-7 space-y-5">
+          <main className="flex-1 min-w-0 px-4 sm:px-7 pt-3 pb-5 sm:pb-7 space-y-4 sm:space-y-5">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <div>
                 <h1
-                  className="text-[34px] leading-[1.08] font-bold tracking-tight text-[#30465B]"
+                  className="text-[28px] sm:text-[34px] leading-[1.08] font-bold tracking-tight text-[#30465B]"
                   style={{ fontFamily: "var(--font-bricolage), sans-serif" }}
                 >
                   Restock Orders
@@ -201,7 +201,7 @@ export default function RestockOrdersClient({
                       setSuccessMessage("");
                       setShowCreateModal(true);
                     }}
-                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#527DA3] px-4 py-2.5 text-[12px] font-semibold text-white transition hover:bg-[#426B90]"
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-[#527DA3] px-4 py-2.5 text-[12px] font-semibold text-white transition hover:bg-[#426B90]"
                   >
                     <Plus size={15} />
                     Tambah Restock Order
@@ -212,7 +212,7 @@ export default function RestockOrdersClient({
                   type="button"
                   onClick={() => setRefreshKey((current) => current + 1)}
                   disabled={loading}
-                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#DCE6EF] bg-white px-4 py-2.5 text-[12px] font-semibold text-[#30465B] transition hover:bg-[#F7F9FA] disabled:opacity-50"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl border border-[#DCE6EF] bg-white px-4 py-2.5 text-[12px] font-semibold text-[#30465B] transition hover:bg-[#F7F9FA] disabled:opacity-50"
                 >
                   <RefreshCw size={15} strokeWidth={1.9} />
                   Refresh
@@ -236,7 +236,7 @@ export default function RestockOrdersClient({
               </div>
             )}
 
-            <div className="rounded-[20px] bg-[#F8FAFC] border border-[#E8EEF4] p-3.5 flex flex-col md:flex-row items-stretch md:items-center gap-2.5">
+            <div className="rounded-[20px] bg-[#F8FAFC] border border-[#E8EEF4] p-3 sm:p-3.5 flex flex-col md:flex-row items-stretch md:items-center gap-2.5">
               <div className="relative flex-1 min-w-0">
                 <Search
                   size={16}
@@ -257,7 +257,7 @@ export default function RestockOrdersClient({
                 value={status}
                 onChange={(event) => handleStatus(event.target.value)}
                 aria-label="Filter status Restock Order"
-                className={`${fieldCls} md:w-48`}
+                className={`${fieldCls} w-full md:w-48`}
               >
                 <option value="">Semua Status</option>
                 {STATUSES.map((item) => (
@@ -335,7 +335,7 @@ export default function RestockOrdersClient({
                           <button
                             type="button"
                             onClick={() => openDetail(order.id)}
-                            className="inline-flex items-center gap-1.5 rounded-xl bg-[#DCEAF3]/75 px-3 py-1.5 text-[12px] font-semibold text-[#527DA3] transition hover:bg-[#DCEAF3]"
+                            className="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-[#DCEAF3]/75 px-3 py-1.5 text-[12px] font-semibold text-[#527DA3] transition hover:bg-[#DCEAF3]"
                           >
                             <Eye size={14} strokeWidth={1.9} />
                             Detail
@@ -348,7 +348,7 @@ export default function RestockOrdersClient({
               </table>
             </div>
 
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-1 text-[12px] text-[#637587]">
+            <div className="flex flex-wrap items-center justify-between gap-2.5 pt-1 text-[12px] text-[#637587]">
               <p>
                 Total{" "}
                 <span className="font-semibold text-[#30465B]">
@@ -357,7 +357,7 @@ export default function RestockOrdersClient({
                 Restock Orders
               </p>
 
-              <div className="flex items-center gap-2.5">
+              <div className="flex items-center gap-2 sm:gap-2.5">
                 <button
                   type="button"
                   disabled={page <= 1 || loading}
