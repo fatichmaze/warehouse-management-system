@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS users (
         CHECK (role IN ('admin', 'warehouse_manager', 'staff', 'supplier')),
     status VARCHAR(20) NOT NULL DEFAULT 'pending'
         CHECK (status IN ('pending', 'approved', 'rejected')),
+    rejection_reason TEXT,
     company_name VARCHAR(150),
     phone VARCHAR(30),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
