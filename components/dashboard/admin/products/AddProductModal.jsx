@@ -187,23 +187,23 @@ export default function AddProductModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[#1D2D3C]/45 backdrop-blur-[2px] p-3 sm:p-5 overflow-y-auto"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[#1D2D3C]/45 backdrop-blur-[2px] p-2.5 sm:p-5 overflow-y-auto"
       role="dialog"
       aria-modal="true"
       aria-labelledby="add-product-modal-title"
       style={{ fontFamily: "var(--font-inter), sans-serif" }}
     >
-      <div className="w-full max-w-2xl rounded-3xl bg-white border border-[#E8EEF4] shadow-[0_20px_48px_rgba(48,70,91,0.18)] overflow-hidden my-auto">
-        <div className="px-6 py-4.5 border-b border-[#E8EEF4] flex items-center justify-between gap-4 bg-[#FAFBFD]">
-          <div>
+      <div className="w-full max-w-2xl rounded-2xl sm:rounded-3xl bg-white border border-[#E8EEF4] shadow-[0_20px_48px_rgba(48,70,91,0.18)] overflow-hidden my-auto">
+        <div className="px-4 sm:px-6 py-3.5 sm:py-4.5 border-b border-[#E8EEF4] flex items-start sm:items-center justify-between gap-3 sm:gap-4 bg-[#FAFBFD]">
+          <div className="min-w-0">
             <h2
               id="add-product-modal-title"
-              className="text-[20px] leading-tight font-bold text-[#30465B]"
+              className="text-[18px] sm:text-[20px] leading-tight font-bold text-[#30465B]"
               style={{ fontFamily: "var(--font-bricolage), sans-serif" }}
             >
               Add New Product
             </h2>
-            <p className="mt-0.5 text-[12px] text-[#8998A5]">
+            <p className="mt-0.5 text-[11.5px] sm:text-[12px] text-[#8998A5] leading-snug">
               Lengkapi detail produk dan batas stok gudang. Tanda{" "}
               <span className="text-[#C53030] font-semibold">*</span>{" "}
               menandakan field wajib.
@@ -222,11 +222,11 @@ export default function AddProductModal({
         </div>
 
         <form onSubmit={handleFormSubmit} noValidate>
-          <div className="p-6 space-y-4 max-h-[72vh] overflow-y-auto">
+          <div className="p-4 sm:p-6 space-y-3.5 sm:space-y-4 max-h-[68vh] sm:max-h-[72vh] overflow-y-auto">
             {!hasCategories ? (
               <div
                 role="status"
-                className="rounded-xl bg-[#FEF5E7] border border-[#F7D7A8] px-4 py-2.5 text-[12px] font-medium text-[#B76E1E]"
+                className="rounded-xl bg-[#FEF5E7] border border-[#F7D7A8] px-3.5 sm:px-4 py-2.5 text-[12px] font-medium text-[#B76E1E]"
               >
                 Belum ada kategori yang tersedia. Silakan tambahkan kategori terlebih dahulu sebelum menambahkan produk.
               </div>
@@ -235,14 +235,14 @@ export default function AddProductModal({
             {displayedError ? (
               <div
                 role="alert"
-                className="rounded-xl bg-[#FDECEC] border border-[#F5C2C2] px-4 py-2.5 text-[12px] font-medium text-[#C53030]"
+                className="rounded-xl bg-[#FDECEC] border border-[#F5C2C2] px-3.5 sm:px-4 py-2.5 text-[12px] font-medium text-[#C53030]"
               >
                 {displayedError}
               </div>
             ) : null}
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
+              <div className="min-w-0">
                 <label
                   htmlFor="product-sku"
                   className="block text-[12px] font-semibold text-[#30465B] mb-1.5"
@@ -262,7 +262,7 @@ export default function AddProductModal({
                 />
               </div>
 
-              <div>
+              <div className="min-w-0">
                 <label
                   htmlFor="product-name"
                   className="block text-[12px] font-semibold text-[#30465B] mb-1.5"
@@ -283,8 +283,8 @@ export default function AddProductModal({
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
+              <div className="min-w-0">
                 <label
                   htmlFor="product-category-id"
                   className="block text-[12px] font-semibold text-[#30465B] mb-1.5"
@@ -315,7 +315,7 @@ export default function AddProductModal({
                 </select>
               </div>
 
-              <div>
+              <div className="min-w-0">
                 <label
                   htmlFor="product-unit"
                   className="block text-[12px] font-semibold text-[#30465B] mb-1.5"
@@ -336,7 +336,7 @@ export default function AddProductModal({
               </div>
             </div>
 
-            <div>
+            <div className="min-w-0">
               <label
                 htmlFor="product-description"
                 className="block text-[12px] font-semibold text-[#30465B] mb-1.5"
@@ -357,8 +357,8 @@ export default function AddProductModal({
               />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
+              <div className="min-w-0">
                 <label
                   htmlFor="product-purchase-price"
                   className="block text-[12px] font-semibold text-[#30465B] mb-1.5"
@@ -382,7 +382,7 @@ export default function AddProductModal({
                 />
               </div>
 
-              <div>
+              <div className="min-w-0">
                 <label
                   htmlFor="product-selling-price"
                   className="block text-[12px] font-semibold text-[#30465B] mb-1.5"
@@ -407,8 +407,8 @@ export default function AddProductModal({
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4">
+              <div className="min-w-0">
                 <label
                   htmlFor="product-min-stock"
                   className="block text-[12px] font-semibold text-[#30465B] mb-1.5"
@@ -432,7 +432,7 @@ export default function AddProductModal({
                 />
               </div>
 
-              <div>
+              <div className="min-w-0">
                 <label
                   htmlFor="product-low-stock"
                   className="block text-[12px] font-semibold text-[#30465B] mb-1.5"
@@ -455,7 +455,7 @@ export default function AddProductModal({
                 />
               </div>
 
-              <div>
+              <div className="min-w-0">
                 <label
                   htmlFor="product-current-stock"
                   className="block text-[12px] font-semibold text-[#30465B] mb-1.5"
@@ -480,8 +480,8 @@ export default function AddProductModal({
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
+              <div className="min-w-0">
                 <label
                   htmlFor="product-rack-location"
                   className="block text-[12px] font-semibold text-[#30465B] mb-1.5"
@@ -503,7 +503,7 @@ export default function AddProductModal({
                 />
               </div>
 
-              <div>
+              <div className="min-w-0">
                 <label
                   htmlFor="product-image-url"
                   className="block text-[12px] font-semibold text-[#30465B] mb-1.5"
@@ -526,12 +526,12 @@ export default function AddProductModal({
             </div>
           </div>
 
-          <div className="px-6 py-4 border-t border-[#E8EEF4] bg-[#FAFBFD] flex items-center justify-end gap-2.5">
+          <div className="px-4 sm:px-6 py-3.5 sm:py-4 border-t border-[#E8EEF4] bg-[#FAFBFD] flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-2 sm:gap-2.5">
             <button
               type="button"
               onClick={handleClose}
               disabled={isSubmitting}
-              className="px-4 py-2 rounded-xl border border-[#E2E8F0] bg-white hover:bg-[#F7F9FA] text-[#30465B] text-[12.5px] font-semibold disabled:opacity-40 disabled:pointer-events-none transition-colors cursor-pointer"
+              className="w-full sm:w-auto px-4 py-2 rounded-xl border border-[#E2E8F0] bg-white hover:bg-[#F7F9FA] text-[#30465B] text-[12.5px] font-semibold disabled:opacity-40 disabled:pointer-events-none transition-colors cursor-pointer"
             >
               Cancel
             </button>
@@ -539,7 +539,7 @@ export default function AddProductModal({
             <button
               type="submit"
               disabled={isSubmitting}
-              className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-[#2D4356] hover:bg-[#233544] text-white text-[12.5px] font-semibold shadow-[0_6px_16px_rgba(45,67,86,0.18)] disabled:opacity-60 disabled:pointer-events-none transition-colors cursor-pointer"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-[#2D4356] hover:bg-[#233544] text-white text-[12.5px] font-semibold shadow-[0_6px_16px_rgba(45,67,86,0.18)] disabled:opacity-60 disabled:pointer-events-none transition-colors cursor-pointer"
             >
               {isSubmitting ? (
                 <>

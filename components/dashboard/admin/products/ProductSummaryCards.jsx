@@ -101,9 +101,9 @@ export default function ProductSummaryCards({ summary }) {
               </span>
             </div>
 
-            <div className="mt-2.5 sm:mt-3 flex items-baseline justify-between gap-2 sm:block">
+            <div className="mt-2.5 sm:mt-3 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 sm:block">
               <div
-                className={`text-[24px] sm:text-[28px] leading-[1.1] font-bold tracking-tight tabular-nums ${
+                className={`text-[24px] sm:text-[28px] leading-[1.1] font-bold tracking-tight tabular-nums shrink-0 ${
                   isDark ? "text-white" : "text-[#30465B]"
                 }`}
                 style={{ fontFamily: "var(--font-bricolage), sans-serif" }}

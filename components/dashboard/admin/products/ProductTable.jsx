@@ -100,26 +100,36 @@ export default function ProductTable({
   );
 
   return (
-    <div className="rounded-2xl bg-white border border-[#E8EEF4] shadow-[0_2px_10px_rgba(48,70,91,0.04)] overflow-hidden">
+    <div className="min-w-0 rounded-2xl bg-white border border-[#E8EEF4] shadow-[0_2px_10px_rgba(48,70,91,0.04)] overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full min-w-240 border-collapse text-left">
           <thead>
             <tr className="bg-[#F7F9FA] border-b border-[#E8EEF4] text-[10.5px] font-semibold uppercase tracking-wider text-[#8998A5]">
-              <th className="py-3.5 pl-5 pr-3 whitespace-nowrap">SKU</th>
-              <th className="py-3.5 px-3 whitespace-nowrap">Product Name</th>
-              <th className="py-3.5 px-3 whitespace-nowrap">Category</th>
-              <th className="py-3.5 px-3 whitespace-nowrap text-right">
+              <th className="py-3 sm:py-3.5 pl-4 sm:pl-5 pr-3 whitespace-nowrap">
+                SKU
+              </th>
+              <th className="py-3 sm:py-3.5 px-3 whitespace-nowrap">
+                Product Name
+              </th>
+              <th className="py-3 sm:py-3.5 px-3 whitespace-nowrap">
+                Category
+              </th>
+              <th className="py-3 sm:py-3.5 px-3 whitespace-nowrap text-right">
                 Current Stock
               </th>
-              <th className="py-3.5 px-3 whitespace-nowrap">Unit</th>
-              <th className="py-3.5 px-3 whitespace-nowrap text-right">
+              <th className="py-3 sm:py-3.5 px-3 whitespace-nowrap">Unit</th>
+              <th className="py-3 sm:py-3.5 px-3 whitespace-nowrap text-right">
                 Selling Price
               </th>
-              <th className="py-3.5 px-3 whitespace-nowrap">Rack Location</th>
-              <th className="py-3.5 px-3 whitespace-nowrap">Stock Status</th>
+              <th className="py-3 sm:py-3.5 px-3 whitespace-nowrap">
+                Rack Location
+              </th>
+              <th className="py-3 sm:py-3.5 px-3 whitespace-nowrap">
+                Stock Status
+              </th>
 
               {!readOnly && (
-                <th className="py-3.5 pl-3 pr-5 whitespace-nowrap text-right">
+                <th className="py-3 sm:py-3.5 pl-3 pr-4 sm:pr-5 whitespace-nowrap text-right">
                   Actions
                 </th>
               )}
@@ -131,7 +141,7 @@ export default function ProductTable({
               <tr>
                 <td
                   colSpan={readOnly ? 8 : 9}
-                  className="py-14 px-6 text-center"
+                  className="py-12 sm:py-14 px-4 sm:px-6 text-center"
                 >
                   <div className="max-w-90 mx-auto flex flex-col items-center">
                     <span className="w-10 h-10 rounded-2xl bg-[#F7F9FA] border border-[#E8EEF4] text-[#8998A5] flex items-center justify-center mb-3">
@@ -160,11 +170,11 @@ export default function ProductTable({
                     key={product.id}
                     className="hover:bg-[#FAFBFD] transition-colors"
                   >
-                    <td className="py-3.5 pl-5 pr-3 font-medium text-[#527DA3] whitespace-nowrap">
+                    <td className="py-3 sm:py-3.5 pl-4 sm:pl-5 pr-3 font-medium text-[#527DA3] whitespace-nowrap">
                       {product.sku}
                     </td>
 
-                    <td className="py-3.5 px-3 max-w-60">
+                    <td className="py-3 sm:py-3.5 px-3 max-w-48 sm:max-w-60">
                       <div className="font-semibold text-[#30465B] truncate">
                         {product.name}
                       </div>
@@ -176,27 +186,27 @@ export default function ProductTable({
                       ) : null}
                     </td>
 
-                    <td className="py-3.5 px-3 text-[#637587] whitespace-nowrap">
+                    <td className="py-3 sm:py-3.5 px-3 text-[#637587] whitespace-nowrap">
                       {product.category_name || "-"}
                     </td>
 
-                    <td className="py-3.5 px-3 font-semibold text-[#30465B] text-right whitespace-nowrap tabular-nums">
+                    <td className="py-3 sm:py-3.5 px-3 font-semibold text-[#30465B] text-right whitespace-nowrap tabular-nums">
                       {stockValue.toLocaleString("id-ID")}
                     </td>
 
-                    <td className="py-3.5 px-3 text-[#637587] whitespace-nowrap">
+                    <td className="py-3 sm:py-3.5 px-3 text-[#637587] whitespace-nowrap">
                       {product.unit || "-"}
                     </td>
 
-                    <td className="py-3.5 px-3 font-medium text-[#30465B] text-right whitespace-nowrap tabular-nums">
+                    <td className="py-3 sm:py-3.5 px-3 font-medium text-[#30465B] text-right whitespace-nowrap tabular-nums">
                       {formatRupiah(product.selling_price)}
                     </td>
 
-                    <td className="py-3.5 px-3 text-[#637587] whitespace-nowrap">
+                    <td className="py-3 sm:py-3.5 px-3 text-[#637587] whitespace-nowrap">
                       {product.rack_location || "-"}
                     </td>
 
-                    <td className="py-3.5 px-3 whitespace-nowrap">
+                    <td className="py-3 sm:py-3.5 px-3 whitespace-nowrap">
                       <span
                         className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold leading-none ${badgeStyle}`}
                       >
@@ -205,7 +215,7 @@ export default function ProductTable({
                     </td>
 
                     {!readOnly && (
-                      <td className="py-3.5 pl-3 pr-5 whitespace-nowrap text-right">
+                      <td className="py-3 sm:py-3.5 pl-3 pr-4 sm:pr-5 whitespace-nowrap text-right">
                         <div className="inline-flex items-center justify-end gap-1.5">
                           <button
                             type="button"
@@ -247,7 +257,7 @@ export default function ProductTable({
         </table>
       </div>
 
-      <div className="px-5 py-3.5 bg-[#FAFBFD] border-t border-[#E8EEF4] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div className="px-3.5 sm:px-5 py-3 sm:py-3.5 bg-[#FAFBFD] border-t border-[#E8EEF4] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 sm:gap-3">
         <p className="text-[12px] text-[#8998A5]">
           {safeTotalFiltered === 0
             ? "Showing 0 of 0 products"
@@ -265,7 +275,7 @@ export default function ProductTable({
               onPageChange?.(Math.max(1, safeCurrentPage - 1))
             }
             aria-label="Halaman sebelumnya"
-            className="w-8 h-8 rounded-lg border border-[#E2E8F0] bg-white text-[#30465B] hover:bg-[#F7F9FA] disabled:opacity-40 disabled:pointer-events-none inline-flex items-center justify-center cursor-pointer"
+            className="w-8 h-8 rounded-lg border border-[#E2E8F0] bg-white text-[#30465B] hover:bg-[#F7F9FA] disabled:opacity-40 disabled:pointer-events-none inline-flex items-center justify-center cursor-pointer shrink-0"
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
@@ -291,7 +301,7 @@ export default function ProductTable({
                 disabled={safeTotalFiltered === 0}
                 onClick={() => onPageChange?.(item)}
                 aria-current={isActivePage ? "page" : undefined}
-                className={`min-w-8 h-8 px-2 rounded-lg text-[12px] font-semibold cursor-pointer ${
+                className={`min-w-8 h-8 px-2 rounded-lg text-[12px] font-semibold cursor-pointer shrink-0 ${
                   isActivePage
                     ? "bg-[#2D4356] text-white"
                     : "bg-white border border-[#E2E8F0] text-[#30465B] hover:bg-[#F7F9FA]"
@@ -311,7 +321,7 @@ export default function ProductTable({
               onPageChange?.(Math.min(totalPages, safeCurrentPage + 1))
             }
             aria-label="Halaman berikutnya"
-            className="w-8 h-8 rounded-lg border border-[#E2E8F0] bg-white text-[#30465B] hover:bg-[#F7F9FA] disabled:opacity-40 disabled:pointer-events-none inline-flex items-center justify-center cursor-pointer"
+            className="w-8 h-8 rounded-lg border border-[#E2E8F0] bg-white text-[#30465B] hover:bg-[#F7F9FA] disabled:opacity-40 disabled:pointer-events-none inline-flex items-center justify-center cursor-pointer shrink-0"
           >
             <ChevronRight className="w-4 h-4" />
           </button>

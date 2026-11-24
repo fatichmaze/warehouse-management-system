@@ -369,24 +369,24 @@ export default function AdminProductsClient({
 
   return (
     <div
-      className="min-h-screen bg-[#DCE6EF] text-[#30465B] p-3 sm:p-5"
+      className="min-h-screen bg-[#DCE6EF] text-[#30465B] p-2.5 sm:p-5"
       style={{ fontFamily: "var(--font-inter), sans-serif" }}
     >
-      <div className="max-w-350 mx-auto flex flex-col md:flex-row items-start gap-4 min-h-[calc(100vh-2.5rem)]">
+      <div className="max-w-350 w-full mx-auto flex flex-col md:flex-row items-start gap-3 sm:gap-4 min-h-[calc(100vh-2.5rem)]">
         <AdminSidebar pendingCount={0} role={userRole} />
 
-        <div className="flex-1 min-w-0 w-full max-w-full rounded-[28px] bg-white/95 border border-white/90 shadow-[0_14px_36px_rgba(48,70,91,0.08)] flex flex-col">
+        <div className="flex-1 min-w-0 w-full max-w-full rounded-[24px] sm:rounded-[28px] bg-white/95 border border-white/90 shadow-[0_14px_36px_rgba(48,70,91,0.08)] flex flex-col">
           <AdminTopbar
             adminName={userName}
             role={userRole}
             currentSection="Products"
           />
 
-          <main className="flex-1 min-w-0 px-4 sm:px-7 pt-3 pb-7 space-y-5">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <main className="flex-1 min-w-0 px-3.5 sm:px-7 pt-3 pb-5 sm:pb-7 space-y-4 sm:space-y-5">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
               <div>
                 <h1
-                  className="text-[34px] leading-[1.12] font-bold tracking-tight text-[#30465B]"
+                  className="text-[26px] sm:text-[32px] lg:text-[34px] leading-[1.12] font-bold tracking-tight text-[#30465B]"
                   style={{ fontFamily: "var(--font-bricolage), sans-serif" }}
                 >
                   Product Management
@@ -399,7 +399,7 @@ export default function AdminProductsClient({
               <button
                 type="button"
                 onClick={handleOpenAddModal}
-                className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#2D4356] hover:bg-[#233544] text-white text-[12.5px] font-semibold shadow-[0_6px_16px_rgba(45,67,86,0.18)] transition-colors self-start sm:self-auto cursor-pointer"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#2D4356] hover:bg-[#233544] text-white text-[12.5px] font-semibold shadow-[0_6px_16px_rgba(45,67,86,0.18)] transition-colors cursor-pointer shrink-0"
               >
                 <Plus className="w-4 h-4" strokeWidth={2} />
                 <span>Add Product</span>

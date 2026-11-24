@@ -184,10 +184,6 @@ export default function EditProductModal({
       image_url: imageUrlTrimmed || null,
     };
 
-    // Stok hanya dikirim bila pengguna benar-benar mengubahnya. Jika tidak,
-    // stok di database (yang bisa berubah karena transaksi yang di-approve)
-    // tidak disentuh. expected_current_stock = stok saat form dibuka; server
-    // menolak (409) bila stok di database sudah berbeda.
     const originalStock = Number(product.current_stock);
 
     if (currentStockNum !== originalStock) {
@@ -203,7 +199,7 @@ export default function EditProductModal({
   return (
     <div
       onClick={handleBackdropClick}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[#1D2D3C]/45 backdrop-blur-[2px] p-3 sm:p-5 overflow-y-auto"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[#1D2D3C]/45 backdrop-blur-[2px] p-2.5 sm:p-5 overflow-y-auto"
       role="dialog"
       aria-modal="true"
       aria-labelledby="edit-product-modal-title"
@@ -211,18 +207,18 @@ export default function EditProductModal({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-2xl rounded-3xl bg-white border border-[#E8EEF4] shadow-[0_20px_48px_rgba(48,70,91,0.18)] overflow-hidden my-auto"
+        className="w-full max-w-2xl rounded-2xl sm:rounded-3xl bg-white border border-[#E8EEF4] shadow-[0_20px_48px_rgba(48,70,91,0.18)] overflow-hidden my-auto"
       >
-        <div className="px-6 py-4.5 border-b border-[#E8EEF4] flex items-center justify-between gap-4 bg-[#FAFBFD]">
-          <div>
+        <div className="px-4 sm:px-6 py-3.5 sm:py-4.5 border-b border-[#E8EEF4] flex items-start sm:items-center justify-between gap-3 sm:gap-4 bg-[#FAFBFD]">
+          <div className="min-w-0">
             <h2
               id="edit-product-modal-title"
-              className="text-[20px] leading-tight font-bold text-[#30465B]"
+              className="text-[18px] sm:text-[20px] leading-tight font-bold text-[#30465B]"
               style={{ fontFamily: "var(--font-bricolage), sans-serif" }}
             >
               Edit Product
             </h2>
-            <p className="mt-0.5 text-[12px] text-[#8998A5]">
+            <p className="mt-0.5 text-[11.5px] sm:text-[12px] text-[#8998A5] leading-snug">
               Perbarui detail produk dan batas stok gudang. Tanda{" "}
               <span className="text-[#C53030] font-semibold">*</span>{" "}
               menandakan field wajib.
@@ -241,11 +237,11 @@ export default function EditProductModal({
         </div>
 
         <form onSubmit={handleFormSubmit} noValidate>
-          <div className="p-6 space-y-4 max-h-[72vh] overflow-y-auto">
+          <div className="p-4 sm:p-6 space-y-3.5 sm:space-y-4 max-h-[68vh] sm:max-h-[72vh] overflow-y-auto">
             {!hasCategories ? (
               <div
                 role="status"
-                className="rounded-xl bg-[#FEF5E7] border border-[#F7D7A8] px-4 py-2.5 text-[12px] font-medium text-[#B76E1E]"
+                className="rounded-xl bg-[#FEF5E7] border border-[#F7D7A8] px-3.5 sm:px-4 py-2.5 text-[12px] font-medium text-[#B76E1E]"
               >
                 Belum ada kategori yang tersedia. Silakan tambahkan kategori terlebih dahulu sebelum memperbarui produk.
               </div>
@@ -254,14 +250,14 @@ export default function EditProductModal({
             {displayedError ? (
               <div
                 role="alert"
-                className="rounded-xl bg-[#FDECEC] border border-[#F5C2C2] px-4 py-2.5 text-[12px] font-medium text-[#C53030]"
+                className="rounded-xl bg-[#FDECEC] border border-[#F5C2C2] px-3.5 sm:px-4 py-2.5 text-[12px] font-medium text-[#C53030]"
               >
                 {displayedError}
               </div>
             ) : null}
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
+              <div className="min-w-0">
                 <div className="flex items-center justify-between gap-2 mb-1.5">
                   <label
                     htmlFor="edit-product-sku"
@@ -269,7 +265,7 @@ export default function EditProductModal({
                   >
                     SKU
                   </label>
-                  <span className="inline-flex items-center gap-1 text-[11px] text-[#8998A5]">
+                  <span className="inline-flex items-center gap-1 text-[11px] text-[#8998A5] shrink-0">
                     <Lock className="w-3 h-3" strokeWidth={1.8} />
                     <span>Read-only</span>
                   </span>
@@ -286,7 +282,7 @@ export default function EditProductModal({
                 />
               </div>
 
-              <div>
+              <div className="min-w-0">
                 <label
                   htmlFor="edit-product-name"
                   className="block text-[12px] font-semibold text-[#30465B] mb-1.5"
@@ -307,8 +303,8 @@ export default function EditProductModal({
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
+              <div className="min-w-0">
                 <label
                   htmlFor="edit-product-category-id"
                   className="block text-[12px] font-semibold text-[#30465B] mb-1.5"
@@ -339,7 +335,7 @@ export default function EditProductModal({
                 </select>
               </div>
 
-              <div>
+              <div className="min-w-0">
                 <label
                   htmlFor="edit-product-unit"
                   className="block text-[12px] font-semibold text-[#30465B] mb-1.5"
@@ -360,7 +356,7 @@ export default function EditProductModal({
               </div>
             </div>
 
-            <div>
+            <div className="min-w-0">
               <label
                 htmlFor="edit-product-description"
                 className="block text-[12px] font-semibold text-[#30465B] mb-1.5"
@@ -381,8 +377,8 @@ export default function EditProductModal({
               />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
+              <div className="min-w-0">
                 <label
                   htmlFor="edit-product-purchase-price"
                   className="block text-[12px] font-semibold text-[#30465B] mb-1.5"
@@ -406,7 +402,7 @@ export default function EditProductModal({
                 />
               </div>
 
-              <div>
+              <div className="min-w-0">
                 <label
                   htmlFor="edit-product-selling-price"
                   className="block text-[12px] font-semibold text-[#30465B] mb-1.5"
@@ -431,8 +427,8 @@ export default function EditProductModal({
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4">
+              <div className="min-w-0">
                 <label
                   htmlFor="edit-product-min-stock"
                   className="block text-[12px] font-semibold text-[#30465B] mb-1.5"
@@ -456,7 +452,7 @@ export default function EditProductModal({
                 />
               </div>
 
-              <div>
+              <div className="min-w-0">
                 <label
                   htmlFor="edit-product-low-stock"
                   className="block text-[12px] font-semibold text-[#30465B] mb-1.5"
@@ -479,7 +475,7 @@ export default function EditProductModal({
                 />
               </div>
 
-              <div>
+              <div className="min-w-0">
                 <label
                   htmlFor="edit-product-current-stock"
                   className="block text-[12px] font-semibold text-[#30465B] mb-1.5"
@@ -504,8 +500,8 @@ export default function EditProductModal({
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
+              <div className="min-w-0">
                 <label
                   htmlFor="edit-product-rack-location"
                   className="block text-[12px] font-semibold text-[#30465B] mb-1.5"
@@ -527,7 +523,7 @@ export default function EditProductModal({
                 />
               </div>
 
-              <div>
+              <div className="min-w-0">
                 <label
                   htmlFor="edit-product-image-url"
                   className="block text-[12px] font-semibold text-[#30465B] mb-1.5"
@@ -550,12 +546,12 @@ export default function EditProductModal({
             </div>
           </div>
 
-          <div className="px-6 py-4 border-t border-[#E8EEF4] bg-[#FAFBFD] flex items-center justify-end gap-2.5">
+          <div className="px-4 sm:px-6 py-3.5 sm:py-4 border-t border-[#E8EEF4] bg-[#FAFBFD] flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-2 sm:gap-2.5">
             <button
               type="button"
               onClick={handleClose}
               disabled={isSubmitting}
-              className="px-4 py-2 rounded-xl border border-[#E2E8F0] bg-white hover:bg-[#F7F9FA] text-[#30465B] text-[12.5px] font-semibold disabled:opacity-40 disabled:pointer-events-none transition-colors cursor-pointer"
+              className="w-full sm:w-auto px-4 py-2 rounded-xl border border-[#E2E8F0] bg-white hover:bg-[#F7F9FA] text-[#30465B] text-[12.5px] font-semibold disabled:opacity-40 disabled:pointer-events-none transition-colors cursor-pointer"
             >
               Cancel
             </button>
@@ -563,7 +559,7 @@ export default function EditProductModal({
             <button
               type="submit"
               disabled={isSubmitting}
-              className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-[#2D4356] hover:bg-[#233544] text-white text-[12.5px] font-semibold shadow-[0_6px_16px_rgba(45,67,86,0.18)] disabled:opacity-60 disabled:pointer-events-none transition-colors cursor-pointer"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-[#2D4356] hover:bg-[#233544] text-white text-[12.5px] font-semibold shadow-[0_6px_16px_rgba(45,67,86,0.18)] disabled:opacity-60 disabled:pointer-events-none transition-colors cursor-pointer"
             >
               {isSubmitting ? (
                 <>
