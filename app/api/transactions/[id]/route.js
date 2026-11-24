@@ -21,6 +21,7 @@ const invalidId = () =>
 
 export async function GET(_request, context) {
   const auth = await requireApiRole([
+    "admin",
     "staff",
     "warehouse_manager",
   ]);

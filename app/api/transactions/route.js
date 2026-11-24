@@ -4,7 +4,7 @@ import { requireApiRole } from "@/lib/api-auth";
 import { createTransaction } from "@/lib/transaction-service";
 import { serviceErrorResponse } from "@/lib/api-errors";
 
-const READ_ROLES = ["staff", "warehouse_manager"];
+const READ_ROLES = ["admin", "staff", "warehouse_manager"];
 
 const SORT_MAP = {
   date_desc: "t.transaction_date DESC, t.id DESC",

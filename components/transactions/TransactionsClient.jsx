@@ -12,12 +12,19 @@ import { callApi, formatDateId } from "./api";
 
 const PAGE_SIZE = 10;
 
-const TABS = [
+const DEFAULT_TABS = [
+  { key: "incoming", label: "Barang Masuk" },
+  { key: "outgoing", label: "Barang Keluar" },
+];
+
+const READ_ONLY_TABS = [
+  { key: "all", label: "Semua" },
   { key: "incoming", label: "Barang Masuk" },
   { key: "outgoing", label: "Barang Keluar" },
 ];
 
 const STATUS_OPTIONS = {
+  all: ["Pending", "Approved", "Rejected", "Shipped"],
   incoming: ["Pending", "Approved", "Rejected"],
   outgoing: ["Pending", "Approved", "Rejected", "Shipped"],
 };
@@ -32,6 +39,24 @@ const SORT_OPTIONS = [
 const fieldCls =
   "rounded-xl border border-[#DCE6EF] bg-white px-3.5 py-2 text-[12px] text-[#30465B] placeholder:text-[#8998A5] outline-none focus:border-[#527DA3]";
 
+function resolveInitialTab(initialTab, readOnly) {
+  if (readOnly && initialTab === "all") return "all";
+  return initialTab === "outgoing" ? "outgoing" : "incoming";
+}
+
+function getTypeBadgeMeta(type) {
+  if (type === "incoming") {
+    return {
+      label: "Barang Masuk",
+      className: "bg-[#EBF5FF] text-[#2B6CB0] border border-[#BEE3F8]",
+    };
+  }
+  return {
+    label: "Barang Keluar",
+    className: "bg-[#FFF5EB] text-[#B75A14] border border-[#FBD38D]",
+  };
+}
+
 export default function TransactionsClient({
   role,
   userId,
@@ -40,14 +65,14 @@ export default function TransactionsClient({
   suppliers,
   receivedOrders,
   initialTab = "incoming",
+  readOnly = false,
 }) {
   const router = useRouter();
-  const isStaff = role === "staff";
-  const columnCount = 7;
+  const isStaff = !readOnly && role === "staff";
+  const tabs = readOnly ? READ_ONLY_TABS : DEFAULT_TABS;
+  const columnCount = readOnly ? 8 : 7;
 
-  const [tab, setTab] = useState(
-    initialTab === "outgoing" ? "outgoing" : "incoming"
-  );
+  const [tab, setTab] = useState(() => resolveInitialTab(initialTab, readOnly));
   const [status, setStatus] = useState("");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
@@ -147,35 +172,45 @@ export default function TransactionsClient({
     setPage(1);
   }
 
+  const isAll = readOnly && tab === "all";
   const isIncoming = tab === "incoming";
+  const statusList = STATUS_OPTIONS[tab] ?? STATUS_OPTIONS.incoming;
   const pagination = result.pagination;
+
+  const searchPlaceholder = isAll
+    ? "Cari supplier, customer, atau tujuan..."
+    : isIncoming
+    ? "Cari supplier..."
+    : "Cari customer atau tujuan...";
 
   return (
     <div
-      className="min-h-screen bg-[#DCE6EF] text-[#30465B] p-3 sm:p-5"
+      className="min-h-screen bg-[#DCE6EF] text-[#30465B] p-2.5 sm:p-5"
       style={{ fontFamily: "var(--font-inter), sans-serif" }}
     >
-      <div className="max-w-350 mx-auto flex flex-col md:flex-row items-start gap-4 min-h-[calc(100vh-2.5rem)]">
+      <div className="max-w-350 w-full mx-auto flex flex-col md:flex-row items-start gap-3 sm:gap-4 min-h-[calc(100vh-2.5rem)]">
         <AdminSidebar role={role} />
 
-        <div className="flex-1 min-w-0 rounded-[28px] bg-white/95 border border-white/90 shadow-[0_14px_36px_rgba(48,70,91,0.08)] flex flex-col">
+        <div className="flex-1 w-full min-w-0 rounded-[24px] sm:rounded-[28px] bg-white/95 border border-white/90 shadow-[0_14px_36px_rgba(48,70,91,0.08)] flex flex-col">
           <AdminTopbar
             adminName={userName}
             role={role}
             currentSection="Transaksi"
           />
 
-          <main className="flex-1 px-7 pt-3 pb-7 space-y-5">
+          <main className="flex-1 min-w-0 px-4 sm:px-7 pt-3 pb-5 sm:pb-7 space-y-4 sm:space-y-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <h1
-                  className="text-[34px] leading-[1.08] font-bold tracking-tight text-[#30465B]"
+                  className="text-[28px] sm:text-[34px] leading-[1.08] font-bold tracking-tight text-[#30465B]"
                   style={{ fontFamily: "var(--font-bricolage), sans-serif" }}
                 >
                   Transaksi
                 </h1>
                 <p className="mt-1.5 text-[12px] leading-relaxed text-[#8998A5]">
-                  Seluruh transaksi barang masuk dan keluar gudang.
+                  {readOnly
+                    ? "Pemantauan seluruh transaksi barang masuk dan keluar gudang (read-only)."
+                    : "Seluruh transaksi barang masuk dan keluar gudang."}
                 </p>
               </div>
 
@@ -209,13 +244,13 @@ export default function TransactionsClient({
               </div>
             )}
 
-            <div className="flex gap-1.5 border-b border-[#E8EEF4]">
-              {TABS.map((t) => (
+            <div className="flex flex-wrap gap-1.5 border-b border-[#E8EEF4]">
+              {tabs.map((t) => (
                 <button
                   key={t.key}
                   type="button"
                   onClick={() => handleTabChange(t.key)}
-                  className={`px-4 py-2.5 text-[13px] border-b-2 -mb-px cursor-pointer ${
+                  className={`px-3.5 sm:px-4 py-2.5 text-[13px] border-b-2 -mb-px whitespace-nowrap cursor-pointer ${
                     tab === t.key
                       ? "border-[#2D4356] font-semibold text-[#30465B]"
                       : "border-transparent text-[#8998A5] hover:text-[#30465B]"
@@ -226,9 +261,9 @@ export default function TransactionsClient({
               ))}
             </div>
 
-            <div className="rounded-[20px] bg-[#F8FAFC] border border-[#E8EEF4] p-3.5 flex flex-wrap items-center gap-2.5">
+            <div className="rounded-[20px] bg-[#F8FAFC] border border-[#E8EEF4] p-3 sm:p-3.5 flex flex-wrap items-center gap-2.5">
               <form
-                className="relative flex-1 min-w-52"
+                className="relative flex-1 min-w-48 w-full sm:w-auto"
                 onSubmit={(e) => {
                   e.preventDefault();
                   setParty(partyInput.trim());
@@ -243,11 +278,7 @@ export default function TransactionsClient({
                   type="search"
                   value={partyInput}
                   onChange={(e) => handlePartyInputChange(e.target.value)}
-                  placeholder={
-                    isIncoming
-                      ? "Cari supplier..."
-                      : "Cari customer atau tujuan..."
-                  }
+                  placeholder={searchPlaceholder}
                   aria-label="Cari supplier atau customer"
                   className={`${fieldCls} w-full pl-9`}
                 />
@@ -260,18 +291,18 @@ export default function TransactionsClient({
                   setPage(1);
                 }}
                 aria-label="Filter status"
-                className={fieldCls}
+                className={`${fieldCls} w-full sm:w-auto`}
               >
                 <option value="">Semua status</option>
-                {STATUS_OPTIONS[tab].map((s) => (
+                {statusList.map((s) => (
                   <option key={s} value={s}>
                     {s}
                   </option>
                 ))}
               </select>
 
-              <label className="text-[11px] text-[#8998A5] flex items-center gap-1.5">
-                Dari
+              <label className="text-[11px] text-[#8998A5] flex items-center gap-1.5 w-full sm:w-auto">
+                <span className="shrink-0">Dari</span>
                 <input
                   type="date"
                   value={dateFrom}
@@ -279,12 +310,12 @@ export default function TransactionsClient({
                     setDateFrom(e.target.value);
                     setPage(1);
                   }}
-                  className={fieldCls}
+                  className={`${fieldCls} flex-1 sm:flex-initial`}
                 />
               </label>
 
-              <label className="text-[11px] text-[#8998A5] flex items-center gap-1.5">
-                Sampai
+              <label className="text-[11px] text-[#8998A5] flex items-center gap-1.5 w-full sm:w-auto">
+                <span className="shrink-0">Sampai</span>
                 <input
                   type="date"
                   value={dateTo}
@@ -292,7 +323,7 @@ export default function TransactionsClient({
                     setDateTo(e.target.value);
                     setPage(1);
                   }}
-                  className={fieldCls}
+                  className={`${fieldCls} flex-1 sm:flex-initial`}
                 />
               </label>
 
@@ -303,7 +334,7 @@ export default function TransactionsClient({
                   setPage(1);
                 }}
                 aria-label="Urutkan"
-                className={fieldCls}
+                className={`${fieldCls} w-full sm:w-auto`}
               >
                 {SORT_OPTIONS.map((o) => (
                   <option key={o.value} value={o.value}>
@@ -315,25 +346,46 @@ export default function TransactionsClient({
               <button
                 type="button"
                 onClick={resetFilters}
-                className="text-[12px] font-semibold text-[#527DA3] hover:text-[#30465B] cursor-pointer px-2 py-1.5"
+                className="text-[12px] font-semibold text-[#527DA3] hover:text-[#30465B] cursor-pointer px-2.5 py-1.5"
               >
                 Reset
               </button>
             </div>
 
-            <div className="overflow-x-auto rounded-2xl border border-[#E8EEF4]">
-              <table className="w-full text-left text-[13px]">
+            <div className="w-full max-w-full overflow-x-auto rounded-2xl border border-[#E8EEF4]">
+              <table className="w-full min-w-170 text-left text-[13px]">
                 <thead>
                   <tr className="bg-[#F7F9FA] text-[10.5px] uppercase tracking-wider text-[#8998A5]">
-                    <th className="px-4 py-3 font-semibold">No. Transaksi</th>
-                    <th className="px-4 py-3 font-semibold">Tanggal</th>
-                    <th className="px-4 py-3 font-semibold">
-                      {isIncoming ? "Supplier" : "Customer/Tujuan"}
+                    <th className="px-4 py-3 font-semibold whitespace-nowrap">
+                      No. Transaksi
                     </th>
-                    <th className="px-4 py-3 font-semibold">Produk</th>
-                    <th className="px-4 py-3 font-semibold">Dibuat oleh</th>
-                    <th className="px-4 py-3 font-semibold">Status</th>
-                    <th className="px-4 py-3 font-semibold text-right">Aksi</th>
+                    {readOnly && (
+                      <th className="px-4 py-3 font-semibold whitespace-nowrap">
+                        Jenis
+                      </th>
+                    )}
+                    <th className="px-4 py-3 font-semibold whitespace-nowrap">
+                      Tanggal
+                    </th>
+                    <th className="px-4 py-3 font-semibold whitespace-nowrap">
+                      {isAll
+                        ? "Supplier / Tujuan"
+                        : isIncoming
+                        ? "Supplier"
+                        : "Customer/Tujuan"}
+                    </th>
+                    <th className="px-4 py-3 font-semibold whitespace-nowrap">
+                      Produk
+                    </th>
+                    <th className="px-4 py-3 font-semibold whitespace-nowrap">
+                      Dibuat oleh
+                    </th>
+                    <th className="px-4 py-3 font-semibold whitespace-nowrap">
+                      Status
+                    </th>
+                    <th className="px-4 py-3 font-semibold text-right whitespace-nowrap">
+                      Aksi
+                    </th>
                   </tr>
                 </thead>
 
@@ -372,50 +424,74 @@ export default function TransactionsClient({
                   )}
 
                   {!loading &&
-                    result.rows.map((row) => (
-                      <tr key={row.id} className="border-t border-[#F1F5F9]">
-                        <td className="px-4 py-3 font-semibold text-[#30465B]">
-                          {row.transaction_number}
-                        </td>
-                        <td className="px-4 py-3 text-[#637587]">
-                          {formatDateId(row.transaction_date)}
-                        </td>
-                        <td className="px-4 py-3 text-[#30465B]">
-                          {isIncoming
-                            ? row.supplier_name || "-"
-                            : row.customer_destination || "-"}
-                          {isIncoming && row.po_number && (
-                            <span className="block text-[11px] text-[#8998A5]">
-                              PO: {row.po_number}
-                            </span>
+                    result.rows.map((row) => {
+                      const rowIsIncoming = row.type === "incoming";
+                      const typeMeta = getTypeBadgeMeta(row.type);
+
+                      return (
+                        <tr
+                          key={row.id}
+                          className="border-t border-[#F1F5F9]"
+                        >
+                          <td className="px-4 py-3 font-semibold text-[#30465B] whitespace-nowrap">
+                            {row.transaction_number}
+                          </td>
+
+                          {readOnly && (
+                            <td className="px-4 py-3 whitespace-nowrap">
+                              <span
+                                className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-medium ${typeMeta.className}`}
+                              >
+                                {typeMeta.label}
+                              </span>
+                            </td>
                           )}
-                        </td>
-                        <td className="px-4 py-3 text-[#637587]">
-                          {row.item_count} produk • {row.total_quantity} unit
-                        </td>
-                        <td className="px-4 py-3 text-[#637587]">
-                          {row.created_by_name || "-"}
-                        </td>
-                        <td className="px-4 py-3">
-                          <TransactionStatusBadge status={row.status} />
-                        </td>
-                        <td className="px-4 py-3 text-right">
-                          <button
-                            type="button"
-                            onClick={() => setDetailId(row.id)}
-                            className="text-[12px] font-semibold text-[#527DA3] cursor-pointer"
-                          >
-                            Detail
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
+
+                          <td className="px-4 py-3 text-[#637587] whitespace-nowrap">
+                            {formatDateId(row.transaction_date)}
+                          </td>
+
+                          <td className="px-4 py-3 text-[#30465B]">
+                            {rowIsIncoming
+                              ? row.supplier_name || "-"
+                              : row.customer_destination || "-"}
+                            {rowIsIncoming && row.po_number && (
+                              <span className="block text-[11px] text-[#8998A5]">
+                                PO: {row.po_number}
+                              </span>
+                            )}
+                          </td>
+
+                          <td className="px-4 py-3 text-[#637587] whitespace-nowrap">
+                            {row.item_count} produk • {row.total_quantity} unit
+                          </td>
+
+                          <td className="px-4 py-3 text-[#637587] whitespace-nowrap">
+                            {row.created_by_name || "-"}
+                          </td>
+
+                          <td className="px-4 py-3 whitespace-nowrap">
+                            <TransactionStatusBadge status={row.status} />
+                          </td>
+
+                          <td className="px-4 py-3 text-right whitespace-nowrap">
+                            <button
+                              type="button"
+                              onClick={() => setDetailId(row.id)}
+                              className="inline-flex items-center px-2.5 py-1.5 rounded-lg text-[12px] font-semibold text-[#527DA3] hover:bg-[#F5F8FB] hover:text-[#30465B] transition-colors cursor-pointer"
+                            >
+                              Detail
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })}
                 </tbody>
               </table>
             </div>
 
             {pagination && (
-              <div className="flex items-center justify-between text-[12px] text-[#637587]">
+              <div className="flex flex-wrap items-center justify-between gap-2 text-[12px] text-[#637587]">
                 <span>
                   Halaman {pagination.page} dari {pagination.totalPages} •{" "}
                   {pagination.total} transaksi
@@ -456,14 +532,18 @@ export default function TransactionsClient({
           userId={userId}
           onClose={() => setDetailId(null)}
           onChanged={handleChanged}
-          onEdit={(detail) => {
-            setDetailId(null);
-            setFormState({ mode: "edit", initial: detail });
-          }}
+          onEdit={
+            readOnly
+              ? undefined
+              : (detail) => {
+                  setDetailId(null);
+                  setFormState({ mode: "edit", initial: detail });
+                }
+          }
         />
       )}
 
-      {formState && (
+      {!readOnly && formState && (
         <TransactionFormModal
           key={
             formState.mode === "edit"
