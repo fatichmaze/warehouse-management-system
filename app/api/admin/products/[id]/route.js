@@ -84,8 +84,6 @@ export async function PATCH(request, context) {
     "selling_price",
     "min_stock",
     "low_stock",
-    "current_stock",
-    "expected_current_stock",
     "unit",
     "rack_location",
     "image_url",
@@ -307,74 +305,6 @@ export async function PATCH(request, context) {
       );
     }
 
-    let nextCurrentStock;
-
-    if (Object.prototype.hasOwnProperty.call(body, "current_stock")) {
-      const val = Number(body.current_stock);
-
-      if (
-        body.current_stock === "" ||
-        body.current_stock === null ||
-        typeof body.current_stock === "boolean" ||
-        !Number.isInteger(val) ||
-        val < 0
-      ) {
-        return NextResponse.json(
-          { error: "Current Stock harus berupa bilangan bulat 0 atau lebih." },
-          { status: 400 }
-        );
-      }
-
-      nextCurrentStock = val;
-
-      if (
-        Object.prototype.hasOwnProperty.call(body, "expected_current_stock")
-      ) {
-        const expected = Number(body.expected_current_stock);
-
-        if (
-          body.expected_current_stock === "" ||
-          body.expected_current_stock === null ||
-          typeof body.expected_current_stock === "boolean" ||
-          !Number.isInteger(expected) ||
-          expected < 0
-        ) {
-          return NextResponse.json(
-            {
-              error:
-                "expected_current_stock harus berupa bilangan bulat 0 atau lebih.",
-            },
-            { status: 400 }
-          );
-        }
-
-        if (expected !== Number(current.current_stock)) {
-          return NextResponse.json(
-            {
-              error: `Stok produk sudah berubah menjadi ${Number(
-                current.current_stock
-              )} sejak form dibuka (mungkin karena transaksi baru disetujui). Tutup form, muat ulang halaman, lalu coba lagi.`,
-            },
-            { status: 409 }
-          );
-        }
-      }
-    } else {
-      if (
-        Object.prototype.hasOwnProperty.call(body, "expected_current_stock")
-      ) {
-        return NextResponse.json(
-          {
-            error:
-              "expected_current_stock hanya boleh dikirim bersama current_stock.",
-          },
-          { status: 400 }
-        );
-      }
-
-      nextCurrentStock = Number(current.current_stock);
-    }
-
     const nextUnit = Object.prototype.hasOwnProperty.call(body, "unit")
       ? typeof body.unit === "string"
         ? body.unit.trim()
@@ -446,11 +376,10 @@ export async function PATCH(request, context) {
            selling_price = $5,
            min_stock = $6,
            low_stock = $7,
-           current_stock = $8,
-           unit = $9,
-           rack_location = $10,
-           image_url = $11
-         WHERE id = $12
+           unit = $8,
+           rack_location = $9,
+           image_url = $10
+         WHERE id = $11
          RETURNING
            id,
            sku,
@@ -480,7 +409,6 @@ export async function PATCH(request, context) {
         nextSellingPrice,
         nextMinStock,
         nextLowStock,
-        nextCurrentStock,
         nextUnit,
         nextRackLocation,
         nextImageUrl,

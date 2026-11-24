@@ -82,7 +82,6 @@ export default function EditProductModal({
     const sellingPriceNum = Number(formData.selling_price);
     const minStockNum = Number(formData.min_stock);
     const lowStockNum = Number(formData.low_stock);
-    const currentStockNum = Number(formData.current_stock);
 
     const imageUrlTrimmed = formData.image_url.trim();
 
@@ -151,17 +150,6 @@ export default function EditProductModal({
       return;
     }
 
-    if (
-      formData.current_stock === "" ||
-      !Number.isInteger(currentStockNum) ||
-      currentStockNum < 0
-    ) {
-      setValidationError(
-        "Current Stock harus berupa bilangan bulat 0 atau lebih."
-      );
-      return;
-    }
-
     if (imageUrlTrimmed !== "" && !isValidHttpOrHttpsUrl(imageUrlTrimmed)) {
       setValidationError(
         "Image URL harus berupa URL valid yang diawali http:// atau https://."
@@ -183,13 +171,6 @@ export default function EditProductModal({
       rack_location: rackTrimmed,
       image_url: imageUrlTrimmed || null,
     };
-
-    const originalStock = Number(product.current_stock);
-
-    if (currentStockNum !== originalStock) {
-      payload.current_stock = currentStockNum;
-      payload.expected_current_stock = originalStock;
-    }
 
     onSubmit?.(payload);
   }
@@ -476,27 +457,34 @@ export default function EditProductModal({
               </div>
 
               <div className="min-w-0">
-                <label
-                  htmlFor="edit-product-current-stock"
-                  className="block text-[12px] font-semibold text-[#30465B] mb-1.5"
-                >
-                  Current Stock <span className="text-[#C53030]">*</span>
-                </label>
+                <div className="flex items-center justify-between gap-2 mb-1.5">
+                  <label
+                    htmlFor="edit-product-current-stock"
+                    className="block text-[12px] font-semibold text-[#30465B]"
+                  >
+                    Current Stock
+                  </label>
+                  <span className="inline-flex items-center gap-1 text-[11px] text-[#8998A5] shrink-0">
+                    <Lock className="w-3 h-3" strokeWidth={1.8} />
+                    <span>Read-only</span>
+                  </span>
+                </div>
                 <input
                   id="edit-product-current-stock"
                   name="current_stock"
                   type="number"
                   step="1"
                   min="0"
-                  required
-                  disabled={isSubmitting}
+                  readOnly
+                  disabled
+                  aria-readonly="true"
                   value={formData.current_stock}
-                  onChange={(e) =>
-                    handleFieldChange("current_stock", e.target.value)
-                  }
                   placeholder="0"
-                  className="w-full h-10 px-3.5 rounded-xl bg-white border border-[#E2E8F0] text-[12.5px] text-[#30465B] placeholder:text-[#8998A5] focus:outline-none focus:border-[#527DA3] disabled:bg-[#F7F9FA] transition-colors tabular-nums"
+                  className="w-full h-10 px-3.5 rounded-xl bg-[#F7F9FA] border border-[#E8EEF4] text-[12.5px] font-medium text-[#637587] cursor-not-allowed select-none tabular-nums"
                 />
+                <p className="mt-1 text-[11px] leading-snug text-[#8998A5]">
+                  Stok hanya berubah melalui transaksi Incoming dan Outgoing.
+                </p>
               </div>
             </div>
 

@@ -76,6 +76,7 @@ export default function AdminProductsClient({
   const [editingProduct, setEditingProduct] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
   const [updateError, setUpdateError] = useState(null);
+  const [updateSuccessMessage, setUpdateSuccessMessage] = useState(null);
 
   const [deletingProduct, setDeletingProduct] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -260,6 +261,7 @@ export default function AdminProductsClient({
   function handleOpenEditModal(product) {
     if (isUpdating || isDeleting || !product) return;
     setUpdateError(null);
+    setUpdateSuccessMessage(null);
     setEditingProduct(product);
   }
 
@@ -297,8 +299,17 @@ export default function AdminProductsClient({
         return;
       }
 
+      const updatedName =
+        result?.data?.name ||
+        editingProduct?.name ||
+        `ID #${editingProduct.id}`;
+      const updatedSku = result?.data?.sku || editingProduct?.sku;
+      const label = updatedSku ? `${updatedName} (${updatedSku})` : updatedName;
+
       setUpdateError(null);
       setEditingProduct(null);
+      setUpdateSuccessMessage(`Produk ${label} berhasil diperbarui.`
+      );
       router.refresh();
     } catch {
       setUpdateError("Terjadi gangguan jaringan saat menghubungi server.");
@@ -405,6 +416,22 @@ export default function AdminProductsClient({
                 <span>Add Product</span>
               </button>
             </div>
+
+            {updateSuccessMessage ? (
+              <div
+                role="status"
+                className="rounded-xl bg-[#EAF6EE] border border-[#C6E6D0] px-4 py-2.5 text-[12px] font-medium text-[#2F855A] flex items-center justify-between gap-3"
+              >
+                <span>{updateSuccessMessage}</span>
+                <button
+                  type="button"
+                  onClick={() => setUpdateSuccessMessage(null)}
+                  className="text-[11.5px] font-semibold underline underline-offset-2 hover:opacity-80 cursor-pointer shrink-0"
+                >
+                  Tutup
+                </button>
+              </div>
+            ) : null}
 
             {deleteSuccessMessage ? (
               <div
