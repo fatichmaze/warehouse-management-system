@@ -1,4 +1,3 @@
-
 import { NextResponse } from "next/server";
 import { requireApiRole } from "@/lib/api-auth";
 import pool from "@/lib/db";
@@ -26,11 +25,25 @@ export async function PATCH(request, { params }) {
 
     const body = await request.json();
     let newStatus;
+    let rejectionReason = null;
 
-    if (body.action === "approve") {
+    if (body?.action === "approve") {
       newStatus = "approved";
-    } else if (body.action === "reject") {
+      rejectionReason = null;
+    } else if (body?.action === "reject") {
+      const rawReason =
+        typeof body?.rejection_reason === "string" ? body.rejection_reason : "";
+      const trimmedReason = rawReason.trim();
+
+      if (!trimmedReason) {
+        return NextResponse.json(
+          { message: "Alasan penolakan wajib diisi." },
+          { status: 400 }
+        );
+      }
+
       newStatus = "rejected";
+      rejectionReason = trimmedReason;
     } else {
       return NextResponse.json(
         { message: "Tindakan tidak valid." },
@@ -40,12 +53,13 @@ export async function PATCH(request, { params }) {
 
     const result = await pool.query(
       `UPDATE users
-       SET status = $1
-       WHERE id = $2
+       SET status = $1,
+           rejection_reason = $2
+       WHERE id = $3
          AND role = 'supplier'
          AND status = 'pending'
        RETURNING id`,
-      [newStatus, Number(id)]
+      [newStatus, rejectionReason, Number(id)]
     );
 
     if (result.rowCount === 0) {
