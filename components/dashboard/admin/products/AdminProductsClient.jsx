@@ -386,7 +386,7 @@ export default function AdminProductsClient({
       <div className="max-w-350 w-full mx-auto flex flex-col md:flex-row items-start gap-3 sm:gap-4 min-h-[calc(100vh-2.5rem)]">
         <AdminSidebar pendingCount={0} role={userRole} />
 
-        <div className="flex-1 min-w-0 w-full max-w-full rounded-[24px] sm:rounded-[28px] bg-white/95 border border-white/90 shadow-[0_14px_36px_rgba(48,70,91,0.08)] flex flex-col">
+        <div className="flex-1 min-w-0 w-full max-w-full rounded-3xl sm:rounded-[28px] bg-white/95 border border-white/90 shadow-[0_14px_36px_rgba(48,70,91,0.08)] flex flex-col">
           <AdminTopbar
             adminName={userName}
             role={userRole}

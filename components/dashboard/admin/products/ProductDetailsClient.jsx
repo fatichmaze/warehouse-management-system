@@ -51,7 +51,7 @@ export default function ProductDetailsClient({
       <div className="mx-auto flex min-h-[calc(100vh-2.5rem)] w-full max-w-350 flex-col items-start gap-3 sm:gap-4 md:flex-row">
         <AdminSidebar pendingCount={0} role={userRole} />
 
-        <div className="flex w-full min-w-0 flex-1 flex-col rounded-[24px] border border-white/90 bg-white/95 shadow-[0_14px_36px_rgba(48,70,91,0.08)] sm:rounded-[28px]">
+        <div className="flex w-full min-w-0 flex-1 flex-col rounded-3xl border border-white/90 bg-white/95 shadow-[0_14px_36px_rgba(48,70,91,0.08)] sm:rounded-[28px]">
           <AdminTopbar
             adminName={userName}
             role={userRole}
