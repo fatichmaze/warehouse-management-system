@@ -1,5 +1,7 @@
+import { useState } from "react";
 import Image from "next/image";
 import { Package } from "lucide-react";
+import { isValidHttpOrHttpsUrl } from "@/lib/product-form-helpers";
 import { formatDateDisplay, formatRupiah } from "./productDetailsHelpers";
 
 function ProductInfoField({ label, children, className = "" }) {
@@ -15,12 +17,46 @@ function ProductInfoField({ label, children, className = "" }) {
   );
 }
 
+function ProductImagePreview({ imageUrl, alt }) {
+  const [hasImageError, setHasImageError] = useState(false);
+
+  if (!isValidHttpOrHttpsUrl(imageUrl) || hasImageError) {
+    return (
+      <div className="space-y-1.5 text-center">
+        <Package
+          className="mx-auto h-8 w-8 text-[#8998A5]"
+          strokeWidth={1.6}
+        />
+
+        <p className="text-[12px] font-medium text-[#637587]">
+          Tidak ada gambar produk
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <Image
+      src={imageUrl}
+      alt={alt}
+      width={600}
+      height={400}
+      unoptimized
+      referrerPolicy="no-referrer"
+      onError={() => setHasImageError(true)}
+      className="max-h-44 w-full rounded-xl object-contain"
+    />
+  );
+}
+
 export default function ProductInfoSection({
   product,
   safeCurrentStock,
   safeMinStock,
   safeLowStock,
 }) {
+  const imageUrl = product?.image_url ?? "";
+
   return (
     <section className="space-y-5 rounded-2xl border border-[#E8EEF4] bg-white p-6 shadow-[0_2px_10px_rgba(48,70,91,0.04)]">
       <div className="flex items-center justify-between gap-3 border-b border-[#EEF2F6] pb-3.5">
@@ -42,26 +78,11 @@ export default function ProductInfoSection({
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="flex min-h-48 flex-col items-center justify-center rounded-2xl border border-[#E8EEF4] bg-[#F7F9FA] p-4">
-          {product?.image_url ? (
-            <Image
-              src={product.image_url}
-              alt={product?.name || "Gambar produk"}
-              width={600}
-              height={400}
-              className="max-h-44 w-full rounded-xl object-contain"
-            />
-          ) : (
-            <div className="space-y-1.5 text-center">
-              <Package
-                className="mx-auto h-8 w-8 text-[#8998A5]"
-                strokeWidth={1.6}
-              />
-
-              <p className="text-[12px] font-medium text-[#637587]">
-                Tidak ada gambar produk
-              </p>
-            </div>
-          )}
+          <ProductImagePreview
+            key={imageUrl}
+            imageUrl={imageUrl}
+            alt={product?.name || "Gambar produk"}
+          />
         </div>
 
         <div className="grid grid-cols-1 gap-4 text-[12.5px] sm:grid-cols-2 md:grid-cols-3 lg:col-span-2">
