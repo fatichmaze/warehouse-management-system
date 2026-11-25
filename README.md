@@ -28,9 +28,9 @@ TATALOKA adalah aplikasi Warehouse Management System berbasis web yang dirancang
 
 Mulai dari pencatatan produk, pemantauan stok, pengelolaan pemesanan ulang, hingga transaksi barang masuk dan keluar, seluruh proses dikelola melalui satu sistem dengan pembagian hak akses berdasarkan peran pengguna.
 
-| Aspek | Fokus Utama |
-| :--- | :--- |
-| **Our Purpose** | Membantu operasional gudang menjadi lebih terorganisasi melalui pencatatan persediaan dan alur transaksi yang terstruktur. |
+| Aspek            | Fokus Utama                                                                                                                   |
+| :--------------- | :---------------------------------------------------------------------------------------------------------------------------- |
+| **Our Purpose**  | Membantu operasional gudang menjadi lebih terorganisasi melalui pencatatan persediaan dan alur transaksi yang terstruktur.    |
 | **Our Approach** | Menghubungkan Admin, Manager, Staff, dan Supplier dalam satu alur kerja dengan kontrol akses dan perubahan stok yang terjaga. |
 
 ---
@@ -39,12 +39,12 @@ Mulai dari pencatatan produk, pemantauan stok, pengelolaan pemesanan ulang, hing
 
 Ringkasan data pada lingkungan demonstrasi:
 
-| Metrik | Jumlah | Keterangan |
-| :--- | :---: | :--- |
-| **Users** | **7** | 4 roles |
-| **Products** | **24** | 4 categories |
-| **Restock Orders** | **8** | Supplier workflow |
-| **Transactions** | **10** | Incoming & Outgoing |
+| Metrik             | Jumlah | Keterangan          |
+| :----------------- | :----: | :------------------ |
+| **Users**          | **7**  | 4 roles             |
+| **Products**       | **24** | 4 categories        |
+| **Restock Orders** | **8**  | Supplier workflow   |
+| **Transactions**   | **10** | Incoming & Outgoing |
 
 ---
 
@@ -56,39 +56,39 @@ Pengelolaan gudang dibagi menjadi beberapa modul utama.
 
 Mengelola informasi produk dan persediaan.
 
-* Product management
-* Category management
-* Unique SKU
-* Automatic stock status
-* Low-stock monitoring
+- Product management
+- Category management
+- Unique SKU
+- Automatic stock status
+- Low-stock monitoring
 
 ### Restock Management
 
 Mengelola pemesanan ulang kepada Supplier.
 
-* Create Restock Order
-* Supplier confirmation
-* Rejection with reason
-* Shipment status tracking (`In Transit`)
-* Receiving confirmation
+- Create Restock Order
+- Supplier confirmation
+- Rejection with reason
+- Shipment status tracking (`In Transit`)
+- Receiving confirmation
 
 ### Incoming Transactions
 
 Mengelola pencatatan barang masuk.
 
-* Create incoming transaction
-* Link with received PO
-* Manager approval
-* Automatic stock increase
+- Create incoming transaction
+- Link with received PO
+- Manager approval
+- Automatic stock increase
 
 ### Outgoing Transactions
 
 Mengelola pencatatan barang keluar.
 
-* Create outgoing transaction
-* Manager approval or rejection
-* Shipment status update
-* Automatic stock decrease
+- Create outgoing transaction
+- Manager approval or rejection
+- Shipment status update
+- Automatic stock decrease
 
 ---
 
@@ -138,12 +138,12 @@ flowchart TD
 
 Status stok ditentukan secara otomatis berdasarkan jumlah persediaan dan batas stok produk.
 
-| Status | Stock Condition | Description |
-| :--- | :--- | :--- |
-| 🟢 **Normal** | `Stock > Low Stock` | Persediaan berada pada kondisi normal. |
-| 🟡 **Low** | `Min Stock < Stock <= Low Stock` | Persediaan mulai rendah. |
-| 🔴 **Severe** | `0 < Stock <= Min Stock` | Persediaan berada di bawah batas minimum. |
-| ⚫ **Out of Stock** | `Stock = 0` | Produk tidak memiliki persediaan. |
+| Status              | Stock Condition                  | Description                               |
+| :------------------ | :------------------------------- | :---------------------------------------- |
+| 🟢 **Normal**       | `Stock > Low Stock`              | Persediaan berada pada kondisi normal.    |
+| 🟡 **Low**          | `Min Stock < Stock <= Low Stock` | Persediaan mulai rendah.                  |
+| 🔴 **Severe**       | `0 < Stock <= Min Stock`         | Persediaan berada di bawah batas minimum. |
+| ⚫ **Out of Stock** | `Stock = 0`                      | Produk tidak memiliki persediaan.         |
 
 ---
 
@@ -151,11 +151,12 @@ Status stok ditentukan secara otomatis berdasarkan jumlah persediaan dan batas s
 
 Empat peran pengguna memiliki tanggung jawab berbeda dalam operasional gudang.
 
-| Role | Responsibilities |
-| :--- | :--- |
-| ⚙️ **ADMIN** | User management, Supplier verification, product and category management. |
-| 📊 **MANAGER** | Restock Orders, product management, and transaction approval. |
-| 📋 **STAFF** | Incoming and outgoing transaction operations. |
+| Role            | Responsibilities                                                                                                                                                      |
+| :-------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ⚙️ **ADMIN**    | Supplier verification, product and category management.|
+
+| 📊 **MANAGER**  | Restock Orders, product management, and transaction approval.                                                                                                         |
+| 📋 **STAFF**    | Incoming and outgoing transaction operations.                                                                                                                         |
 | 🏢 **SUPPLIER** | Mengakses Restock Order miliknya sendiri, mengonfirmasi atau menolak Restock Order dengan alasan penolakan, serta memperbarui status pengiriman menjadi `In Transit`. |
 
 ---
@@ -164,13 +165,13 @@ Empat peran pengguna memiliki tanggung jawab berbeda dalam operasional gudang.
 
 Teknologi yang digunakan dalam pengembangan aplikasi:
 
-| Frontend | Backend & Database |
-| :--- | :--- |
-| Next.js 16.4.6 | Next.js App Router |
-| React 19.3.0 | PostgreSQL |
-| JavaScript | node-postgres (`pg`) |
-| Tailwind CSS 4.3.3 | JOSE (JWT) |
-| Lucide React | `bcryptjs` |
+| Frontend           | Backend & Database   |
+| :----------------- | :------------------- |
+| Next.js 16.4.6     | Next.js App Router   |
+| React 19.3.0       | PostgreSQL           |
+| JavaScript         | node-postgres (`pg`) |
+| Tailwind CSS 4.3.3 | JOSE (JWT)           |
+| Lucide React       | `bcryptjs`           |
 
 ---
 
@@ -193,7 +194,7 @@ products
 restock_orders
   └── Data pemesanan ulang
 
-restock_items
+restock_order_items
   └── Detail produk dalam PO
 
 transactions
@@ -211,14 +212,14 @@ Ingin menjalankan TATALOKA di perangkat lokal? Ikuti langkah berikut.
 
 ### Prerequisites
 
-* Node.js dan `npm`
-* PostgreSQL
-* Git
+- Node.js dan `npm`
+- PostgreSQL
+- Git
 
 ### 1. Clone Repository
 
 ```bash
-git clone [https://github.com/fatichmaze/warehouse-management-system.git](https://github.com/fatichmaze/warehouse-management-system.git)
+git clone https://github.com/fatichmaze/warehouse-management-system.git
 cd warehouse-management-system
 ```
 
@@ -261,15 +262,28 @@ Ganti `your_password` dengan password PostgreSQL milikmu dan gunakan secret acak
 
 ### 5. Setup Database Schema
 
-Urutan berikut merupakan panduan untuk setup database baru (`tataloka_db`). Jalankan file SQL berikut secara berurutan melalui `pgAdmin` atau PostgreSQL client:
+**For a new database:**
 
-| Order | File |
-| :---: | :--- |
-| 01 | `database/schema.sql` |
-| 02 | `database/migrations/001_restock_order_lifecycle.sql` |
-| 03 | `database/migrations/002_supplier_rejection_reason.sql` |
+Jalankan `database/schema.sql` untuk membuat struktur database terbaru. File ini sudah mencakup seluruh perubahan schema dan migration terbaru, sehingga tidak perlu menjalankan migration secara terpisah.
 
-Jalankan setiap migration pada database baru yang sedang disiapkan; jangan menjalankan ulang migration pada database yang sudah selesai disiapkan.
+```text
+database/
+├── schema.sql
+└── seed.sql
+```
+
+**For an existing database:**
+
+Periksa migration yang sudah diterapkan. Jalankan hanya migration yang belum diterapkan secara berurutan melalui `pgAdmin` atau PostgreSQL client.
+
+```text
+database/migrations/
+├── 001_restock_order_lifecycle.sql
+├── 002_supplier_rejection_reason.sql
+└── 003_supplier_rejection_reason_enforcement.sql
+```
+
+Jangan menjalankan ulang migration yang sudah diterapkan.
 
 ### 6. Insert Demo Data
 
@@ -288,7 +302,8 @@ psql "$DATABASE_URL" -f database/seed.sql
 Perintah `\i database/seed.sql` merupakan meta-command klien `psql`, bukan perintah SQL biasa untuk Query Tool `pgAdmin`.
 
 Untuk pengguna **Windows**:
-* Jalankan perintah dari root folder proyek menggunakan **Command Prompt** atau **PowerShell**, dengan folder `bin` PostgreSQL sudah tersedia di `PATH` atau dengan memanggil path lengkap ke `psql.exe`.
+
+- Jalankan perintah dari root folder proyek menggunakan **Command Prompt** atau **PowerShell**, dengan folder `bin` PostgreSQL sudah tersedia di `PATH` atau dengan memanggil path lengkap ke `psql.exe`.
 
 ```cmd
 psql -U postgres -d tataloka_db -f database\seed.sql
@@ -321,15 +336,15 @@ TATALOKA menyediakan tujuh akun untuk menguji aplikasi berdasarkan masing-masing
 <details>
 <summary><strong>View Demo Credentials</strong></summary>
 
-| Role | Email | Password |
-| :--- | :--- | :--- |
-| Admin | `admin@tataloka.demo` | `TatalokaAdmin26!` |
-| Manager | `manager@tataloka.demo` | `TatalokaManager26!` |
-| Staff | `staff@tataloka.demo` | `TatalokaStaff26!` |
+| Role     | Email                    | Password              |
+| :------- | :----------------------- | :-------------------- |
+| Admin    | `admin@tataloka.demo`    | `TatalokaAdmin26!`    |
+| Manager  | `manager@tataloka.demo`  | `TatalokaManager26!`  |
+| Staff    | `staff@tataloka.demo`    | `TatalokaStaff26!`    |
 | Supplier | `supplier@tataloka.demo` | `TatalokaSupplier26!` |
-| Supplier | `sumber@tataloka.demo` | `TatalokaSumber26!` |
-| Supplier | `bersih@tataloka.demo` | `TatalokaBersih26!` |
-| Supplier | `sentosa@tataloka.demo` | `TatalokaSentosa26!` |
+| Supplier | `sumber@tataloka.demo`   | `TatalokaSumber26!`   |
+| Supplier | `bersih@tataloka.demo`   | `TatalokaBersih26!`   |
+| Supplier | `sentosa@tataloka.demo`  | `TatalokaSentosa26!`  |
 
 </details>
 
@@ -339,12 +354,12 @@ TATALOKA menyediakan tujuh akun untuk menguji aplikasi berdasarkan masing-masing
 
 ## Available Commands
 
-| Command | Description |
-| :--- | :--- |
-| `npm run dev` | Menjalankan development server |
-| `npm run build` | Membuat production build |
-| `npm run start` | Menjalankan production server |
-| `npm run lint` | Menjalankan pemeriksaan kode menggunakan ESLint |
+| Command         | Description                                     |
+| :-------------- | :---------------------------------------------- |
+| `npm run dev`   | Menjalankan development server                  |
+| `npm run build` | Membuat production build                        |
+| `npm run start` | Menjalankan production server                   |
+| `npm run lint`  | Menjalankan pemeriksaan kode menggunakan ESLint |
 
 ---
 
