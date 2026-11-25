@@ -21,6 +21,11 @@ CREATE TABLE IF NOT EXISTS categories (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Nama kategori unik tanpa membedakan huruf besar/kecil
+-- dan mengabaikan spasi di awal/akhir.
+CREATE UNIQUE INDEX IF NOT EXISTS ux_categories_name_normalized
+    ON categories (LOWER(BTRIM(name)));
+
 CREATE TABLE IF NOT EXISTS products (
     id SERIAL PRIMARY KEY,
     sku VARCHAR(50) NOT NULL UNIQUE,
