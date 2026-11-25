@@ -485,7 +485,10 @@ SELECT t.id, p.id, v.quantity
 FROM (
     VALUES
     ('TRX-IN-2026-001', 'TL-GDG-001', 5),
+    ('TRX-IN-2026-001', 'TL-GDG-002', 10),
+
     ('TRX-IN-2026-002', 'TL-KTR-001', 10),
+    ('TRX-IN-2026-002', 'TL-KTR-004', 20),
 
     ('TRX-IN-2026-003', 'TL-KBR-003', 12),
     ('TRX-IN-2026-003', 'TL-KBR-005', 15),
