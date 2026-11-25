@@ -6,6 +6,8 @@ async function getManagerDashboardData() {
   const [
     productResult,
     stockResult,
+    pendingTransactionCountResult,
+    ongoingRestockCountResult,
     pendingTransactionResult,
     restockResult,
     recentTransactionResult,
@@ -28,6 +30,20 @@ async function getManagerDashboardData() {
           WHERE current_stock > min_stock AND current_stock <= low_stock
         )::int AS low
       FROM products
+    `),
+
+    // Jumlah seluruh transaksi yang menunggu persetujuan Manager
+    pool.query(`
+      SELECT COUNT(*)::int AS pending_count
+      FROM transactions
+      WHERE status = 'Pending'
+    `),
+
+    // Jumlah seluruh restock order yang sedang berjalan
+    pool.query(`
+      SELECT COUNT(*)::int AS ongoing_count
+      FROM restock_orders
+      WHERE status IN ('Pending', 'Confirmed', 'In Transit')
     `),
 
     // Transaksi yang menunggu persetujuan Manager
@@ -99,10 +115,10 @@ async function getManagerDashboardData() {
       low: stock.low,
     },
 
-    pendingTransactions: pendingTransactionResult.rows.length,
+    pendingTransactions: pendingTransactionCountResult.rows[0].pending_count,
     pendingTransactionList: pendingTransactionResult.rows,
 
-    ongoingRestockOrders: restockResult.rows.length,
+    ongoingRestockOrders: ongoingRestockCountResult.rows[0].ongoing_count,
     ongoingRestockList: restockResult.rows,
 
     recentTransactions: recentTransactionResult.rows,

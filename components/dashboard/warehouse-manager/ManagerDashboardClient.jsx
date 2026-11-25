@@ -206,7 +206,7 @@ export default function ManagerDashboardClient({
                 <SummaryCard
                   title="Restock Berjalan"
                   value={data.ongoingRestockOrders}
-                  description="Confirmed dan In Transit"
+                  description="Pending, Confirmed, dan In Transit"
                   icon={Truck}
                   href="/warehouse-manager/restock-orders"
                 />
