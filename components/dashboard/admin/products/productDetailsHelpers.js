@@ -12,7 +12,7 @@ export function getProductStockStatus(product) {
   }
 
   if (currentStock <= lowStock) {
-    return "Low Stock";
+    return "Low";
   }
 
   return "Normal";
@@ -24,7 +24,7 @@ export function getStockBadgeStyle(status) {
       return "bg-[#2D4356] text-white";
     case "Severe":
       return "bg-[#FDECEC] text-[#C53030]";
-    case "Low Stock":
+    case "Low":
       return "bg-[#FEF5E7] text-[#D9822B]";
     case "Normal":
     default:

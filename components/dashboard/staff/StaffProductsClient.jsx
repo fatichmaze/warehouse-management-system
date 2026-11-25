@@ -16,7 +16,7 @@ function getProductStockStatus(product) {
 
   if (currentStock === 0) return "Out of Stock";
   if (currentStock <= minStock) return "Severe";
-  if (currentStock <= lowStock) return "Low Stock";
+  if (currentStock <= lowStock) return "Low";
   return "Normal";
 }
 
